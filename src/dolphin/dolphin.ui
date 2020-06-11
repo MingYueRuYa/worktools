@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dolphinClass</class>
+ <widget class="QMainWindow" name="dolphinClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1095</width>
+    <height>418</height>
+   </rect>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>dolphin</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineedit_path"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_serachpath">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_ok">
+        <property name="text">
+         <string>确定</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="productInfoTable">
+      <property name="contextMenuPolicy">
+       <enum>Qt::ActionsContextMenu</enum>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>原始文件名</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>文件说明</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>数字签名</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>类型</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>文件版本</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>产品名称</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>产品版本</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>版权</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>大小</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>修改日期</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1095</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="dolphin.qrc"/>
+ </resources>
+ <connections/>
+</ui>
