@@ -54,3 +54,12 @@ std::wstring StringtoWString(const std::string& str)
     delete[] szRes;
     return strRtn;
 }
+
+QString WrapHtmlStr(const QString pColor, const QString pMsgInfo, 
+					uint pFontSize)
+{
+	QString str = QString("<p><font size=\"%1\" face=\"Microsoft YaHei\"" 
+						"color=\"%2\">%3</font></p>").arg(pFontSize).arg(
+						pColor).arg(pMsgInfo);
+	return str;
+}

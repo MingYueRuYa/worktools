@@ -216,4 +216,5 @@ void monMainWindow::SaveRCFile()
     QMessageBox::information(this, "title", "modified version successful.", 
                              QMessageBox::Yes);
 }
+
 #include "moc_monmainwindow.cpp"

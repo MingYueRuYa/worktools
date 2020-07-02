@@ -18,4 +18,7 @@ QString GetProductVer(const QString pFilePath);
 
 std::wstring StringtoWString(const std::string& str);
 
+QString WrapHtmlStr(const QString pColor, const QString pMsgInfo, 
+					uint pFontSize);
+
 #endif // common_h
