@@ -3,35 +3,64 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dolphin", "src\dolphin\dolphin.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cattle", "cattle\cattle.vcxproj", "{9387C880-9AE9-4FA4-942F-1309A0E1A20D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "monkey", "src\monkey\monkey.vcxproj", "{F85DC719-1249-4347-96FA-D40560B6045C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dolphin", "dolphin\dolphin.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cattle", "src\cattle\cattle.vcxproj", "{9387C880-9AE9-4FA4-942F-1309A0E1A20D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "monkey", "monkey\monkey.vcxproj", "{F85DC719-1249-4347-96FA-D40560B6045C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
+		Debug|x86 = Debug|x86
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|Win32 = Release|Win32
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.Build.0 = Debug|Win32
-		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.ActiveCfg = Release|Win32
-		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.Build.0 = Release|Win32
-		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Win32.Build.0 = Debug|Win32
-		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Win32.ActiveCfg = Release|Win32
-		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Win32.Build.0 = Release|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|Win32.Build.0 = Debug|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|x86.ActiveCfg = Debug|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Debug|x86.Build.0 = Debug|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|Win32.ActiveCfg = Release|Win32
 		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|Win32.Build.0 = Release|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|x86.ActiveCfg = Release|Win32
+		{9387C880-9AE9-4FA4-942F-1309A0E1A20D}.Release|x86.Build.0 = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.Build.0 = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x86.ActiveCfg = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x86.Build.0 = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.ActiveCfg = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.Build.0 = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x86.ActiveCfg = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x86.Build.0 = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|Win32.Build.0 = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|x86.ActiveCfg = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Debug|x86.Build.0 = Debug|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Win32.ActiveCfg = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|Win32.Build.0 = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|x86.ActiveCfg = Release|Win32
+		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2013
+		SolutionGuid = {27243E68-A755-43AF-8542-334CF3206EC7}
+		Qt5Version = Qt5.6.3
 	EndGlobalSection
 EndGlobal
