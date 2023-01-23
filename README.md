@@ -129,7 +129,7 @@ optional arguments:
 
 ![03_compile_warning_tip_rounder](./images/03_compile_warning_tip_rounder.png)
 
-## TODO list:
+### TODO list:
 
 - [x] 未能识别编译错误，给出提示
 - [x] build resource 不能叫着名字，给人造成歧义
@@ -138,9 +138,9 @@ optional arguments:
 
 
 
-## Tips:
+### Tips:
 
-### compile.py脚本
+#### compile.py脚本
 
 1.关于脚本中的--compileargs参数，其实就在如下图的一行中，比如这里的就是"Debug|x86"
 
