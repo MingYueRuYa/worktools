@@ -1,4 +1,4 @@
-#ifndef ROUND_SHADOW_WIDGET
+﻿#ifndef ROUND_SHADOW_WIDGET
 #define ROUND_SHADOW_WIDGET
 
 #include "move_widget_helper.h"

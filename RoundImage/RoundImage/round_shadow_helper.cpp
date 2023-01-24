@@ -1,4 +1,4 @@
-#include "round_shadow_helper.h"
+﻿#include "round_shadow_helper.h"
 
 #include <QPainter>
 #include <QPainterPath>

@@ -1,4 +1,4 @@
-#ifndef ROUND_IMAGE_HELEPR
+﻿#ifndef ROUND_IMAGE_HELEPR
 #define ROUND_IMAGE_HELEPR
 
 #include "round_shadow_helper.h"

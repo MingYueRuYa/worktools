@@ -1,4 +1,4 @@
-#ifndef ROUND_SHADOW_HELPER_H
+﻿#ifndef ROUND_SHADOW_HELPER_H
 #define ROUND_SHADOW_HELPER_H
 
 #include <QLinearGradient>

@@ -1,7 +1,8 @@
-#include "round_image_helper.h"
+﻿#include "round_image_helper.h"
 
 #include <QPainter>
 #include <QPainterPath>
+#include <QPixmap>
 
 // 1.阴影的距离可以调整
 // 2.阴影可以调整
