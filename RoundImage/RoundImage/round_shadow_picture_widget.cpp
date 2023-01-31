@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QPainter>
+#include <QMessageBox>
 
 RoundShadowPictureWidget::RoundShadowPictureWidget(const QString& pixmap_path,
                                                    QWidget* parent)
@@ -75,18 +76,14 @@ void RoundShadowPictureWidget::contextMenuEvent(QContextMenuEvent* event) {
 }
 
 void RoundShadowPictureWidget::on_action_save_triggered(bool) {
-  if (!pixmap_path_.isNull()) {
-    QFileInfo file_info(pixmap_path_);
-    QString file_path = file_info.absolutePath() + "/";
-    file_path += file_info.baseName() + "_rounder." + file_info.suffix();
-    round_shadow_pixmap_.save(file_path);
-  } else {
     QString file_name = QFileDialog::getSaveFileName(
-        this, tr("Save File"), "", tr("Images (*.png *.jpg)"));
+        this, tr("Save File"), "", tr("Images (*.png)"));
     if (!file_name.isEmpty()) {
       round_shadow_pixmap_.save(file_name);
+    } else {
+      QMessageBox::information(NULL, tr("warning"),
+                               tr("Please input file name"), QMessageBox::Ok);
     }
-  }
 }
 
 void RoundShadowPictureWidget::on_action_exit_triggered(bool) {
