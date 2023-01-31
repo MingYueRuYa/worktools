@@ -133,12 +133,13 @@ class App:
         else:
             compile_parameter = '/build "' + self.compile_args + '"'
         if os.path.isabs(self.compile_file):
-            execute(['devenv "' + self.compile_file + '" ' + compile_parameter],
+            execute(['devenv ' + self.compile_file + ' ' + compile_parameter],
                     lambda x: print("%s" % x),
                     lambda x: print("%s" % x))
         else:
             solution_file = os.getcwd() +'/'+ self.compile_file
-            execute(['devenv "' + solution_file + '" ' + compile_parameter],
+            print(colorama.Fore.GREEN + solution_file);
+            execute(['devenv ' + solution_file + ' ' + compile_parameter],
                     lambda x: print("%s" % x),
                     lambda x: print("%s" % x))
         return len(error_list)
