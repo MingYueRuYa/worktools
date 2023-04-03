@@ -18,7 +18,7 @@ stashed=0
 
 
 # 获取git remote出来的远程服务器名称，并将多个名称放入数组中
-remote_names=($(git remote))
+# remote_names=($(git remote))
 
 # 输出数组中的所有元素
 # for name in "${remote_names[@]}"
