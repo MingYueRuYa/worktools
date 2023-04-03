@@ -40,6 +40,7 @@ if [ -n "$status" ]; then
 	echo_red "git stash end"
 
 	# 如果有3rd，hc字段，表示有子模块更新
+	# 第三方子仓库的目录组织方式，必须如下: .../3rd/  .../hc/
 	if echo "$status" | grep -qE "idl|hc"; then
 		echo_red "update submodule starts"
 		git submodule update --init --recursive
@@ -51,12 +52,18 @@ fi
 echo_red "git status "
 
 
-echo_red "git fetch origin start"
-git fetch origin
-echo_red "git fetch origin end"
+# 远程服务器的名称，可能存在多个，
+# 所以约定成俗，上游的服务器统称为up(upstream)
+echo_red "git fetch up start"
+git fetch up 
+echo_red "git fetch up end"
 
+# 远程服务器的分支格式必须是统一的。
+# 如：up/release/branch_name，从本地的分支获取名字，组成远程分支名称
 echo_red "git rebase start"
-git rebase 'up/release/v1.1.20'
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+version=$(echo "$branch_name" | sed 's/^[^\/]*\///')
+git rebase "up/release/$version"
 echo_red "git rebase end"
 
 if [ $stashed -eq 1 ]; then
