@@ -16,6 +16,16 @@ function echo_green {
 
 stashed=0
 
+
+# 获取git remote出来的远程服务器名称，并将多个名称放入数组中
+remote_names=($(git remote))
+
+# 输出数组中的所有元素
+# for name in "${remote_names[@]}"
+# do
+#   echo "The remote server name is: $name"
+# done
+
 # 查看是否有文件，子模块修改
 echo_red "git status "
 status=$(git status --porcelain -uno)
