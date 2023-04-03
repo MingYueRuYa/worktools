@@ -93,7 +93,6 @@ class App:
             if proc.info['name'] == self.process_name:
                 find_flag = 1
                 list_process_id.append(proc.info['pid'])
-                break
         if len(list_process_id) == 0:
             print(colorama.Fore.GREEN + "Not find target process")
         return list_process_id
@@ -133,13 +132,12 @@ class App:
         else:
             compile_parameter = '/build "' + self.compile_args + '"'
         if os.path.isabs(self.compile_file):
-            execute(['devenv ' + self.compile_file + ' ' + compile_parameter],
+            execute(['devenv "' + self.compile_file + '" ' + compile_parameter],
                     lambda x: print("%s" % x),
                     lambda x: print("%s" % x))
         else:
             solution_file = os.getcwd() +'/'+ self.compile_file
-            print(colorama.Fore.GREEN + solution_file);
-            execute(['devenv ' + solution_file + ' ' + compile_parameter],
+            execute(['devenv "' + solution_file + '" ' + compile_parameter],
                     lambda x: print("%s" % x),
                     lambda x: print("%s" % x))
         return len(error_list)
