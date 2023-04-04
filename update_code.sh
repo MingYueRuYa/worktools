@@ -62,7 +62,7 @@ echo_red "git fetch up end"
 # 如：up/release/branch_name，从本地的分支获取名字，组成远程分支名称
 echo_red "git rebase start"
 branch_name=$(git rev-parse --abbrev-ref HEAD)
-version=$(echo "$branch_name" | sed 's/^[^\/]*\///')
+version=$(basename "$branch_name")
 git rebase "up/release/$version"
 echo_red "git rebase end"
 
