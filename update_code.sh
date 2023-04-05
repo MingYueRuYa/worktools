@@ -16,6 +16,33 @@ function echo_green {
 
 stashed=0
 
+while getopts ":h" opt; do
+  case $opt in
+    h)
+	  echo "usage:./update_code.sh remote_svr branch_name"
+      exit 0
+      ;;
+  esac
+done
+
+if [ $# -eq 0 ]; then
+  echo_green "No parameters provided, use default parameters"
+  remote_svr="origin"
+  remote_branch="master"
+else
+	if [ $# -eq 1 ]; then
+  		remote_svr=$1
+  		remote_branch="master"
+	elif [ $# -eq 2 ]; then
+  		remote_svr=$1
+  		remote_branch=$2
+	fi
+fi
+
+echo_green "remote server:"$remote_svr
+echo_green "remote branch name:"$remote_branch
+
+echo ""
 
 # 获取git remote出来的远程服务器名称，并将多个名称放入数组中
 # remote_names=($(git remote))
@@ -27,17 +54,22 @@ stashed=0
 # done
 
 # 查看是否有文件，子模块修改
-echo_red "git status "
+echo_red "git status start"
 status=$(git status --porcelain -uno)
 
 if [ -n "$status" ]; then
-	echo_red "git stash start"
 	echo_red "modified files"
 	echo "$status"
 	echo_red "modified files"
+
+	echo ""
+
+	echo_red "git stash start"
 	git stash 
-	stashed=1
 	echo_red "git stash end"
+	echo ""
+
+	stashed=1
 
 	# 如果有3rd，hc字段，表示有子模块更新
 	# 第三方子仓库的目录组织方式，必须如下: .../3rd/  .../hc/
@@ -45,26 +77,34 @@ if [ -n "$status" ]; then
 		echo_red "update submodule starts"
 		git submodule update --init --recursive
 		echo_red "update submodule end"
+		git stash 
 	fi
 else
 	echo_green "Not find any modified."
 fi
-echo_red "git status "
+echo_red "git status end"
 
+echo ""
 
 # 远程服务器的名称，可能存在多个，
 # 所以约定成俗，上游的服务器统称为up(upstream)
-echo_red "git fetch up start"
-git fetch up 
-echo_red "git fetch up end"
+echo_red "git fetch $remote_svr start"
+git fetch $remote_svr
+echo_red "git fetch $remote_svr end"
+
+echo ""
 
 # 远程服务器的分支格式必须是统一的。
 # 如：up/release/branch_name，从本地的分支获取名字，组成远程分支名称
 echo_red "git rebase start"
-branch_name=$(git rev-parse --abbrev-ref HEAD)
-version=$(basename "$branch_name")
-git rebase "up/release/$version"
+# 这种方式要求本地分支和远程名称一致，且满足特定的格式。
+# 条件苛刻，故不再采用，而是采用将分支名通过参数传递
+# branch_name=$(git rev-parse --abbrev-ref HEAD)
+# version=$(basename "$branch_name")
+git rebase "$remote_svr/$remote_branch"
 echo_red "git rebase end"
+
+echo ""
 
 if [ $stashed -eq 1 ]; then
 	echo_red "git stash pop start"
