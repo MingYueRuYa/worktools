@@ -1,0 +1,13 @@
+# 1.rename win_bashrc to .bashrc
+# 2.move to ~ home
+alias tortise_commit='tortoisegitproc.exe /command:commit'
+alias tortise_log='tortoisegitproc.exe /command:log'
+alias fetch='git fetch'
+alias update_sub_all='git submodule update --init --recursive'
+alias rebase='git rebase'
+alias push='git push'
+alias git_all_log='git log --all --graph'
+alias count_id='git rev-list --count '
+
+export PATH=$PATH:"/c/Program Files/Google/Chrome/Application":"/c/Program Files (x86)/Tencent/WeChat":"/c/Program Files (x86)/Windows Kits/10/Debuggers/x86"
+
