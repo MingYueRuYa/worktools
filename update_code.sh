@@ -102,6 +102,13 @@ echo_red "git rebase start"
 # branch_name=$(git rev-parse --abbrev-ref HEAD)
 # version=$(basename "$branch_name")
 git rebase "$remote_svr/$remote_branch"
+
+if [ $? -ne 0 ]; then
+	echo_green "git rebase occur error.Please rebase manual."
+	echo_red "git rebase end"
+	exit 1
+fi
+
 echo_red "git rebase end"
 
 echo ""
