@@ -55,7 +55,7 @@ echo ""
 
 # 查看是否有文件，子模块修改
 echo_red "git status start"
-status=$(git status --porcelain -uno)
+status=$(git status --porcelain)
 
 if [ -n "$status" ]; then
 	echo_red "modified files"
@@ -106,6 +106,9 @@ git rebase "$remote_svr/$remote_branch"
 if [ $? -ne 0 ]; then
 	echo_green "git rebase occur error.Please rebase manual."
 	echo_red "git rebase end"
+	if [ $stashed -eq 1 ]; then
+		echo_green "you maybe git stash pop manual."
+	fi
 	exit 1
 fi
 
