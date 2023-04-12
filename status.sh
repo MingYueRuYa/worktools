@@ -26,6 +26,7 @@ else
 	# 遍历文件列表，设置环境变量
 	for file in "${files[@]}"
 	do
+		origin_file_name="$(basename "$file")"
 		file_name="$(basename "$file")"
 		if [[ $file_name == .* ]]; then
 			IFS='.'
@@ -38,6 +39,7 @@ else
 			file_name="${file_name%%.*}"
 		fi
 	# 设置环境变量
+		file_name="$file_name""_""${origin_file_name##*.}"
 		export "$file_name=$PWD/$file"
 		echo_red "$file_name=$PWD/$file"
 	done
