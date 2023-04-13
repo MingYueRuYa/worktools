@@ -38,8 +38,10 @@ else
 			# 提取出文件名（不含后缀）
 			file_name="${file_name%%.*}"
 		fi
-	# 设置环境变量
-		file_name="$file_name""_""${origin_file_name##*.}"
+		# 设置环境变量
+		if [[ $origin_file_name = *.* ]]; then
+			file_name="$file_name""_""${origin_file_name##*.}"
+		fi
 		export "$file_name=$PWD/$file"
 		echo_red "$file_name=$PWD/$file"
 	done
