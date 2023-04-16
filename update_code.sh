@@ -15,20 +15,34 @@ function echo_green {
 }
 
 stashed=0
+config_file="update_config.json"
 
 while getopts ":h" opt; do
   case $opt in
     h)
-	  echo "usage:./update_code.sh remote_svr branch_name"
+	  echo "usage:./update_code.sh [remote_svr] [branch_name]"
       exit 0
       ;;
   esac
 done
 
 if [ $# -eq 0 ]; then
-  echo_green "No parameters provided, use default parameters"
-  remote_svr="origin"
-  remote_branch="master"
+	echo_green "No parameters provided, try to read update_config.json"
+	remote_svr="origin"
+	remote_branch="master"
+
+	if [ -f $config_file ]; then
+		while IFS='=' read -r key value; do
+			if [ $key = "remote" ]; then
+				remote_svr=$value
+			fi
+			if [ $key = "branch" ]; then
+				remote_branch=$value
+			fi
+		done < $config_file
+	else
+		echo_green "Not find $config_file, use default parameters"
+	fi
 else
 	if [ $# -eq 1 ]; then
   		remote_svr=$1
@@ -55,7 +69,7 @@ echo ""
 
 # 查看是否有文件，子模块修改
 echo_red "git status start"
-status=$(git status --porcelain)
+status=$(git status --porcelain -uno)
 
 if [ -n "$status" ]; then
 	echo_red "modified files"
@@ -73,7 +87,7 @@ if [ -n "$status" ]; then
 
 	# 如果有3rd，hc字段，表示有子模块更新
 	# 第三方子仓库的目录组织方式，必须如下: .../3rd/  .../hc/
-	if echo "$status" | grep -qE "idl|hc"; then
+	if echo "$status" | grep -qE "idl|3rd|.premake"; then
 		echo_red "update submodule starts"
 		git submodule update --init --recursive
 		echo_red "update submodule end"
