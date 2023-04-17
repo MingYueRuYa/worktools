@@ -20,37 +20,30 @@ config_file="update_config.json"
 while getopts ":h" opt; do
   case $opt in
     h)
-	  echo "usage:./update_code.sh [remote_svr] [branch_name]"
+	  echo "usage:./update_code.sh [config_file]"
       exit 0
       ;;
   esac
 done
 
-if [ $# -eq 0 ]; then
-	echo_green "No parameters provided, try to read update_config.json"
-	remote_svr="origin"
-	remote_branch="master"
+if [ $# -ne 0 ]; then
+	config_file=$1
+fi
 
-	if [ -f $config_file ]; then
-		while IFS='=' read -r key value; do
-			if [ $key = "remote" ]; then
-				remote_svr=$value
-			fi
-			if [ $key = "branch" ]; then
-				remote_branch=$value
-			fi
-		done < $config_file
-	else
-		echo_green "Not find $config_file, use default parameters"
-	fi
+remote_svr="origin"
+remote_branch="master"
+
+if [ -f $config_file ]; then
+	while IFS='=' read -r key value; do
+		if [ $key = "remote" ]; then
+			remote_svr=$value
+		fi
+		if [ $key = "branch" ]; then
+			remote_branch=$value
+		fi
+	done < $config_file
 else
-	if [ $# -eq 1 ]; then
-  		remote_svr=$1
-  		remote_branch="master"
-	elif [ $# -eq 2 ]; then
-  		remote_svr=$1
-  		remote_branch=$2
-	fi
+	echo_green "Not find $config_file, use default parameters"
 fi
 
 echo_green "remote server:"$remote_svr
