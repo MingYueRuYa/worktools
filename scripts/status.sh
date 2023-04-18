@@ -14,6 +14,23 @@ function echo_green {
 	echo -e "${GREEN}$1${GREEN_END}"
 }
 
+var_list=()
+
+function update_var {
+	suffix=1
+	newstr=$1
+	# 解决文件可能重名，如果重名则添加后缀方式解决
+	while [[ "${var_list[*]}" =~ $newstr ]]
+	do
+	  newstr="$newstr""_""$suffix"
+	  suffix=$(($suffix+1))
+	done
+
+	var_list+=("$newstr")
+	export "$newstr=$2"
+	echo_red "$newstr=$2"
+}
+
 # 获取 git status 输出的有变化的文件名，并保存到数组 files 中
 files=( $(git status --porcelain | tee /dev/tty | awk '{print $2}') )
 
@@ -42,8 +59,8 @@ else
 		if [[ $origin_file_name = *.* ]]; then
 			file_name="$file_name""_""${origin_file_name##*.}"
 		fi
-		export "$file_name=$PWD/$file"
-		echo_red "$file_name=$PWD/$file"
+		# export "$file_name=$PWD/$file"
+		update_var "$file_name" "$PWD/$file"
 	done
 	echo_green "setting envirnoment variable end: "
 fi
