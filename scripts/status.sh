@@ -31,6 +31,7 @@ function update_var {
 	echo_red "$newstr=$2"
 }
 
+top_dir_path=`git rev-parse --show-toplevel`
 # 获取 git status 输出的有变化的文件名，并保存到数组 files 中
 files=( $(git status --porcelain | tee /dev/tty | awk '{print $2}') )
 
@@ -59,8 +60,7 @@ else
 		if [[ $origin_file_name = *.* ]]; then
 			file_name="$file_name""_""${origin_file_name##*.}"
 		fi
-		# export "$file_name=$PWD/$file"
-		update_var "$file_name" "$PWD/$file"
+		update_var "$file_name" "$top_dir_path/$file"
 	done
 	echo_green "setting envirnoment variable end: "
 fi
