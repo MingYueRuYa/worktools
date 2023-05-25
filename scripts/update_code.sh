@@ -72,11 +72,16 @@ if [ -n "$status" ]; then
 	echo ""
 
 	echo_red "git stash start"
-	git stash 
+
+	if [ "$(git stash)" = "No local changes to save" ]; then
+		stashed=0
+	else
+		stashed=1
+	fi
+
 	echo_red "git stash end"
 	echo ""
 
-	stashed=1
 
 	# 如果有3rd，hc字段，表示有子模块更新
 	# 第三方子仓库的目录组织方式，必须如下: .../3rd/  .../hc/
