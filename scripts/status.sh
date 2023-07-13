@@ -15,6 +15,7 @@ function echo_green {
 }
 
 var_list=()
+invalid_var_list=()
 
 function update_var {
 	suffix=1
@@ -26,9 +27,30 @@ function update_var {
 	  suffix=$(($suffix+1))
 	done
 
-	var_list+=("$newstr")
-	export "$newstr=$2"
-	echo_red "$newstr=$2"
+	check_variable_name $newstr
+	if [[ $? -eq 0 ]]; then
+		invalid_var_list+=("$2")
+	else
+		var_list+=("$newstr")
+		export "$newstr=$2"
+		echo_green "$newstr=$2"
+	fi
+}
+
+function check_variable_name() {
+    local var_name=$1
+    if [[ ! $var_name =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ || $(type -t "$var_name") == "keyword" ]]; then
+		return 0
+    fi
+	return 1
+}
+
+function print_list_content()
+{
+	for item in "${invalid_var_list[@]}"
+	do
+	  echo_red $item
+	done
 }
 
 top_dir_path=`git rev-parse --show-toplevel`
@@ -64,6 +86,9 @@ else
 	done
 	echo_green "setting envirnoment variable end: "
 fi
+
+echo_red "print invalid name:"
+print_list_content
 
 unset RED
 unset RES
