@@ -1,18 +1,6 @@
 #!/bin/bash
 
-RED='\e[1;31m' # 红
-RES='\e[0m'
-
-GREEN='\033[32m'
-GREEN_END='\033[0m'
-
-function echo_red {
-	echo -e "${RED}$1${RES}"
-}
-
-function echo_green {
-	echo -e "${GREEN}$1${GREEN_END}"
-}
+source ./echo_color_func.sh
 
 var_list=()
 invalid_var_list=()
@@ -33,7 +21,7 @@ function update_var {
 	else
 		var_list+=("$newstr")
 		export "$newstr=$2"
-		echo_green "$newstr=$2"
+		echo_green_color "$newstr=$2"
 	fi
 }
 
@@ -49,7 +37,7 @@ function print_list_content()
 {
 	for item in "${invalid_var_list[@]}"
 	do
-	  echo_red $item
+	  echo_red_color $item
 	done
 }
 
@@ -60,9 +48,9 @@ files=( $(git status --porcelain | tee /dev/tty | awk '{print $2}') )
 echo ""
 
 if [ ${#files[@]} -eq 0 ]; then
-    echo_green "Not find any modified file"
+    echo_green_color "Not find any modified file"
 else
-	echo_green "setting envirnoment variable start: "
+	echo_green_color "setting envirnoment variable start: "
 	# 遍历文件列表，设置环境变量
 	for file in "${files[@]}"
 	do
@@ -84,10 +72,10 @@ else
 		fi
 		update_var "$file_name" "$top_dir_path/$file"
 	done
-	echo_green "setting envirnoment variable end: "
+	echo_green_color "setting envirnoment variable end: "
 fi
 
-echo_red "print invalid name:"
+echo_red_color "print invalid name:"
 print_list_content
 
 unset RED

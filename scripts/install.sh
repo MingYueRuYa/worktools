@@ -1,46 +1,41 @@
 #!/bin/sh
 
-GREEN='\033[32m'
-GREEN_END='\033[0m'
+source ./echo_color_func.sh
+source ./alias_git_command.sh
 
-function echo_green {
-	echo -e "${GREEN}************$1************${GREEN_END}"
-}
+cp_command_arr=("./echo_color_func.sh" "./alias_git_command.sh")
 
-echo "will install status.sh and update_code.sh"
-cp ./update_code.sh /usr/bin/git_update_code
+for i in "${!cp_command_arr[@]}"
+do
+	command_content=${cp_command_arr[$i]}
+	cp $command_content /usr/bin/$command_content
+done
 
-if [ $? -ne 0 ]; then
-	echo "cp ./update_code.sh /usr/bin/git_update_code error"
-	exit 1
-fi
+echo_green_color "will install status.sh and update_code.sh"
 
-cp ./status.sh /usr/bin/git_st
+# define dict 
+declare -A dict
+dict['git_update_code']='update_code.sh'
+dict['git_st']='status.sh'
+dict['git_push']='push.sh'
+dict['git_commit_id']='git_commit_id.sh'
 
-if [ $? -ne 0 ]; then
-	echo "cp ./status.sh /usr/bin/git_st"
-	exit 1
-fi
+for key in "${!dict[@]}"
+do
+	cp ./${dict[$key]} /usr/bin/$key
+	echo_green_color "cp ./${dict[$key]} /usr/bin/$key"
+done
 
-# 检查~/.bashrc是否存在
-if [[ -e ~/.bashrc ]]; then
-	# 检查字符串是否存在
-  if grep -q "alias git_st=source git_st" ~/.bashrc; then
-	  echo_green "find git_st command in ~/.bashrc"
-  else
-	echo "alias git_st='source git_st'" >> ~/.bashrc
-  fi
-else
-	echo "alias git_st=\'source git_st\'" >> ~/.bashrc
-fi
+command_str=""
+for key in "${!dict[@]}"
+do
+	command_str="${command_str} $key "
+done
+echo_green_color "you can use command:$command_str"
 
-cp ./push.sh /usr/bin/git_push
+echo_green_color "install shell succussful"
 
-if [ $? -ne 0 ]; then
-	echo "cp ./push.sh /usr/bin/git_push"
-	exit 1
-fi
+########################################
 
-echo_green "install shell succussful"
+install_alias_command
 
-echo "you can input git_update_code or git_st command"
