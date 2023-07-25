@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source ./echo_color_func.sh
+source /usr/bin/echo_color_func.sh
 source ./alias_git_command.sh
 
 cp_command_arr=("./echo_color_func.sh" "./alias_git_command.sh")

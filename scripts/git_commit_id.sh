@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./echo_color_func.sh
+source /usr/bin/echo_color_func.sh
 
 while getopts ":h" opt; do
   case $opt in

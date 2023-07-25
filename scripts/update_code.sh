@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source ./echo_color_func.sh
+source /usr/bin/echo_color_func.sh
 
 stashed=0
 config_file="update_config.json"
