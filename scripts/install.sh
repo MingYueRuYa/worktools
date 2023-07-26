@@ -3,6 +3,8 @@
 source /usr/bin/echo_color_func.sh
 source ./alias_git_command.sh
 
+echo_red_color "maybe you should use source ./install.sh command if new alias not work"
+
 cp_command_arr=("./echo_color_func.sh" "./alias_git_command.sh")
 
 for i in "${!cp_command_arr[@]}"
