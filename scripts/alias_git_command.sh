@@ -5,7 +5,7 @@ command_arr=("alias count_id='git rev-list --count '" "alias git_all_log='git lo
 		 	 "alias fetch='git fetch'" "alias tortise_log='tortoisegitproc.exe /command:log'"
 		 	 "alias tortise_commit='tortoisegitproc.exe /command:commit'"
 		 	 "alias git_st='source git_st'" "alias commit='git commit -m '"
-		 	 "alias add='git add'")
+		 	 "alias add='git add'" "alias checkout='git checkout'")
 
 source /usr/bin/echo_color_func.sh
 
