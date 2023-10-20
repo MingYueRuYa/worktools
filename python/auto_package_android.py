@@ -1,9 +1,11 @@
+# -*- coding:utf-8 -*-
 from selenium import webdriver
 from selenium.common import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.alert import Alert
 import time
 import os
 import json
@@ -23,21 +25,19 @@ def savecookies(cookies):
 
 class AutoPackPage(object):
 
-	def __init__(self):
-		self.driver = self.start_chrome()
+	def __init__(self, url):
+		self.driver = self.__start_chrome__(url)
 
-	def start_chrome(self) -> object:
+	def __start_chrome__(self, url):
 		chrome_path = os.getcwd() + '/chromedriver.exe'
 		driver = webdriver.Chrome(service=Service(chrome_path))
 		driver.implicitly_wait(10)
 		driver.start_client()
 		driver.get(url)
-		driver.delete_all_cookies()
-		driver.get(url)
 		return driver
 
 	def load_url(self):
-		exists_title = ['诺捷-移动开发', '数字化工作台']
+		exists_title = ['诺捷-移动开发', '数字化工作台', 'Digital Workbench']
 
 		wait = WebDriverWait(self.driver, 3)  # 创建WebDriverWait对象，设置等待时间为10秒
 		while True:
@@ -50,7 +50,80 @@ class AutoPackPage(object):
 				self.driver.refresh()
 
 	def input_passwd(self):
-		pass
+		self.driver.switch_to.frame('yonbip_login_id')
+		switch_label = self.driver.find_element(By.XPATH, "//label[@id='switchLabel']")
+		if switch_label is None:
+			print("Not find switch label")
+			return
+		else:
+			print("find element")
+		switch_label.click()
+
+		input_username = self.driver.find_element(By.ID, 'username')
+		input_username.clear()
+		input_username.send_keys('liushixiong')
+
+		input_passwd = self.driver.find_element(By.ID, 'password')
+		input_passwd.clear()
+		input_passwd.send_keys('1234567')
+
+		btn_login = self.driver.find_element(By.ID, 'submit_btn_login')
+		btn_login.click()
+		self.driver.switch_to.default_content()
+
+	def close_alert(self):
+		iframes = self.driver.find_elements(By.CLASS_NAME, "developer-iframe")
+		self.driver.switch_to.frame(iframes[0])
+		try:
+			elements = self.driver.find_elements(By.CLASS_NAME, 'intro-head')
+			ele = elements[0].find_element(By.TAG_NAME, 'svg').find_element(By.TAG_NAME, 'g')
+			ele.click()
+		except:
+			print("not find alert dialog")
+		self.driver.switch_to.default_content()
+
+	def search_mobile_dev(self):
+		iframes = self.driver.find_elements(By.CLASS_NAME, "developer-iframe")
+		self.driver.switch_to.frame(iframes[0])
+		css_selector_str = '[data-analyfun-name="移动应用开发"]'
+		element = self.find_element_with_try(self.driver, By.CSS_SELECTOR, css_selector_str, 3)
+		if element is None:
+			print('not find elment')
+		else:
+			element.click()
+
+		self.driver.switch_to.default_content()
+
+	def switch_mobile_package(self):
+		iframes = self.driver.find_elements(By.CLASS_NAME, "developer-iframe")
+		self.driver.switch_to.frame(iframes[0])
+		applist_div = self.driver.find_element(By.CLASS_NAME, 'section-applist')
+		elements = applist_div.find_element(By.CLASS_NAME, 'content-wrap')
+		divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+		while True:
+			if len(divs) < 2:
+				time.sleep(2)
+				divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+			else:
+				break
+
+		divs[2].click()
+		# 或者打印其他属性
+		self.driver.switch_to.default_content()
+
+		# 需要再找一遍，不知道原因
+		applist_div = self.driver.find_element(By.CLASS_NAME, 'section-applist')
+		elements = applist_div.find_element(By.CLASS_NAME, 'content-wrap')
+		divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+		while True:
+			if len(divs) < 2:
+				time.sleep(2)
+				divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+			else:
+				break
+		divs[1].click()
+		tag_li = self.driver.find_element(By.CSS_SELECTOR, '[data-analybtn-id="go-mobile-pack-page"]')
+		tag_li.click()
 
 	def contains_title(self, title_list: []):
 		def _predicate(driver):
@@ -58,13 +131,94 @@ class AutoPackPage(object):
 
 		return _predicate
 
+	def find_element_with_try(self, driver, id, element, loop_time):
+		wait = WebDriverWait(driver, 3)  # 创建WebDriverWait对象，设置等待时间为10秒
+		loop = 0
+		find_element = None
+		while loop_time > loop:
+			try:
+				find_element = wait.until(EC.presence_of_element_located((id, element)))
+				find_element.click()
+				break
+			except:
+				print("元素未找到，等待1秒...")
+				loop += 1
+				time.sleep(1)
+		return find_element
+
+	def print_all_element(self):
+		iframes = self.driver.find_elements(By.CLASS_NAME, "developer-iframe")
+		self.driver.switch_to.frame(iframes[0])
+		# elements = self.driver.find_elements(By.XPATH, "//*")
+		applist_div = self.driver.find_element(By.CLASS_NAME, 'section-applist')
+		elements = applist_div.find_element(By.CLASS_NAME, 'content-wrap')
+		divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+		while True:
+			if len(divs) < 2:
+				time.sleep(2)
+				divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+			else:
+				break
+		# ele = divs[1].find_element(By.CLASS_NAME, 'item-main-box')
+		# ele.click()
+		# ele = elements[0].find_element(By.TAG_NAME, 'svg').find_element(By.TAG_NAME, 'g')
+		# ele.click()
+
+		# 打印每个元素的文本或其他属性
+		for element in divs:
+			try:
+				print('------------------')
+				print(element.get_attribute('innerHTML'))
+				print('------------------')
+			except:
+				# print('not have text attribute')
+				pass
+		print('aaaaaaaaaaaaaaaaa')
+		print(divs[2].get_attribute('innerHTML'))
+		print('aaaaaaaaaaaaaaaaa')
+		divs[2].click()
+		# 或者打印其他属性
+		# print(element.get_attribute("attribute_name"))
+		self.driver.switch_to.default_content()
+
+		applist_div = self.driver.find_element(By.CLASS_NAME, 'section-applist')
+		elements = applist_div.find_element(By.CLASS_NAME, 'content-wrap')
+		divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+		while True:
+			if len(divs) < 2:
+				time.sleep(2)
+				divs = elements.find_elements(By.CLASS_NAME, 'app-item')
+			else:
+				break
+		divs[1].click()
+		tag_li = self.driver.find_element(By.CSS_SELECTOR, '[data-analybtn-id="go-mobile-pack-page"]')
+		tag_li.click()
+
+	def package_config(self):
+		ele = self.driver.find_element(By.CLASS_NAME, 'flex-col-center-box.platform-info-box')
+		ele.click()
+		btn = self.driver.find_element(By.CLASS_NAME, 'wui-switch.wui-switch-sm.wui-switch-span')
+		btn.click()
+		label = self.driver.find_elements(By.CLASS_NAME, 'wui-radio')[1]
+		label.click()
+
+
 	def __delete__(self, instance):
 		cookies = self.driver.get_cookies()
 		savecookies(cookies)
 
 
 if __name__ == "__main__":
-	package = AutoPackPage()
-    package.start_chrome()
-    package.load_url()
-	input('enter return:')
+	package = AutoPackPage(url)
+	package.load_url()
+	package.input_passwd()
+	# package.print_all_element()
+	time.sleep(10)
+	package.close_alert()
+	package.search_mobile_dev()
+	# time.sleep(10)
+	# package.print_all_element()
+	package.switch_mobile_package()
+	package.package_config()
+	input('enter return')
+
