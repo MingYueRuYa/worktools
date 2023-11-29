@@ -61,11 +61,11 @@ class AutoPackPage(object):
 
 		input_username = self.driver.find_element(By.ID, 'username')
 		input_username.clear()
-		input_username.send_keys('liushixiong')
+		input_username.send_keys('phone_number')
 
 		input_passwd = self.driver.find_element(By.ID, 'password')
 		input_passwd.clear()
-		input_passwd.send_keys('1234567')
+		input_passwd.send_keys('password')
 
 		btn_login = self.driver.find_element(By.ID, 'submit_btn_login')
 		btn_login.click()
@@ -173,9 +173,6 @@ class AutoPackPage(object):
 			except:
 				# print('not have text attribute')
 				pass
-		print('aaaaaaaaaaaaaaaaa')
-		print(divs[2].get_attribute('innerHTML'))
-		print('aaaaaaaaaaaaaaaaa')
 		divs[2].click()
 		# 或者打印其他属性
 		# print(element.get_attribute("attribute_name"))
@@ -195,13 +192,58 @@ class AutoPackPage(object):
 		tag_li.click()
 
 	def package_config(self):
+		# Android 平台
 		ele = self.driver.find_element(By.CLASS_NAME, 'flex-col-center-box.platform-info-box')
 		ele.click()
+		# Android AAB格式
 		btn = self.driver.find_element(By.CLASS_NAME, 'wui-switch.wui-switch-sm.wui-switch-span')
 		btn.click()
+		# 类型 正式版
 		label = self.driver.find_elements(By.CLASS_NAME, 'wui-radio')[1]
 		label.click()
+		# Android CPU架构
+		cpu_label = self.driver.find_element(By.CLASS_NAME, 'radio-item.wui-radio')
+		cpu_label.click()
+		# 备注
+		mark_notes = self.driver.find_element(By.CLASS_NAME, 'wui-textarea.wui-input.md')
+		mark_notes.send_keys('This packing operation is done by a machine.')
+		# 打包按钮
+		btn = self.driver.find_element(By.CLASS_NAME, 'package-btn')
 
+	# TODO: 测试环境下先不要打包
+	# btn.click()
+
+	def download_package(self):
+		# 1 获取打包的版本
+		# 2、轮询打包是否完成 看打包的文字是否变为‘开始打包’
+		btn = self.driver.find_element(By.CLASS_NAME, 'package-btn')
+		# 最长等待时间10分钟
+		wait_count = 10 * 60
+		loop_count = 0
+		while True:
+			if loop_count * 3 > wait_count:
+				print('wait package timeout...')
+				return
+			text = btn.get_attribute('data-analybtn-name')
+			if text == '开始打包':
+				# 打包结束
+				break
+			else:
+				print('waiting package...')
+				time.sleep(3)
+				loop_count += 1
+		# 3、获取下载的链接
+		try:
+			table = self.driver.find_element(By.CLASS_NAME, 'wui-table-tbody')
+			# 只需要第一个
+			tr_datas = table.find_elements(By.CLASS_NAME, 'wui-table-row')
+			# 找到包含下载链接的div
+			div_data = tr_datas[0].find_element(By.CLASS_NAME, 'url-address.flex-col-center-box')
+			a_tag = div_data.find_element(By.TAG_NAME, 'a')
+			download_url = a_tag.get_attribute('href')
+			print(download_url)
+		except:
+			print('not find target element')
 
 	def __delete__(self, instance):
 		cookies = self.driver.get_cookies()
@@ -221,4 +263,3 @@ if __name__ == "__main__":
 	package.switch_mobile_package()
 	package.package_config()
 	input('enter return')
-
