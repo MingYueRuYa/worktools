@@ -1,0 +1,10 @@
+LIBRARY "qt_plugin"
+
+EXPORTS
+	help
+	dumptree
+	dumpQString
+	
+    DebugExtensionInitialize
+   	DebugExtensionUninitialize
+	KnownStructOutput
