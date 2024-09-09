@@ -12,7 +12,6 @@
 #include <QFileSystemModel>
 #include <QDir>
 #include <QMouseEvent>
-#include <unordered_map>
 
 
 class CheckBoxDelegate : public QStyledItemDelegate
@@ -124,7 +123,7 @@ public:
             QModelIndex par_index = idx.parent();
             if (par_index.isValid())
             {
-				QImage pixmap(16, 1, QImage::Format_ARGB32_Premultiplied);
+				static QImage pixmap(16, 1, QImage::Format_ARGB32_Premultiplied);
 				pixmap.fill(Qt::transparent);
 				return QIcon(QPixmap::fromImage(pixmap));
             }
@@ -179,7 +178,48 @@ private:
 
 };
 
+// 递归选中或取消选择子节点
+//void recursiveSetCheckState(QAbstractItemModel &model, QTreeView *treeview, const QModelIndex &idx, Qt::CheckState state) {
+//    if (!idx.isValid()) {
+//        return;
+//    }
+//
+//    model.setData(idx, state, Qt::UserRole);
+//    
+//    int rowCount = model.rowCount(idx);
+//    for (int i = 0; i < rowCount; ++i) {
+//        recursiveSetCheckState(model, treeview, idx.child(i, 0), state);
+//    }
+//}
+
+void expandRecursive(QTreeView* view, const QModelIndex& index) {
+    if (index.isValid()) {
+        view->setExpanded(index, true);
+        for (int row = 0; row < index.model()->rowCount(index); ++row) {
+            QModelIndex child = index.model()->index(row, 0, index);
+            expandRecursive(view, child);
+        }
+    }
+}
+
+int g(int a, int b)
+{
+    return a + b;
+}
+
+void f(int argc)
+{
+    g(1, 2);
+    printf("%d", argc);
+}
+
 int main(int argc, char* argv[])
+{
+    f(3);
+    return 0;
+}
+
+int main02(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
@@ -230,6 +270,7 @@ int main(int argc, char* argv[])
     // 设置自定义委托
     CheckBoxDelegate* delegate = new CheckBoxDelegate(&treeView);
     treeView.setItemDelegateForColumn(0, delegate); // 设置第一列使用自定义委托
+    treeView.expandAll();
 
 
         // 连接信号槽，实现父节点选中子节点也自动选中
@@ -237,6 +278,8 @@ int main(int argc, char* argv[])
         bool state = model.data(index, Qt::UserRole).value<bool>();
         if (state) {
             // 如果父节点已选中，则将所有子节点也选中
+            // treeView.expand(index);
+            expandRecursive(&treeView, index);
             for (int i = 0; i < model.rowCount(index); ++i) {
                 const QModelIndex& childIndex = model.index(i, 0, index);
                 model.setData(childIndex, QVariant(true), Qt::UserRole);
