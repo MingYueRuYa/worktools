@@ -12,12 +12,12 @@ WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent) {
 void WindbgIFEO::on_pushButtonAdd_clicked() {
   QString reg_path = this->get_reg_path();
   if (reg_path.isEmpty()) {
-    ui.label_log->setText("Error: Please input process name");
+    ui.label_log->setText(tr("Error: Please input process name"));
     return;
   }
 
   if (0 == ui.comboBox_windbg_path->count()) {
-    ui.label_log->setText("Error: Not find any windbg path");
+    ui.label_log->setText(tr("Error: Not find any windbg path"));
     return;
   }
 
@@ -30,13 +30,13 @@ void WindbgIFEO::on_pushButtonAdd_clicked() {
 void WindbgIFEO::on_pushButtonDel_clicked() {
   QString process_name = this->get_process_name();
   if (process_name.isEmpty()) {
-    this->log_info("Please input process name", false);
+    this->log_info(tr("Please input process name"), false);
     return;
   }
 
   QSettings settings(this->_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
-  this->log_info("remove value successful", true);
+  this->log_info(tr("remove value successful"), true);
 }
 
 void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
