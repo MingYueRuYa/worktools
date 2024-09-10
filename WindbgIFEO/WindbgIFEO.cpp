@@ -71,7 +71,8 @@ void WindbgIFEO::search_windbg_path() {
 
   // Set the search string to abc
   Everything_SetMatchCase(true);
-  Everything_SetSearch(L"windbg.exe");
+  Everything_SetMatchWholeWord(true);
+  Everything_SetSearch(L"windbg.exe|DbgX.Shell.exe ext:exe");
 
   // Execute the query.
   Everything_Query(TRUE);
