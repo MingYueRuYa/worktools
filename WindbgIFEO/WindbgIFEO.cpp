@@ -49,9 +49,23 @@ void WindbgIFEO::on_pushButtonPostmortem_clicked() {
     this->log_info("Please select windbg", false);
     return;
   }
-  QProcess process;
-  process.start(QString("\"") + windbg_path + QString("\"") + " -I");
-  process.waitForFinished();
+
+  QString reg_path = "";
+  ExecHelper exec_helper;
+  ExecHelper::Architecture arch = exec_helper.detect_arch(windbg_path);
+  if (ExecHelper::Architecture::ARCH_X86 == arch) {
+    reg_path = this->_x86_postmortem_reg_path;
+  }
+  else if (ExecHelper::Architecture::ARCH_X64 == arch) {
+    reg_path = this->_x64_postmortem_reg_path;
+  }
+
+  QString command_line = " -p %ld -e %ld -g";
+  windbg_path = QString("\"") + windbg_path + QString("\"") + command_line;
+
+  QSettings bug_settings(reg_path, QSettings::NativeFormat);
+  bug_settings.setValue(this->_bugger_value, windbg_path);
+  bug_settings.setValue("Auto", 1);
   this->log_info("register postmortem successful", true);
 }
 
