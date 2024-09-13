@@ -1,11 +1,13 @@
 #include "WindbgIFEO.h"
 #include "everything/Everything.h"
+#include "exec_helper.h"
 
+#include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent) {
   ui.setupUi(this);
-  ui.label_reg_path->setText(this->_reg_path);
+  ui.label_reg_path->setText(this->_ifeo_reg_path);
   this->search_windbg_path();
 }
 
@@ -34,12 +36,24 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
     return;
   }
 
-  QSettings settings(this->_reg_path, QSettings::NativeFormat);
+  QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
   this->log_info(tr("remove value successful"), true);
 }
 
 void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
+
+void WindbgIFEO::on_pushButtonPostmortem_clicked() {
+  QString windbg_path = this->ui.comboBox_windbg_path->currentText();
+  if (windbg_path.isEmpty()) {
+    this->log_info("Please select windbg", false);
+    return;
+  }
+  QProcess process;
+  process.start(QString("\"") + windbg_path + QString("\"") + " -I");
+  process.waitForFinished();
+  this->log_info("register postmortem successful", true);
+}
 
 QString WindbgIFEO::get_reg_path() const {
   QString process_name = this->get_process_name();
@@ -47,7 +61,7 @@ QString WindbgIFEO::get_reg_path() const {
     return QString("");
   }
 
-  return this->_reg_path + QString("\\") + process_name;
+  return this->_ifeo_reg_path + QString("\\") + process_name;
 }
 
 QString WindbgIFEO::get_process_name() const {

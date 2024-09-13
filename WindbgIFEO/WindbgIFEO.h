@@ -17,6 +17,7 @@ class WindbgIFEO : public QWidget {
   void on_pushButtonAdd_clicked();
   void on_pushButtonDel_clicked();
   void on_pushButtonOpenRegEditor_clicked();
+  void on_pushButtonPostmortem_clicked();
 
  private:
   QString get_reg_path() const;
@@ -27,8 +28,12 @@ class WindbgIFEO : public QWidget {
  private:
   Ui::WindbgIFEOClass ui;
 
-  const QString _reg_path =
+  const QString _ifeo_reg_path =
       R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options)";
+  //const QString _x86_postmortem_reg_path =
+  //    R"(HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug)";
+  //const QString _x64_postmortem_reg_path =
+  //    R"(HKLM\Software\Microsoft\Windows NT\CurrentVersion\AeDebug)";
   const QString _bugger_value = "Debugger";
   const QString _windbg_name = "WinDbg.exe";
 };

@@ -70,6 +70,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonPostmortem">
+       <property name="text">
+        <string>注冊事后调试</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="pushButtonOpenRegEditor">
        <property name="text">
         <string>打开注册表</string>

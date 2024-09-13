@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="exec_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WindbgIFEO.cpp" />
   </ItemGroup>
@@ -107,6 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="WindbgIFEO.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="exec_helper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
