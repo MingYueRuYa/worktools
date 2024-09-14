@@ -2,13 +2,24 @@
 #include "everything/Everything.h"
 #include "exec_helper.h"
 
+#include <algorithm>
+
+#include <QDebug>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
-WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent) {
+WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
-  //ui.label_reg_path->setText(this->_ifeo_reg_path);
-  this->search_windbg_path();
+
+  this->init_signal();
+  this->start_serach_windbg_path();
+}
+
+WindbgIFEO::~WindbgIFEO() {
+  if (this->_search_windbg_ptr->joinable()) {
+    this->log_info(tr("wait thread exit..."));
+    this->_search_windbg_ptr->join();
+  }
 }
 
 void WindbgIFEO::on_pushButtonAdd_clicked() {
@@ -58,7 +69,7 @@ void WindbgIFEO::on_pushButtonPostmortem_clicked() {
       {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path}};
   auto find_itr = arch_map.find(arch);
 
-  QString command_line = " -p %ld -e %ld -g";
+  const QString command_line = " -p %ld -e %ld -g";
   windbg_path = QString("\"") + windbg_path + QString("\"") + command_line;
 
   QSettings bug_settings(find_itr->second, QSettings::NativeFormat);
@@ -103,4 +114,48 @@ void WindbgIFEO::search_windbg_path() {
            QString::fromStdWString(Everything_GetResultFileName(i));
     ui.comboBox_windbg_path->addItem(path);
   }
+}
+
+void WindbgIFEO::start_serach_windbg_path() {
+  // std::thread thr();
+  _search_windbg_ptr = std::make_unique<std::thread>([this]() {
+    DWORD i;
+    // Set the search string to abc
+    Everything_SetMatchCase(true);
+    Everything_SetMatchWholeWord(true);
+    Everything_SetSearch(L"windbg.exe|DbgX.Shell.exe ext:exe");
+
+    // Execute the query.
+    Everything_Query(TRUE);
+
+    // Display results.
+    map_qstring map_path = {};
+    QString path = "";
+    for (i = 0; i < Everything_GetNumResults(); i++) {
+      path = QString::fromStdWString(Everything_GetResultPath(i)) +
+             QString("\\") +
+             QString::fromStdWString(Everything_GetResultFileName(i));
+      map_path[path] = path;
+      qDebug() << path;
+    }
+    this->add_windbg_path(map_path);
+  });
+}
+
+void WindbgIFEO::add_windbg_path(const map_qstring& paths) {
+  this->_map_windbg_path = paths;
+  emit this->finished_windbg_exes();
+}
+
+void WindbgIFEO::init_signal() {
+  connect(this, SIGNAL(finished_windbg_exes()), this,
+          SLOT(on_update_windbg_path()), Qt::QueuedConnection);
+}
+
+void WindbgIFEO::on_update_windbg_path() {
+  std::for_each(this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
+                [this](const std::pair<QString, QString>& value) {
+                  this->ui.comboBox_windbg_path->addItem(value.second);
+                  this->log_info(value.second);
+                });
 }
