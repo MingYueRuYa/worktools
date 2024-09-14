@@ -4,7 +4,7 @@
 
 class ExecHelper {
  public:
-  enum Architecture { ARCH_UNKNOWN, ARCH_X86, ARCH_X64 };
+  enum class Architecture { ARCH_UNKNOWN, ARCH_X86, ARCH_X64 };
 
  public:
   ExecHelper() = default;

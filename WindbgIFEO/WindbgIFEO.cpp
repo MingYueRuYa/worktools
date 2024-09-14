@@ -1,4 +1,4 @@
-#include "WindbgIFEO.h"
+﻿#include "WindbgIFEO.h"
 #include "everything/Everything.h"
 #include "exec_helper.h"
 
@@ -7,19 +7,19 @@
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent) {
   ui.setupUi(this);
-  ui.label_reg_path->setText(this->_ifeo_reg_path);
+  //ui.label_reg_path->setText(this->_ifeo_reg_path);
   this->search_windbg_path();
 }
 
 void WindbgIFEO::on_pushButtonAdd_clicked() {
   QString reg_path = this->get_reg_path();
   if (reg_path.isEmpty()) {
-    ui.label_log->setText(tr("Error: Please input process name"));
+    this->log_info(tr("Error: Please input process name"), false);
     return;
   }
 
   if (0 == ui.comboBox_windbg_path->count()) {
-    ui.label_log->setText(tr("Error: Not find any windbg path"));
+    this->log_info(tr("Error: Not find any windbg path"), false);
     return;
   }
 
@@ -53,17 +53,15 @@ void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   QString reg_path = "";
   ExecHelper exec_helper;
   ExecHelper::Architecture arch = exec_helper.detect_arch(windbg_path);
-  if (ExecHelper::Architecture::ARCH_X86 == arch) {
-    reg_path = this->_x86_postmortem_reg_path;
-  }
-  else if (ExecHelper::Architecture::ARCH_X64 == arch) {
-    reg_path = this->_x64_postmortem_reg_path;
-  }
+  std::map<ExecHelper::Architecture, QString> arch_map = {
+      {ExecHelper::Architecture::ARCH_X86, this->_x86_postmortem_reg_path},
+      {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path}};
+  auto find_itr = arch_map.find(arch);
 
   QString command_line = " -p %ld -e %ld -g";
   windbg_path = QString("\"") + windbg_path + QString("\"") + command_line;
 
-  QSettings bug_settings(reg_path, QSettings::NativeFormat);
+  QSettings bug_settings(find_itr->second, QSettings::NativeFormat);
   bug_settings.setValue(this->_bugger_value, windbg_path);
   bug_settings.setValue("Auto", 1);
   this->log_info("register postmortem successful", true);
@@ -83,15 +81,7 @@ QString WindbgIFEO::get_process_name() const {
 }
 
 void WindbgIFEO::log_info(const QString& info, bool is_suc) {
-  QString color = "";
-  if (is_suc) {
-    color = "color: rgb(0, 170, 0)";
-  } else {
-  color:
-    color = "color:rgb(255, 85, 0)";
-  }
-  ui.label_log->setStyleSheet(color);
-  ui.label_log->setText(info);
+  ui.textBrowserLog->append(info);
 }
 
 void WindbgIFEO::search_windbg_path() {
