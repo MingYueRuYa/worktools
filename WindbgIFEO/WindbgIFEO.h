@@ -60,6 +60,7 @@ public:
   void _query_windbg_path();
   void _add_windbg_path(const map_qstring& paths);
   QString _format_log_info(const QString &info, LOG_TYPE type);
+  bool _get_cur_windbg_path(QString &path, QString &err_msg);
 
  private:
   Ui::WindbgIFEOClass ui;

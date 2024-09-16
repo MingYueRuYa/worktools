@@ -1,15 +1,16 @@
 ﻿#include "WindbgIFEO.h"
-#include "everything/Everything.h"
-#include "exec_helper.h"
-
-#include <tuple>
-#include <algorithm>
 
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
+#include <algorithm>
+#include <tuple>
+
+#include "everything/Everything.h"
+#include "exec_helper.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
@@ -26,25 +27,50 @@ WindbgIFEO::~WindbgIFEO() {
 }
 
 void WindbgIFEO::on_pushButtonStartDbg_clicked() {
-  const QString process_path = this->ui.comboBox_windbg_path->currentText();
-  if (process_path.isEmpty()) {
-    this->log_info(tr("application can't be empty."), LOG_TYPE::ERR);
+  QString cur_path = "";
+  QString err_msg = "";
+  bool result = this->_get_cur_windbg_path(cur_path, err_msg);
+  if (!result) {
+    this->log_info(err_msg, LOG_TYPE::ERR);
     return; 
   }
-  QFileInfo file_info(process_path);
-  if (!file_info.exists(process_path)) {
-    this->log_info(tr("Not find application"), LOG_TYPE::ERR);
-    return; 
-  }
-  
+
+  QFileInfo file_info(cur_path);
   const QString work_dir = file_info.absoluteDir().absolutePath();
-  bool result = QProcess::startDetached(process_path, QStringList(), work_dir);
+  result = QProcess::startDetached(cur_path, QStringList(), work_dir);
   const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
-      {{true, {tr("Start windbg successful."), LOG_TYPE::INFO}},     {false, {tr("Start windbg error."), LOG_TYPE::ERR}}}  };  auto itr = map_result.find(result);
-  this->log_info(itr->second.first, itr->second.second);} 
+      {{true, {tr("Start windbg successful."), LOG_TYPE::INFO}},
+       {false, {tr("Start windbg error."), LOG_TYPE::ERR}}}};
+  auto itr = map_result.find(result);
+  this->log_info(itr->second.first, itr->second.second);
+}
 void WindbgIFEO::on_pushButtonDbgDetails_clicked() {}
 
-void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {}
+void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {
+  //const QString process_path = this->ui.comboBox_windbg_path->currentText();
+  //if (process_path.isEmpty()) {
+  //  this->log_info(tr("application can't be empty."), LOG_TYPE::ERR);
+  //  return;
+  //}
+
+  //QFileInfo file_info(process_path);
+  //if (!file_info.exists(process_path)) {
+  //  this->log_info(tr("Not find application"), LOG_TYPE::ERR);
+  //  return;
+  //}
+
+  QString cur_path = "";
+  QString err_msg = "";
+  bool result = this->_get_cur_windbg_path(cur_path, err_msg);
+  if (! result) {
+    this->log_info(err_msg, LOG_TYPE::ERR);
+    return;
+  }
+
+  QFileInfo file_info(cur_path);
+  const QString work_dir = "file:///"+file_info.absoluteDir().absolutePath();
+  result = QDesktopServices::openUrl(work_dir);
+}
 
 void WindbgIFEO::on_pushButtonAdd_clicked() {
   QString reg_path = this->_get_reg_path();
@@ -76,9 +102,7 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
   this->log_info(tr("remove value successful"));
 }
 
-void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
-
-}
+void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {}
 
 void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {}
 
@@ -160,16 +184,31 @@ void WindbgIFEO::_add_windbg_path(const map_qstring& paths) {
   emit this->finished_windbg_exes();
 }
 
-QString WindbgIFEO::_format_log_info(const QString& info, LOG_TYPE type)
-{
-  std::map<LOG_TYPE, QString> map_log = {{LOG_TYPE::VERBORSE, "[VERBORSE]"},
-{LOG_TYPE::DEBUG, "[DEBUG]:"},
-{LOG_TYPE::INFO, "[INFO]:"},
-{LOG_TYPE::WARNING, "[WARNING]:"},
-{LOG_TYPE::ERR, "[ERR]:"}
-  };
+QString WindbgIFEO::_format_log_info(const QString& info, LOG_TYPE type) {
+  const std::map<LOG_TYPE, QString> map_log = {
+      {LOG_TYPE::VERBORSE, "[VERBORSE]"},
+      {LOG_TYPE::DEBUG, "[DEBUG]:"},
+      {LOG_TYPE::INFO, "[INFO]:"},
+      {LOG_TYPE::WARNING, "[WARNING]:"},
+      {LOG_TYPE::ERR, "[ERR]:"}};
 
-  return map_log[type] + info;
+  auto itr = map_log.find(type);
+  return itr->second + info;
+}
+
+bool WindbgIFEO::_get_cur_windbg_path(QString& path, QString& err_msg) {
+  const QString process_path = this->ui.comboBox_windbg_path->currentText();
+  if (process_path.isEmpty()) {
+    err_msg = tr("application can't be empty.");
+    return false;
+  }
+  QFileInfo file_info(process_path);
+  if (!file_info.exists(process_path)) {
+    err_msg = tr("Not find application");
+    return false;
+  }
+  path = process_path;
+  return true;
 }
 
 void WindbgIFEO::_init_signal() {
