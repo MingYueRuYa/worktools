@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
-    <height>323</height>
+    <width>494</width>
+    <height>467</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -22,42 +22,87 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout_7">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>WinDbg位置：</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox_windbg_path">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>WinDbg事项</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>WinDbg位置：</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_windbg_path">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QPushButton" name="pushButtonStartDbg">
+          <property name="text">
+           <string>启动</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonStartDbgDir">
+          <property name="text">
+           <string>打开目录</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonDbgDetails">
+          <property name="text">
+           <string>详情</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBoxIFEO">
      <property name="title">
       <string>镜像映射</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QLabel" name="label_2">
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>进程名：</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>进程名：</string>
+             <string>参数：</string>
             </property>
            </widget>
           </item>
@@ -69,6 +114,13 @@
            <widget class="QLineEdit" name="lineEdit_process_name">
             <property name="placeholderText">
              <string>例如：git.exe</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_process_param">
+            <property name="placeholderText">
+             <string>例如：-g</string>
             </property>
            </widget>
           </item>
@@ -105,7 +157,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonDel_2">
+         <widget class="QPushButton" name="pushButtonIFEOQuery">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -118,7 +170,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonOpenRegEditor_2">
+         <widget class="QPushButton" name="pushButtonIFEOOpenReg">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -148,19 +200,6 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="pushButtonPostmortem_2">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>取消</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pushButtonPostmortem">
         <property name="minimumSize">
          <size>
@@ -174,7 +213,20 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonDel_3">
+       <widget class="QPushButton" name="pushButtonCancelPostmortem">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>取消</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonPostmortemQuery">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -203,7 +255,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QTextBrowser" name="textBrowserLog"/>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>日志：</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="textBrowserLog"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

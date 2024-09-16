@@ -2,17 +2,20 @@
 #include "everything/Everything.h"
 #include "exec_helper.h"
 
+#include <tuple>
 #include <algorithm>
 
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
 
-  this->init_signal();
-  this->start_serach_windbg_path();
+  this->_init_signal();
+  this->_query_windbg_path();
 }
 
 WindbgIFEO::~WindbgIFEO() {
@@ -22,42 +25,67 @@ WindbgIFEO::~WindbgIFEO() {
   }
 }
 
+void WindbgIFEO::on_pushButtonStartDbg_clicked() {
+  const QString process_path = this->ui.comboBox_windbg_path->currentText();
+  if (process_path.isEmpty()) {
+    this->log_info(tr("application can't be empty."), LOG_TYPE::ERR);
+    return; 
+  }
+  QFileInfo file_info(process_path);
+  if (!file_info.exists(process_path)) {
+    this->log_info(tr("Not find application"), LOG_TYPE::ERR);
+    return; 
+  }
+  
+  const QString work_dir = file_info.absoluteDir().absolutePath();
+  bool result = QProcess::startDetached(process_path, QStringList(), work_dir);
+  const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
+      {{true, {tr("Start windbg successful."), LOG_TYPE::INFO}},     {false, {tr("Start windbg error."), LOG_TYPE::ERR}}}  };  auto itr = map_result.find(result);
+  this->log_info(itr->second.first, itr->second.second);} 
+void WindbgIFEO::on_pushButtonDbgDetails_clicked() {}
+
+void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {}
+
 void WindbgIFEO::on_pushButtonAdd_clicked() {
-  QString reg_path = this->get_reg_path();
+  QString reg_path = this->_get_reg_path();
   if (reg_path.isEmpty()) {
-    this->log_info(tr("Error: Please input process name"), false);
+    this->log_info(tr("Error: Please input process name"), LOG_TYPE::ERR);
     return;
   }
 
   if (0 == ui.comboBox_windbg_path->count()) {
-    this->log_info(tr("Error: Not find any windbg path"), false);
+    this->log_info(tr("Error: Not find any windbg path"), LOG_TYPE::ERR);
     return;
   }
 
   QSettings settings(reg_path, QSettings::NativeFormat);
   settings.setValue(this->_bugger_value,
                     ui.comboBox_windbg_path->currentText());
-  this->log_info("set value successful", true);
+  this->log_info("set value successful");
 }
 
 void WindbgIFEO::on_pushButtonDel_clicked() {
-  QString process_name = this->get_process_name();
+  QString process_name = this->_get_process_name();
   if (process_name.isEmpty()) {
-    this->log_info(tr("Please input process name"), false);
+    this->log_info(tr("Please input process name"), LOG_TYPE::ERR);
     return;
   }
 
   QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
-  this->log_info(tr("remove value successful"), true);
+  this->log_info(tr("remove value successful"));
 }
 
-void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
+void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
+
+}
+
+void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {}
 
 void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   QString windbg_path = this->ui.comboBox_windbg_path->currentText();
   if (windbg_path.isEmpty()) {
-    this->log_info("Please select windbg", false);
+    this->log_info("Please select windbg", LOG_TYPE::ERR);
     return;
   }
 
@@ -75,11 +103,17 @@ void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   QSettings bug_settings(find_itr->second, QSettings::NativeFormat);
   bug_settings.setValue(this->_bugger_value, windbg_path);
   bug_settings.setValue("Auto", 1);
-  this->log_info("register postmortem successful", true);
+  this->log_info("register postmortem successful");
 }
 
-QString WindbgIFEO::get_reg_path() const {
-  QString process_name = this->get_process_name();
+void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {}
+
+void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
+
+void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {}
+
+QString WindbgIFEO::_get_reg_path() const {
+  QString process_name = this->_get_process_name();
   if (process_name.isEmpty()) {
     return QString("");
   }
@@ -87,36 +121,15 @@ QString WindbgIFEO::get_reg_path() const {
   return this->_ifeo_reg_path + QString("\\") + process_name;
 }
 
-QString WindbgIFEO::get_process_name() const {
+QString WindbgIFEO::_get_process_name() const {
   return ui.lineEdit_process_name->text();
 }
 
-void WindbgIFEO::log_info(const QString& info, bool is_suc) {
+void WindbgIFEO::log_info(const QString& info, LOG_TYPE type) {
   ui.textBrowserLog->append(info);
 }
 
-void WindbgIFEO::search_windbg_path() {
-  DWORD i;
-
-  // Set the search string to abc
-  Everything_SetMatchCase(true);
-  Everything_SetMatchWholeWord(true);
-  Everything_SetSearch(L"windbg.exe|DbgX.Shell.exe ext:exe");
-
-  // Execute the query.
-  Everything_Query(TRUE);
-
-  // Display results.
-  QString path = "";
-  for (i = 0; i < Everything_GetNumResults(); i++) {
-    path = QString::fromStdWString(Everything_GetResultPath(i)) +
-           QString("\\") +
-           QString::fromStdWString(Everything_GetResultFileName(i));
-    ui.comboBox_windbg_path->addItem(path);
-  }
-}
-
-void WindbgIFEO::start_serach_windbg_path() {
+void WindbgIFEO::_query_windbg_path() {
   // std::thread thr();
   _search_windbg_ptr = std::make_unique<std::thread>([this]() {
     DWORD i;
@@ -138,16 +151,28 @@ void WindbgIFEO::start_serach_windbg_path() {
       map_path[path] = path;
       qDebug() << path;
     }
-    this->add_windbg_path(map_path);
+    this->_add_windbg_path(map_path);
   });
 }
 
-void WindbgIFEO::add_windbg_path(const map_qstring& paths) {
+void WindbgIFEO::_add_windbg_path(const map_qstring& paths) {
   this->_map_windbg_path = paths;
   emit this->finished_windbg_exes();
 }
 
-void WindbgIFEO::init_signal() {
+QString WindbgIFEO::_format_log_info(const QString& info, LOG_TYPE type)
+{
+  std::map<LOG_TYPE, QString> map_log = {{LOG_TYPE::VERBORSE, "[VERBORSE]"},
+{LOG_TYPE::DEBUG, "[DEBUG]:"},
+{LOG_TYPE::INFO, "[INFO]:"},
+{LOG_TYPE::WARNING, "[WARNING]:"},
+{LOG_TYPE::ERR, "[ERR]:"}
+  };
+
+  return map_log[type] + info;
+}
+
+void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_windbg_exes()), this,
           SLOT(on_update_windbg_path()), Qt::QueuedConnection);
 }
