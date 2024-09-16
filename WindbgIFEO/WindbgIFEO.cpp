@@ -10,7 +10,6 @@
 #include <tuple>
 
 #include "everything/Everything.h"
-#include "exec_helper.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
@@ -20,9 +19,9 @@ WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
 }
 
 WindbgIFEO::~WindbgIFEO() {
-  if (this->_search_windbg_ptr->joinable()) {
+  if (this->_query_windbg_ptr->joinable()) {
     this->log_info(tr("wait thread exit..."));
-    this->_search_windbg_ptr->join();
+    this->_query_windbg_ptr->join();
   }
 }
 
@@ -32,7 +31,7 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
   bool result = this->_get_cur_windbg_path(cur_path, err_msg);
   if (!result) {
     this->log_info(err_msg, LOG_TYPE::ERR);
-    return; 
+    return;
   }
 
   QFileInfo file_info(cur_path);
@@ -47,28 +46,16 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
 void WindbgIFEO::on_pushButtonDbgDetails_clicked() {}
 
 void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {
-  //const QString process_path = this->ui.comboBox_windbg_path->currentText();
-  //if (process_path.isEmpty()) {
-  //  this->log_info(tr("application can't be empty."), LOG_TYPE::ERR);
-  //  return;
-  //}
-
-  //QFileInfo file_info(process_path);
-  //if (!file_info.exists(process_path)) {
-  //  this->log_info(tr("Not find application"), LOG_TYPE::ERR);
-  //  return;
-  //}
-
   QString cur_path = "";
   QString err_msg = "";
   bool result = this->_get_cur_windbg_path(cur_path, err_msg);
-  if (! result) {
+  if (!result) {
     this->log_info(err_msg, LOG_TYPE::ERR);
     return;
   }
 
   QFileInfo file_info(cur_path);
-  const QString work_dir = "file:///"+file_info.absoluteDir().absolutePath();
+  const QString work_dir = "file:///" + file_info.absoluteDir().absolutePath();
   result = QDesktopServices::openUrl(work_dir);
 }
 
@@ -84,9 +71,10 @@ void WindbgIFEO::on_pushButtonAdd_clicked() {
     return;
   }
 
+  const QString value = "\"" + ui.comboBox_windbg_path->currentText() + "\"" +
+                        " " + ui.lineEdit_process_param->text();
   QSettings settings(reg_path, QSettings::NativeFormat);
-  settings.setValue(this->_bugger_value,
-                    ui.comboBox_windbg_path->currentText());
+  settings.setValue(this->_bugger_value, value);
   this->log_info("set value successful");
 }
 
@@ -99,7 +87,7 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
 
   QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
-  this->log_info(tr("remove value successful"));
+  this->log_info(tr("Remove value successful"));
 }
 
 void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {}
@@ -107,42 +95,70 @@ void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {}
 void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {}
 
 void WindbgIFEO::on_pushButtonPostmortem_clicked() {
-  QString windbg_path = this->ui.comboBox_windbg_path->currentText();
-  if (windbg_path.isEmpty()) {
-    this->log_info("Please select windbg", LOG_TYPE::ERR);
+  QString windbg_path = "";
+  QString err_msg = "";
+  bool result = this->_get_cur_windbg_path(windbg_path, err_msg);
+  if (!result) {
+    this->log_info(err_msg);
     return;
   }
 
-  QString reg_path = "";
-  ExecHelper exec_helper;
-  ExecHelper::Architecture arch = exec_helper.detect_arch(windbg_path);
-  std::map<ExecHelper::Architecture, QString> arch_map = {
-      {ExecHelper::Architecture::ARCH_X86, this->_x86_postmortem_reg_path},
-      {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path}};
-  auto find_itr = arch_map.find(arch);
+  QString reg_path = this->_get_arch_reg(windbg_path);
+  QString str_arch = this->_get_arch_str(windbg_path);
 
   const QString command_line = " -p %ld -e %ld -g";
   windbg_path = QString("\"") + windbg_path + QString("\"") + command_line;
 
-  QSettings bug_settings(find_itr->second, QSettings::NativeFormat);
+  QSettings bug_settings(reg_path, QSettings::NativeFormat);
   bug_settings.setValue(this->_bugger_value, windbg_path);
   bug_settings.setValue("Auto", 1);
-  this->log_info("register postmortem successful");
+  this->log_info(
+      QString(tr("Register %1 postmortem successful")).arg(str_arch));
 }
 
-void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {}
+void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {
+  QString windbg_path = "";
+  QString err_msg = "";
+  bool result = this->_get_cur_windbg_path(windbg_path, err_msg);
+  if (!result) {
+    this->log_info(err_msg);
+    return;
+  }
+
+  QString reg_path = this->_get_arch_reg(windbg_path);
+  QString str_arch = this->_get_arch_str(windbg_path);
+
+  QSettings bug_settings(reg_path, QSettings::NativeFormat);
+  bug_settings.setValue(this->_bugger_value, "");
+  bug_settings.setValue("Auto", 1);
+  QString log_info =
+      QString(tr("Unregister %1 postmortem successful")).arg(str_arch);
+  this->log_info(log_info);
+}
 
 void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
 
-void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {}
+void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
+
+  //TODO: declear type by decltype key word
+  // namespace type = decltype(this->_arch_map.begin());
+
+  auto func = [this](const auto& item) { 
+    QString path = item.second;
+    QSettings bug_settings(path, QSettings::NativeFormat);
+    QVariant var = bug_settings.value(this->_bugger_value, "");
+    this->log_info(var.toString());
+  };
+  std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
+}
 
 QString WindbgIFEO::_get_reg_path() const {
   QString process_name = this->_get_process_name();
   if (process_name.isEmpty()) {
     return QString("");
+  } else {
+    return this->_ifeo_reg_path + QString("\\") + process_name;
   }
-
-  return this->_ifeo_reg_path + QString("\\") + process_name;
 }
 
 QString WindbgIFEO::_get_process_name() const {
@@ -155,7 +171,7 @@ void WindbgIFEO::log_info(const QString& info, LOG_TYPE type) {
 
 void WindbgIFEO::_query_windbg_path() {
   // std::thread thr();
-  _search_windbg_ptr = std::make_unique<std::thread>([this]() {
+  auto func = [this]() {
     DWORD i;
     // Set the search string to abc
     Everything_SetMatchCase(true);
@@ -176,7 +192,9 @@ void WindbgIFEO::_query_windbg_path() {
       qDebug() << path;
     }
     this->_add_windbg_path(map_path);
-  });
+  };
+
+  _query_windbg_ptr = std::make_unique<std::thread>(func);
 }
 
 void WindbgIFEO::_add_windbg_path(const map_qstring& paths) {
@@ -202,6 +220,7 @@ bool WindbgIFEO::_get_cur_windbg_path(QString& path, QString& err_msg) {
     err_msg = tr("application can't be empty.");
     return false;
   }
+
   QFileInfo file_info(process_path);
   if (!file_info.exists(process_path)) {
     err_msg = tr("Not find application");
@@ -209,6 +228,22 @@ bool WindbgIFEO::_get_cur_windbg_path(QString& path, QString& err_msg) {
   }
   path = process_path;
   return true;
+}
+
+QString WindbgIFEO::_get_arch_str(const QString& windbg_path) {
+  ExecHelper::Architecture arch = ExecHelper::detect_arch(windbg_path);
+  return arch == ExecHelper::Architecture::ARCH_X86 ? "x86" : "x64";
+}
+
+QString WindbgIFEO::_get_arch_reg(const QString& windbg_path) {
+  // TODO: cache
+  ExecHelper::Architecture arch = ExecHelper::detect_arch(windbg_path);
+  auto find_itr = this->_arch_map.find(arch);
+  if (find_itr == this->_arch_map.end()) {
+    return "";
+  } else {
+    return find_itr->second;
+  }
 }
 
 void WindbgIFEO::_init_signal() {

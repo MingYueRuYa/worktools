@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_WindbgIFEO.h"
+#include "exec_helper.h"
 
 #include <map>
 #include <string>
@@ -61,11 +62,13 @@ public:
   void _add_windbg_path(const map_qstring& paths);
   QString _format_log_info(const QString &info, LOG_TYPE type);
   bool _get_cur_windbg_path(QString &path, QString &err_msg);
+  QString _get_arch_str(const QString &windbg_path);
+  QString _get_arch_reg(const QString &windbg_path);
 
  private:
   Ui::WindbgIFEOClass ui;
   map_qstring _map_windbg_path;
-  std::unique_ptr<std::thread> _search_windbg_ptr;
+  std::unique_ptr<std::thread> _query_windbg_ptr;
 
   const QString _ifeo_reg_path =
       R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options)";
@@ -75,4 +78,9 @@ public:
       R"(HKLM\Software\Microsoft\Windows NT\CurrentVersion\AeDebug)";
   const QString _bugger_value = "Debugger";
   // const QString _windbg_name = "WinDbg.exe";
+
+  const std::map<ExecHelper::Architecture, QString> _arch_map = {
+      {ExecHelper::Architecture::ARCH_X86, this->_x86_postmortem_reg_path},
+      {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path},
+      {ExecHelper::Architecture::ARCH_UNKNOWN, ""}};
 };

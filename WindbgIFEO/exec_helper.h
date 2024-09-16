@@ -12,5 +12,5 @@ class ExecHelper {
   ExecHelper(const ExecHelper& left) = delete;
   ExecHelper& operator=(const ExecHelper& left) = delete;
 
-  Architecture detect_arch(const QString& filePath);
+  static Architecture detect_arch(const QString& filePath);
 };
