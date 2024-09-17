@@ -102,6 +102,7 @@
     <ClCompile Include="exec_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WindbgIFEO.cpp" />
+    <ClCompile Include="windbg_info_mgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="WindbgIFEO.h" />
@@ -114,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exec_helper.h" />
+    <ClInclude Include="windbg_info_mgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
