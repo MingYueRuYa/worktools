@@ -36,6 +36,7 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
 
   QFileInfo file_info(cur_path);
   const QString work_dir = file_info.absoluteDir().absolutePath();
+  // TODO: start failed reason
   result = QProcess::startDetached(cur_path, QStringList(), work_dir);
   const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
       {{true, {tr("Start windbg successful."), LOG_TYPE::INFO}},
@@ -92,7 +93,43 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
 
 void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {}
 
-void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {}
+void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
+  const QString sel_proc_name = this->_get_process_name();
+  QString reg_path = "";
+  QStringList process_names = {};
+  if (sel_proc_name.isEmpty()) {
+    reg_path = this->_ifeo_reg_path;
+    QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
+    // settings.beginGroup("Image File Execution Options");
+    QStringList groups = settings.childGroups();
+    for (const auto& group : groups) {
+      if (group.contains("\\")) {
+        continue;
+      }
+      process_names.append(group);
+    }
+  } else {
+    reg_path = this->_ifeo_reg_path + "\\" + sel_proc_name;
+    process_names.append(sel_proc_name);
+  }
+
+  // Image File Exection Options value
+  this->log_info(tr("Start query image file exection options:"));
+
+  if (process_names.isEmpty()) {
+    this->log_info(tr("Not find any value."));
+  } else {
+    for (const QString& name : process_names) {
+      QSettings settings(this->_ifeo_reg_path + "\\" + name,
+                         QSettings::NativeFormat);
+      QString value = settings.value(this->_bugger_value).toString();
+      if (value.isEmpty()) {
+        value = tr("Not find value.");
+      }
+      this->log_info(QString(tr("%1:%2")).arg(name).arg(value));
+    }
+  }
+}
 
 void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   QString windbg_path = "";
@@ -139,14 +176,18 @@ void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {
 void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
 
 void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
-
-  //TODO: declear type by decltype key word
+  // TODO: declear type by decltype key word
   // namespace type = decltype(this->_arch_map.begin());
 
-  auto func = [this](const auto& item) { 
+  auto func = [this](const auto& item) {
     QString path = item.second;
     QSettings bug_settings(path, QSettings::NativeFormat);
     QVariant var = bug_settings.value(this->_bugger_value, "");
+    if (item.first == ExecHelper::Architecture::ARCH_X64) {
+      this->log_info(tr("x64 config:"));
+    } else if (item.first == ExecHelper::Architecture::ARCH_X86) {
+      this->log_info(tr("x86 config:"));
+    }
     this->log_info(var.toString());
   };
   std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
@@ -226,6 +267,7 @@ bool WindbgIFEO::_get_cur_windbg_path(QString& path, QString& err_msg) {
     err_msg = tr("Not find application");
     return false;
   }
+  // path = "\"" + process_path + "\"";
   path = process_path;
   return true;
 }
