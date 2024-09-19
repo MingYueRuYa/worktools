@@ -91,7 +91,13 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
   this->log_info(tr("Remove value successful"));
 }
 
-void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {}
+void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
+  QProcess* process = new QProcess();
+  connect(process, SIGNAL(finished(int)), this, SLOT(on_process_finished(int)));
+  connect(process, SIGNAL(started()), this, SLOT(on_process_started()));
+  process->setProgram("regedit");
+  process->start();
+}
 
 void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
   const QString sel_proc_name = this->_get_process_name();
@@ -299,4 +305,13 @@ void WindbgIFEO::on_update_windbg_path() {
                   this->ui.comboBox_windbg_path->addItem(value.second);
                   this->log_info(value.second);
                 });
+}
+
+void WindbgIFEO::on_process_finished(int exitCode) {
+  QProcess* process = (QProcess*)sender();
+  process->deleteLater();
+}
+
+void WindbgIFEO::on_process_started() {
+  this->_reg_editor_helper.send_value(this->_ifeo_reg_path.toStdWString());
 }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "ui_WindbgIFEO.h"
 #include "exec_helper.h"
+#include "reg_editor_helper.h"
+#include "ui_WindbgIFEO.h"
 
 #include <map>
 #include <string>
@@ -15,14 +16,8 @@ class WindbgIFEO : public QWidget {
 
   using map_qstring = std::map<QString, QString>;
 
-public:
-  enum class LOG_TYPE {
-    VERBORSE,
-    DEBUG,
-    INFO,
-    WARNING,
-    ERR
-  };
+ public:
+  enum class LOG_TYPE { VERBORSE, DEBUG, INFO, WARNING, ERR };
 
  public:
   WindbgIFEO(QWidget* parent = Q_NULLPTR);
@@ -40,13 +35,13 @@ public:
   void on_pushButtonDbgDetails_clicked();
   void on_pushButtonStartDbgDir_clicked();
 
-   // ifeo config
+  // ifeo config
   void on_pushButtonAdd_clicked();
   void on_pushButtonDel_clicked();
   void on_pushButtonIFEOOpenReg_clicked();
   void on_pushButtonIFEOQuery_clicked();
 
-   // postmortem config
+  // postmortem config
   void on_pushButtonPostmortem_clicked();
   void on_pushButtonCancelPostmortem_clicked();
   void on_pushButtonOpenRegEditor_clicked();
@@ -54,21 +49,25 @@ public:
 
   void on_update_windbg_path();
 
+  void on_process_finished(int exitCode);
+  void on_process_started();
+
  private:
   void _init_signal();
   QString _get_reg_path() const;
   QString _get_process_name() const;
   void _query_windbg_path();
   void _add_windbg_path(const map_qstring& paths);
-  QString _format_log_info(const QString &info, LOG_TYPE type);
-  bool _get_cur_windbg_path(QString &path, QString &err_msg);
-  QString _get_arch_str(const QString &windbg_path);
-  QString _get_arch_reg(const QString &windbg_path);
+  QString _format_log_info(const QString& info, LOG_TYPE type);
+  bool _get_cur_windbg_path(QString& path, QString& err_msg);
+  QString _get_arch_str(const QString& windbg_path);
+  QString _get_arch_reg(const QString& windbg_path);
 
  private:
   Ui::WindbgIFEOClass ui;
   map_qstring _map_windbg_path;
   std::unique_ptr<std::thread> _query_windbg_ptr;
+  RegEditorHelper _reg_editor_helper;
 
   const QString _ifeo_reg_path =
       R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options)";

@@ -37,6 +37,9 @@
     <ClCompile Include="windbg_info_mgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reg_editor_helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="WindbgIFEO.h">
@@ -58,6 +61,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="windbg_info_mgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="reg_editor_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
