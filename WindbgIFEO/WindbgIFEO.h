@@ -44,7 +44,8 @@ class WindbgIFEO : public QWidget {
   // postmortem config
   void on_pushButtonPostmortem_clicked();
   void on_pushButtonCancelPostmortem_clicked();
-  void on_pushButtonOpenRegEditor_clicked();
+  void on_pushButtonOpenX64RegEditor_clicked();
+  void on_pushButtonOpenX86RegEditor_clicked();
   void on_pushButtonPostmortemQuery_clicked();
 
   void on_update_windbg_path();
@@ -62,6 +63,8 @@ class WindbgIFEO : public QWidget {
   bool _get_cur_windbg_path(QString& path, QString& err_msg);
   QString _get_arch_str(const QString& windbg_path);
   QString _get_arch_reg(const QString& windbg_path);
+  void _start_reg_edit_proc();
+  void _location_reg_path(const QString& reg_path);
 
  private:
   Ui::WindbgIFEOClass ui;

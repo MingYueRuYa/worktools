@@ -92,11 +92,8 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
 }
 
 void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
-  QProcess* process = new QProcess();
-  connect(process, SIGNAL(finished(int)), this, SLOT(on_process_finished(int)));
-  connect(process, SIGNAL(started()), this, SLOT(on_process_started()));
-  process->setProgram("regedit");
-  process->start();
+  this->_start_reg_edit_proc();
+  this->_location_reg_path(this->_ifeo_reg_path);
 }
 
 void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
@@ -179,7 +176,15 @@ void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {
   this->log_info(log_info);
 }
 
-void WindbgIFEO::on_pushButtonOpenRegEditor_clicked() {}
+void WindbgIFEO::on_pushButtonOpenX64RegEditor_clicked() {
+  this->_start_reg_edit_proc();
+  this->_location_reg_path(this->_x64_postmortem_reg_path);
+}
+
+void WindbgIFEO::on_pushButtonOpenX86RegEditor_clicked() {
+  this->_start_reg_edit_proc();
+  this->_location_reg_path(this->_x86_postmortem_reg_path);
+}
 
 void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
   // TODO: declear type by decltype key word
@@ -219,8 +224,6 @@ void WindbgIFEO::log_info(const QString& info, LOG_TYPE type) {
 void WindbgIFEO::_query_windbg_path() {
   // std::thread thr();
   auto func = [this]() {
-    DWORD i;
-    // Set the search string to abc
     Everything_SetMatchCase(true);
     Everything_SetMatchWholeWord(true);
     Everything_SetSearch(L"windbg.exe|DbgX.Shell.exe ext:exe");
@@ -231,6 +234,7 @@ void WindbgIFEO::_query_windbg_path() {
     // Display results.
     map_qstring map_path = {};
     QString path = "";
+    DWORD i;
     for (i = 0; i < Everything_GetNumResults(); i++) {
       path = QString::fromStdWString(Everything_GetResultPath(i)) +
              QString("\\") +
@@ -294,6 +298,21 @@ QString WindbgIFEO::_get_arch_reg(const QString& windbg_path) {
   }
 }
 
+void WindbgIFEO::_start_reg_edit_proc() {
+  QProcess* process = new QProcess();
+  connect(process, SIGNAL(finished(int)), this, SLOT(on_process_finished(int)));
+  process->setProgram("regedit");
+  process->start();
+}
+
+void WindbgIFEO::_location_reg_path(const QString& reg_path) {
+  bool result = this->_reg_editor_helper.send_value(reg_path.toStdWString());
+  QString msg = result ? tr("Open registry editor successful")
+                       : tr("Open registry editor failed");
+  this->log_info(msg, LOG_TYPE::INFO);
+  this->log_info(reg_path, LOG_TYPE::INFO);
+}
+
 void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_windbg_exes()), this,
           SLOT(on_update_windbg_path()), Qt::QueuedConnection);
@@ -313,5 +332,9 @@ void WindbgIFEO::on_process_finished(int exitCode) {
 }
 
 void WindbgIFEO::on_process_started() {
-  this->_reg_editor_helper.send_value(this->_ifeo_reg_path.toStdWString());
+  bool result =
+      this->_reg_editor_helper.send_value(this->_ifeo_reg_path.toStdWString());
+  QString msg = result ? tr("Open registry editor successful")
+                       : tr("Open registry editor failed");
+  this->log_info(msg, LOG_TYPE::INFO);
 }

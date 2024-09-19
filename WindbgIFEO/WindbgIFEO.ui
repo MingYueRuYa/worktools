@@ -239,7 +239,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonOpenRegEditor">
+       <widget class="QPushButton" name="pushButtonOpenX64RegEditor">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -247,7 +247,20 @@
          </size>
         </property>
         <property name="text">
-         <string>打开注册表</string>
+         <string>打开x64注册表</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonOpenX86RegEditor">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>打开x86注册表</string>
         </property>
        </widget>
       </item>
