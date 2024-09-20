@@ -114,14 +114,14 @@
     <QtUic Include="WindbgIFEO.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="WindbgIFEO.qrc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
     <ClInclude Include="reg_editor_helper.h" />
     <ClInclude Include="windbg_info_mgr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resource\WindbgIFEO.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

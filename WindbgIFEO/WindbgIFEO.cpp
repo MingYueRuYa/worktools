@@ -40,8 +40,8 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
   // TODO: start failed reason
   result = QProcess::startDetached(cur_path, QStringList(), work_dir);
   const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
-      {{true, {tr("Start windbg successful."), LOG_TYPE::INFO}},
-       {false, {tr("Start windbg error."), LOG_TYPE::ERR}}}};
+      {{true, {tr("Start WinDbg successful."), LOG_TYPE::INFO}},
+       {false, {tr("Start WinDbg error."), LOG_TYPE::ERR}}}};
   auto itr = map_result.find(result);
   this->log_info(itr->second.first, itr->second.second);
 }
@@ -103,7 +103,7 @@ void WindbgIFEO::on_pushButtonAdd_clicked() {
   }
 
   if (0 == ui.comboBox_windbg_path->count()) {
-    this->log_info(tr("Error: Not find any windbg path"), LOG_TYPE::ERR);
+    this->log_info(tr("Error: Not find any WinDbg path"), LOG_TYPE::ERR);
     return;
   }
 
@@ -367,4 +367,9 @@ void WindbgIFEO::on_update_windbg_path() {
 void WindbgIFEO::on_process_finished(int exitCode) {
   QProcess* process = (QProcess*)sender();
   process->deleteLater();
+}
+
+void WindbgIFEO::on_comboBox_windbg_path_currentTextChanged(
+    const QString& text) {
+  this->log_info(tr("selecte current Windbg:\n") + text, LOG_TYPE::INFO);
 }

@@ -51,6 +51,8 @@ class WindbgIFEO : public QWidget {
   void on_update_windbg_path();
   void on_process_finished(int exitCode);
 
+  void on_comboBox_windbg_path_currentTextChanged(const QString& text);
+
  private:
   void _init_signal();
   QString _get_reg_path() const;

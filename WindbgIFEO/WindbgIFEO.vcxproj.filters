@@ -58,11 +58,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="WindbgIFEO.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="exec_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,5 +73,10 @@
     <ClInclude Include="common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resource\WindbgIFEO.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>
