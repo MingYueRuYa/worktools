@@ -99,6 +99,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common.cpp" />
+    <ClCompile Include="dolproductinfo.cpp" />
     <ClCompile Include="exec_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="reg_editor_helper.cpp" />
@@ -115,6 +117,8 @@
     <QtRcc Include="WindbgIFEO.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
     <ClInclude Include="reg_editor_helper.h" />
     <ClInclude Include="windbg_info_mgr.h" />

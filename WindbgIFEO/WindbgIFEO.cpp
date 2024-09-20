@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <tuple>
 
+#include "dolproductinfo.h"
 #include "everything/Everything.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
@@ -44,7 +45,41 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
   auto itr = map_result.find(result);
   this->log_info(itr->second.first, itr->second.second);
 }
-void WindbgIFEO::on_pushButtonDbgDetails_clicked() {}
+void WindbgIFEO::on_pushButtonDbgDetails_clicked() {
+  QString cur_path = "";
+  QString err_msg = "";
+  bool result = this->_get_cur_windbg_path(cur_path, err_msg);
+  if (!result) {
+    this->log_info(err_msg, LOG_TYPE::ERR);
+    return;
+  }
+  dolProductInfo info(cur_path.toStdString(), true);
+  QString file_details = QString(tr("File description:")) +
+                         QString::fromStdString(info.GetFileDescription()) +
+                         "\n";
+  file_details +=
+      QString(tr("Type:")) + QString::fromStdString(info.GetType()) + "\n";
+  file_details += QString(tr("File version:")) +
+                  QString::fromStdString(info.GetFileVersion()) + "\n";
+  file_details += QString(tr("Production name:")) +
+                  QString::fromStdString(info.GetProductName()) + "\n";
+  file_details += QString(tr("Production version:")) +
+                  QString::fromStdString(info.GetProductVersion()) + "\n";
+  file_details += QString(tr("Copyright:")) +
+                  QString::fromStdString(info.GetCopyRight()) + "\n";
+  file_details +=
+      QString(tr("Size:")) + QString::fromStdString(info.GetSize()) + "\n";
+  file_details += QString(tr("Date modified:")) +
+                  QString::fromStdString(info.GetModifiedTime()) + "\n";
+  file_details += QString(tr("Language:")) +
+                  QString::fromStdString(info.GetLanguage()) + "\n";
+  file_details += QString(tr("Original filename:")) +
+                  QString::fromStdString(info.GetOriginName()) + "\n";
+  file_details += QString(tr("Digital Signatures:")) +
+                  QString::fromStdString(info.GetDigSignature()) + "\n";
+
+  this->log_info(file_details, LOG_TYPE::INFO);
+}
 
 void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {
   QString cur_path = "";
@@ -199,6 +234,10 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
     } else if (item.first == ExecHelper::Architecture::ARCH_X86) {
       this->log_info(tr("x86 config:"));
     }
+    QString value = var.toString();
+    if (value.isEmpty()) {
+      value = tr("Not find any value");
+    }
     this->log_info(var.toString());
   };
   std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
@@ -277,7 +316,6 @@ bool WindbgIFEO::_get_cur_windbg_path(QString& path, QString& err_msg) {
     err_msg = tr("Not find application");
     return false;
   }
-  // path = "\"" + process_path + "\"";
   path = process_path;
   return true;
 }
@@ -329,12 +367,4 @@ void WindbgIFEO::on_update_windbg_path() {
 void WindbgIFEO::on_process_finished(int exitCode) {
   QProcess* process = (QProcess*)sender();
   process->deleteLater();
-}
-
-void WindbgIFEO::on_process_started() {
-  bool result =
-      this->_reg_editor_helper.send_value(this->_ifeo_reg_path.toStdWString());
-  QString msg = result ? tr("Open registry editor successful")
-                       : tr("Open registry editor failed");
-  this->log_info(msg, LOG_TYPE::INFO);
 }

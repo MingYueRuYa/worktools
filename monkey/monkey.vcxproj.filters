@@ -42,46 +42,34 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_monmainwindow.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="monmainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="monabout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\moc_monabout.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\common.cpp">
       <Filter>common\common_cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="monmainwindow.h">
+    <QtMoc Include="monmainwindow.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="monmainwindow.qrc">
+    </QtMoc>
+    <QtRcc Include="monmainwindow.qrc">
       <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="monmainwindow.ui">
+    </QtRcc>
+    <QtUic Include="monmainwindow.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="monabout.h">
+    </QtUic>
+    <QtMoc Include="monabout.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="monabout.ui">
+    </QtMoc>
+    <QtUic Include="monabout.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_monmainwindow.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_monabout.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\common.h">
       <Filter>common\common_h</Filter>
     </ClInclude>

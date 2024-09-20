@@ -49,9 +49,7 @@ class WindbgIFEO : public QWidget {
   void on_pushButtonPostmortemQuery_clicked();
 
   void on_update_windbg_path();
-
   void on_process_finished(int exitCode);
-  void on_process_started();
 
  private:
   void _init_signal();
