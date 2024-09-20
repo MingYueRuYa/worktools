@@ -8,6 +8,7 @@
 #include <string>
 #include <thread>
 
+#include <QEvent>
 #include <QtWidgets/QWidget>
 
 // windbg image file exection options
@@ -51,7 +52,10 @@ class WindbgIFEO : public QWidget {
   void on_update_windbg_path();
   void on_process_finished(int exitCode);
 
-  void on_comboBox_windbg_path_currentTextChanged(const QString& text);
+  void on_comboBoxChanged(const QString& text);
+
+ protected:
+  virtual void changeEvent(QEvent* ev) override;
 
  private:
   void _init_signal();

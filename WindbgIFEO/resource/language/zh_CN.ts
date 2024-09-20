@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>Error: Please input process name</source>
-        <translation>错误：请输入进程名</translation>
+        <translation type="vanished">错误：请输入进程名</translation>
     </message>
     <message>
         <source>Error: Not find any windbg path</source>
@@ -130,7 +130,7 @@
     <message>
         <source>selecte current Windbg:
 </source>
-        <translation>当前选中的WinDbg:</translation>
+        <translation type="vanished">当前选中的WinDbg:\n</translation>
     </message>
     <message>
         <source>Start WinDbg successful.</source>
@@ -142,7 +142,20 @@
     </message>
     <message>
         <source>Error: Not find any WinDbg path</source>
-        <translation>错误：未找到WinDbg路径</translation>
+        <translation type="vanished">错误：未找到WinDbg路径</translation>
+    </message>
+    <message>
+        <source>Not find any WinDbg path</source>
+        <translation>未找到WinDbg路径</translation>
+    </message>
+    <message>
+        <source>selecte current Windbg:<byte value="xd"/>
+</source>
+        <translation type="vanished">当前选中的WinDbg:\r\n</translation>
+    </message>
+    <message>
+        <source>selecte current Windbg:</source>
+        <translation>当前选中的WinDbg:</translation>
     </message>
 </context>
 <context>
@@ -193,11 +206,11 @@
     </message>
     <message>
         <source>Setting</source>
-        <translation>设置</translation>
+        <translation type="vanished">设置</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation>清空</translation>
+        <translation type="vanished">清空</translation>
     </message>
     <message>
         <source>Query</source>
@@ -234,6 +247,26 @@
     <message>
         <source>Operation log:</source>
         <translation>操作日志：</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>语言：</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation>English</translation>
+    </message>
+    <message>
+        <source>Chinese</source>
+        <translation>中文</translation>
+    </message>
+    <message>
+        <source>Auto start</source>
+        <translation>开机启动</translation>
     </message>
 </context>
 </TS>

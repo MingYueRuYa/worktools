@@ -98,12 +98,12 @@ void WindbgIFEO::on_pushButtonStartDbgDir_clicked() {
 void WindbgIFEO::on_pushButtonAdd_clicked() {
   QString reg_path = this->_get_reg_path();
   if (reg_path.isEmpty()) {
-    this->log_info(tr("Error: Please input process name"), LOG_TYPE::ERR);
+    this->log_info(tr("Please input process name"), LOG_TYPE::ERR);
     return;
   }
 
   if (0 == ui.comboBox_windbg_path->count()) {
-    this->log_info(tr("Error: Not find any WinDbg path"), LOG_TYPE::ERR);
+    this->log_info(tr("Not find any WinDbg path"), LOG_TYPE::ERR);
     return;
   }
 
@@ -138,7 +138,6 @@ void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
   if (sel_proc_name.isEmpty()) {
     reg_path = this->_ifeo_reg_path;
     QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
-    // settings.beginGroup("Image File Execution Options");
     QStringList groups = settings.childGroups();
     for (const auto& group : groups) {
       if (group.contains("\\")) {
@@ -362,6 +361,8 @@ void WindbgIFEO::on_update_windbg_path() {
                   this->ui.comboBox_windbg_path->addItem(value.second);
                   this->log_info(value.second);
                 });
+  connect(ui.comboBox_windbg_path, SIGNAL(currentTextChanged(QString)), this,
+          SLOT(on_comboBoxChanged(QString)));
 }
 
 void WindbgIFEO::on_process_finished(int exitCode) {
@@ -369,7 +370,14 @@ void WindbgIFEO::on_process_finished(int exitCode) {
   process->deleteLater();
 }
 
-void WindbgIFEO::on_comboBox_windbg_path_currentTextChanged(
-    const QString& text) {
-  this->log_info(tr("selecte current Windbg:\n") + text, LOG_TYPE::INFO);
+void WindbgIFEO::on_comboBoxChanged(const QString& text) {
+  this->log_info(tr("selecte current Windbg:") + "\n" + text, LOG_TYPE::INFO);
+}
+
+void WindbgIFEO::changeEvent(QEvent* ev) {
+  switch (ev->type()) {
+    case QEvent::LanguageChange:
+      ui.retranslateUi(this);
+  }
+  QWidget::changeEvent(ev);
 }

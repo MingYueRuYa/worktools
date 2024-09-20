@@ -46,9 +46,15 @@
     <ClCompile Include="common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="WindbgIFEO.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="application.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -78,5 +84,13 @@
     <QtRcc Include="resource\WindbgIFEO.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="resource\language\en_US.ts">
+      <Filter>Resource Files</Filter>
+    </QtTranslation>
+    <QtTranslation Include="resource\language\zh_CN.ts">
+      <Filter>Resource Files</Filter>
+    </QtTranslation>
   </ItemGroup>
 </Project>

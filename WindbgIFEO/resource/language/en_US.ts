@@ -61,11 +61,11 @@
     </message>
     <message>
         <source>Error: Please input process name</source>
-        <translation>Error: Please input process name</translation>
+        <translation type="vanished">Error: Please input process name</translation>
     </message>
     <message>
         <source>Error: Not find any WinDbg path</source>
-        <translation>Error: Not find any WinDbg path</translation>
+        <translation type="vanished">Error: Not find any WinDbg path</translation>
     </message>
     <message>
         <source>Please input process name</source>
@@ -130,6 +130,19 @@
     <message>
         <source>selecte current Windbg:
 </source>
+        <translation type="vanished">selecte current Windbg:</translation>
+    </message>
+    <message>
+        <source>Not find any WinDbg path</source>
+        <translation>Not find any WinDbg path</translation>
+    </message>
+    <message>
+        <source>selecte current Windbg:<byte value="xd"/>
+</source>
+        <translation type="vanished">selecte current Windbg:\r\n</translation>
+    </message>
+    <message>
+        <source>selecte current Windbg:</source>
         <translation>selecte current Windbg:</translation>
     </message>
 </context>
@@ -181,11 +194,11 @@
     </message>
     <message>
         <source>Setting</source>
-        <translation>Setting</translation>
+        <translation type="vanished">Setting</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation>Clear</translation>
+        <translation type="vanished">Clear</translation>
     </message>
     <message>
         <source>Query</source>
@@ -218,6 +231,26 @@
     <message>
         <source>Operation log:</source>
         <translation>Operation log:</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Settings</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Language:</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation>English</translation>
+    </message>
+    <message>
+        <source>Chinese</source>
+        <translation>中文</translation>
+    </message>
+    <message>
+        <source>Auto start</source>
+        <translation>Auto start</translation>
     </message>
 </context>
 </TS>

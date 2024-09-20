@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="dolproductinfo.cpp" />
     <ClCompile Include="exec_helper.cpp" />
@@ -114,6 +115,7 @@
     <QtUic Include="WindbgIFEO.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="application.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
@@ -122,6 +124,16 @@
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="resource\WindbgIFEO.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="resource\language\en_US.ts">
+      <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./resource/language</QmOutputDir>
+      <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./resource/language</QmOutputDir>
+    </QtTranslation>
+    <QtTranslation Include="resource\language\zh_CN.ts">
+      <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./resource/language</QmOutputDir>
+      <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./resource/language</QmOutputDir>
+    </QtTranslation>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

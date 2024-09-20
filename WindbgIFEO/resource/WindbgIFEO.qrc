@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="WindbgIFEO">
+    <qresource prefix="/WindbgConfig">
+        <file>language/en_US.qm</file>
+        <file>language/zh_CN.qm</file>
     </qresource>
 </RCC>
