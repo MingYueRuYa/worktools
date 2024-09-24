@@ -21,6 +21,8 @@ bool Application::switch_language(Language lang) {
     qApp->installTranslator(&trans);
     return true;
   }
+
+  return false;
 }
 
 QString Application::AppName() const {
