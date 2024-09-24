@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>514</width>
-    <height>595</height>
+    <height>718</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -393,7 +393,7 @@ border-color:rgb(220, 220, 220);</string>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="WindbgIFEO.qrc"/>
+  <include location="resource/WindbgIFEO.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

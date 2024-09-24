@@ -9,17 +9,20 @@
 #include <algorithm>
 #include <tuple>
 
+#include "application.h"
 #include "dolproductinfo.h"
 #include "everything/Everything.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
 
+  this->_init_ui();
   this->_init_signal();
   this->_query_windbg_path();
 }
 
 WindbgIFEO::~WindbgIFEO() {
+  this->_settings.save();
   if (this->_query_windbg_ptr->joinable()) {
     this->log_info(tr("wait thread exit..."));
     this->_query_windbg_ptr->join();
@@ -242,6 +245,20 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
   std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
 }
 
+void WindbgIFEO::on_chinese_stateChanged(int state) {
+  if (state == Qt::Checked) {
+    ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
+    this->_settings.set_lang("ch_ZN");
+  }
+}
+
+void WindbgIFEO::on_english_stateChanged(int state) {
+  if (state == Qt::Checked) {
+    ((Application*)qApp)->switch_language(Application::Language::en_US);
+    this->_settings.set_lang("en_US");
+  }
+}
+
 QString WindbgIFEO::_get_reg_path() const {
   QString process_name = this->_get_process_name();
   if (process_name.isEmpty()) {
@@ -350,9 +367,25 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
   this->log_info(reg_path, LOG_TYPE::INFO);
 }
 
+void WindbgIFEO::_init_ui() {
+  std::string lang = this->_settings.get_lang();
+  if (lang.empty() || lang == "zh_CN") {
+    this->ui.chb_chinese->setChecked(true);
+    ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
+  } else {
+    this->ui.chb_english->setChecked(true);
+    ((Application*)qApp)->switch_language(Application::Language::en_US);
+  }
+}
+
 void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_windbg_exes()), this,
           SLOT(on_update_windbg_path()), Qt::QueuedConnection);
+
+  connect(ui.chb_chinese, SIGNAL(stateChanged(int)), this,
+          SLOT(on_chinese_stateChanged(int)));
+  connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
+          SLOT(on_english_stateChanged(int)));
 }
 
 void WindbgIFEO::on_update_windbg_path() {

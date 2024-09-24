@@ -2,6 +2,7 @@
 
 #include "exec_helper.h"
 #include "reg_editor_helper.h"
+#include "settings.h"
 #include "ui_WindbgIFEO.h"
 
 #include <map>
@@ -49,6 +50,10 @@ class WindbgIFEO : public QWidget {
   void on_pushButtonOpenX86RegEditor_clicked();
   void on_pushButtonPostmortemQuery_clicked();
 
+  // settings
+  void on_chinese_stateChanged(int state);
+  void on_english_stateChanged(int state);
+
   void on_update_windbg_path();
   void on_process_finished(int exitCode);
 
@@ -58,6 +63,7 @@ class WindbgIFEO : public QWidget {
   virtual void changeEvent(QEvent* ev) override;
 
  private:
+  void _init_ui();
   void _init_signal();
   QString _get_reg_path() const;
   QString _get_process_name() const;
@@ -89,4 +95,6 @@ class WindbgIFEO : public QWidget {
       {ExecHelper::Architecture::ARCH_X86, this->_x86_postmortem_reg_path},
       {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path},
       {ExecHelper::Architecture::ARCH_UNKNOWN, ""}};
+
+  Settings _settings;
 };
