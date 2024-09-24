@@ -18,6 +18,7 @@ std::string Settings::get_lang() const {
 
 void Settings::set_lang(const string& lang) {
   _config["lang"] = lang;
+  this->save();
 }
 
 bool Settings::get_auto_start() const {
@@ -30,6 +31,7 @@ bool Settings::get_auto_start() const {
 
 void Settings::set_auto_start(bool start) {
   _config["auto_start"] = start;
+  this->save();
 }
 
 bool Settings::save() {

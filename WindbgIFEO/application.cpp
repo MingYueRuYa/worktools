@@ -22,3 +22,7 @@ bool Application::switch_language(Language lang) {
     return true;
   }
 }
+
+QString Application::AppName() const {
+  return "WinDbg Config Assistant";
+}

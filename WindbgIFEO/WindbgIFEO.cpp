@@ -22,7 +22,6 @@ WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
 }
 
 WindbgIFEO::~WindbgIFEO() {
-  this->_settings.save();
   if (this->_query_windbg_ptr->joinable()) {
     this->log_info(tr("wait thread exit..."));
     this->_query_windbg_ptr->join();
@@ -249,6 +248,7 @@ void WindbgIFEO::on_chinese_stateChanged(int state) {
   if (state == Qt::Checked) {
     ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
     this->_settings.set_lang("ch_ZN");
+    this->log_info(tr("set language chinese successful"), LOG_TYPE::INFO);
   }
 }
 
@@ -256,6 +256,27 @@ void WindbgIFEO::on_english_stateChanged(int state) {
   if (state == Qt::Checked) {
     ((Application*)qApp)->switch_language(Application::Language::en_US);
     this->_settings.set_lang("en_US");
+    this->log_info(tr("set language english successful"), LOG_TYPE::INFO);
+  }
+}
+
+void WindbgIFEO::on_chb_auto_start_stateChanged(int state) {
+  const QString reg_path =
+      R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+
+  QSettings setting(reg_path, QSettings::NativeFormat);
+  QString name = ((Application*)qApp)->AppName();
+
+  this->_settings.set_auto_start(Qt::Checked == state);
+  if (Qt::Checked == state) {
+    QString cur_path = "\"" + qApp->applicationFilePath() + "\"";
+    setting.setValue(name, cur_path);
+    this->log_info(
+        QString(tr("set auto start successful, path:%1")).arg(cur_path),
+        LOG_TYPE::INFO);
+  } else {
+    setting.remove(name);
+    this->log_info(tr("unset auto start successful"), LOG_TYPE::INFO);
   }
 }
 

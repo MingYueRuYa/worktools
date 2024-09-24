@@ -13,4 +13,5 @@ class Application : public QApplication {
   ~Application();
 
   bool switch_language(Language lang);
+  QString AppName() const;
 };
