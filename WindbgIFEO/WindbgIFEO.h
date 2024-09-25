@@ -43,6 +43,9 @@ class WindbgIFEO : public QWidget {
   void on_pushButtonIFEOOpenReg_clicked();
   void on_pushButtonIFEOQuery_clicked();
 
+  // attach config
+  void on_btn_attach_clicked();
+
   // postmortem config
   void on_pushButtonPostmortem_clicked();
   void on_pushButtonCancelPostmortem_clicked();

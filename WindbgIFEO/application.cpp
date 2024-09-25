@@ -1,30 +1,31 @@
 #include "application.h"
 
+#include <QIcon>
 #include <QTranslator>
 
-Application::Application(int& argc, char** argv) : QApplication(argc, argv) {}
+Application::Application(int& argc, char** argv) : QApplication(argc, argv) {
+  this->setWindowIcon(QIcon(":/WindbgConfig/imags/icon.png"));
+}
 
 Application::~Application() {}
 
 bool Application::switch_language(Language lang) {
   static QTranslator trans;
-  if (Language::ch_ZN == lang) {
-    if (!trans.load(":/WindbgConfig/language/zh_CN.qm")) {
-      return false;
-    }
-    qApp->installTranslator(&trans);
-    return true;
-  } else if (Language::en_US == lang) {
-    if (!trans.load(":/WindbgConfig/language/en_US.qm")) {
-      return false;
-    }
-    qApp->installTranslator(&trans);
-    return true;
-  }
-
-  return false;
+  return this->_install_lang(trans, lang);
 }
 
 QString Application::AppName() const {
   return "WinDbg Config Assistant";
+}
+
+bool Application::_install_lang(QTranslator& trans, Language lang) {
+  std::map<Language, QString> _map = {
+      {Language::ch_ZN, ":/WindbgConfig/language/zh_CN.qm"},
+      {Language::en_US, ":/WindbgConfig/language/en_US.qm"}};
+
+  if (!trans.load(_map[lang])) {
+    return false;
+  }
+  qApp->installTranslator(&trans);
+  return true;
 }

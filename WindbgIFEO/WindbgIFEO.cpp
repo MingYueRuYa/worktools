@@ -170,6 +170,12 @@ void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
   }
 }
 
+void WindbgIFEO::on_btn_attach_clicked() {
+  // 1 获取需要调试的进程
+  // 2 获取pid
+  // 3 根据进程类型选择合适的windbg挂载调试
+}
+
 void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   QString windbg_path = "";
   QString err_msg = "";

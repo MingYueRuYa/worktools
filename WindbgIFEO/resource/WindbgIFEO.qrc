@@ -2,5 +2,6 @@
     <qresource prefix="/WindbgConfig">
         <file>language/en_US.qm</file>
         <file>language/zh_CN.qm</file>
+        <file>images/icon.png</file>
     </qresource>
 </RCC>
