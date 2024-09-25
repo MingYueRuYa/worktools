@@ -88,6 +88,9 @@
     <ClInclude Include="3rdparty\json\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="resource\WindbgIFEO.qrc">
@@ -101,5 +104,11 @@
     <QtTranslation Include="resource\language\zh_CN.ts">
       <Filter>Resource Files</Filter>
     </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WindbgIFEO.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\images\app.ico" />
   </ItemGroup>
 </Project>

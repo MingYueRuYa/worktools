@@ -124,6 +124,7 @@
     <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
     <ClInclude Include="reg_editor_helper.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="windbg_info_mgr.h" />
   </ItemGroup>
@@ -139,6 +140,12 @@
       <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./resource/language</QmOutputDir>
       <QmOutputDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./resource/language</QmOutputDir>
     </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WindbgIFEO.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\images\app.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
