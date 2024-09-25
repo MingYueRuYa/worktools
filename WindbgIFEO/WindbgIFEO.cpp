@@ -396,7 +396,7 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
 
 void WindbgIFEO::_init_ui() {
   std::string lang = this->_settings.get_lang();
-  if (lang.empty() || lang == "zh_CN") {
+  if (lang == "zh_CN") {
     this->ui.chb_chinese->setChecked(true);
     ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
   } else {

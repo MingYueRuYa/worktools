@@ -4,7 +4,7 @@
 #include <QTranslator>
 
 Application::Application(int& argc, char** argv) : QApplication(argc, argv) {
-  this->setWindowIcon(QIcon(":/WindbgConfig/imags/icon.png"));
+  this->setWindowIcon(QIcon(":/WindbgConfig/images/icon.png"));
 }
 
 Application::~Application() {}
