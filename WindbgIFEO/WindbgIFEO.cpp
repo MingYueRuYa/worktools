@@ -1,5 +1,6 @@
 ﻿#include "WindbgIFEO.h"
 
+#include <QCompleter>
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDir>
@@ -15,16 +16,23 @@
 
 WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
-
+  _stop_enum_process = false;
   this->_init_ui();
   this->_init_signal();
   this->_query_windbg_path();
+  this->_enum_process_name();
 }
 
 WindbgIFEO::~WindbgIFEO() {
-  if (this->_query_windbg_ptr->joinable()) {
-    this->log_info(tr("wait thread exit..."));
-    this->_query_windbg_ptr->join();
+  _stop_enum_process = true;
+
+  std::vector<std::unique_ptr<std::thread>*> thr_ptr = {&_query_windbg_ptr,
+                                                        &_enum_process_ptr};
+  for (auto& item : thr_ptr) {
+    if ((*item)->joinable()) {
+      this->log_info(tr("wait thread exit..."));
+      (*item)->join();
+    }
   }
 }
 
@@ -113,7 +121,8 @@ void WindbgIFEO::on_pushButtonAdd_clicked() {
                         " " + ui.lineEdit_process_param->text();
   QSettings settings(reg_path, QSettings::NativeFormat);
   settings.setValue(this->_bugger_value, value);
-  this->log_info("set value successful");
+  this->log_info(QString(tr("set value successful, process name:%1"))
+                     .arg(this->_get_process_name()));
 }
 
 void WindbgIFEO::on_pushButtonDel_clicked() {
@@ -125,7 +134,8 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
 
   QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
-  this->log_info(tr("Remove value successful"));
+  this->log_info(QString(tr("Remove value successful, process name:%1"))
+                     .arg(this->_get_process_name()));
 }
 
 void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
@@ -174,6 +184,29 @@ void WindbgIFEO::on_btn_attach_clicked() {
   // 1 获取需要调试的进程
   // 2 获取pid
   // 3 根据进程类型选择合适的windbg挂载调试
+  QString windbg_path = "";
+  QString error_msg = "";
+  bool result = this->_get_cur_windbg_path(windbg_path, error_msg);
+  QString pid = this->ui.comboBox_attach_pid->currentText();
+  QStringList params = {"-p", pid};
+  QFileInfo file_info(windbg_path);
+  const QString work_dir = file_info.absoluteDir().absolutePath();
+  QProcess::startDetached(windbg_path, params, work_dir);
+}
+
+void WindbgIFEO::on_attach_name_changed(const QString& name) {
+  std::vector<int> vec_pid = {};
+  for (auto& item : _proces_info) {
+    if (name.toLower() != QString::fromStdWString(item.second.name).toLower()) {
+      continue;
+    }
+    vec_pid.push_back(item.first);
+  }
+
+  ui.comboBox_attach_pid->clear();
+  for (auto& pid : vec_pid) {
+    ui.comboBox_attach_pid->addItem(QString::number(pid));
+  }
 }
 
 void WindbgIFEO::on_pushButtonPostmortem_clicked() {
@@ -253,7 +286,7 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
 void WindbgIFEO::on_chinese_stateChanged(int state) {
   if (state == Qt::Checked) {
     ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
-    this->_settings.set_lang("ch_ZN");
+    this->_settings.set_lang("zh_CN");
     this->log_info(tr("set language chinese successful"), LOG_TYPE::INFO);
   }
 }
@@ -296,7 +329,7 @@ QString WindbgIFEO::_get_reg_path() const {
 }
 
 QString WindbgIFEO::_get_process_name() const {
-  return ui.lineEdit_process_name->text();
+  return ui.comboBox_proc_name->currentText();
 }
 
 void WindbgIFEO::log_info(const QString& info, LOG_TYPE type) {
@@ -328,6 +361,22 @@ void WindbgIFEO::_query_windbg_path() {
   };
 
   _query_windbg_ptr = std::make_unique<std::thread>(func);
+}
+
+void WindbgIFEO::_enum_process_name() {
+  auto func = [this]() {
+    while (!this->_stop_enum_process) {
+      ProcessHelper::process_map proc_map = ProcessHelper::EnumAllProcess();
+      this->_add_proc_info(proc_map);
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+  };
+  _enum_process_ptr = std::make_unique<std::thread>(func);
+}
+
+void WindbgIFEO::_add_proc_info(const ProcessHelper::process_map& process) {
+  this->_proces_info = process;
+  emit this->finished_process_info();
 }
 
 void WindbgIFEO::_add_windbg_path(const map_qstring& paths) {
@@ -403,9 +452,20 @@ void WindbgIFEO::_init_ui() {
     this->ui.chb_english->setChecked(true);
     ((Application*)qApp)->switch_language(Application::Language::en_US);
   }
+
+  std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
+                                     ui.comboBox_attach_name};
+  for (auto& item : vec_com) {
+    QCompleter* com = new QCompleter(item->model(), this);
+    com->setCaseSensitivity(Qt::CaseInsensitive);
+    item->setCompleter(com);
+  }
 }
 
 void WindbgIFEO::_init_signal() {
+  connect(this, SIGNAL(finished_process_info()), this,
+          SLOT(on_update_process_info()), Qt::QueuedConnection);
+
   connect(this, SIGNAL(finished_windbg_exes()), this,
           SLOT(on_update_windbg_path()), Qt::QueuedConnection);
 
@@ -413,6 +473,8 @@ void WindbgIFEO::_init_signal() {
           SLOT(on_chinese_stateChanged(int)));
   connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
           SLOT(on_english_stateChanged(int)));
+  connect(ui.comboBox_attach_name, SIGNAL(currentTextChanged(QString)), this,
+          SLOT(on_attach_name_changed(QString)));
 }
 
 void WindbgIFEO::on_update_windbg_path() {
@@ -423,6 +485,26 @@ void WindbgIFEO::on_update_windbg_path() {
                 });
   connect(ui.comboBox_windbg_path, SIGNAL(currentTextChanged(QString)), this,
           SLOT(on_comboBoxChanged(QString)));
+}
+
+void WindbgIFEO::on_update_process_info() {
+  std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
+                                     ui.comboBox_attach_name};
+
+  QStringList process_list = {};
+  for (auto& info : this->_proces_info) {
+    QString name = QString::fromStdWString(info.second.name);
+    if (-1 != process_list.indexOf(name)) {
+      continue;
+    }
+    process_list.append(name);
+  }
+  for (auto& item : vec_com) {
+    item->blockSignals(true);
+    item->clear();
+    item->addItems(process_list);
+    item->blockSignals(false);
+  }
 }
 
 void WindbgIFEO::on_process_finished(int exitCode) {

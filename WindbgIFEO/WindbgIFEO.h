@@ -5,6 +5,8 @@
 #include "settings.h"
 #include "ui_WindbgIFEO.h"
 
+#include "process_helper.h"
+
 #include <map>
 #include <string>
 #include <thread>
@@ -30,6 +32,7 @@ class WindbgIFEO : public QWidget {
 
  signals:
   void finished_windbg_exes();
+  void finished_process_info();
 
  protected slots:
   // windbg msic
@@ -45,6 +48,7 @@ class WindbgIFEO : public QWidget {
 
   // attach config
   void on_btn_attach_clicked();
+  void on_attach_name_changed(const QString& name);
 
   // postmortem config
   void on_pushButtonPostmortem_clicked();
@@ -59,6 +63,7 @@ class WindbgIFEO : public QWidget {
   void on_chb_auto_start_stateChanged(int state);
 
   void on_update_windbg_path();
+  void on_update_process_info();
   void on_process_finished(int exitCode);
 
   void on_comboBoxChanged(const QString& text);
@@ -72,7 +77,10 @@ class WindbgIFEO : public QWidget {
   QString _get_reg_path() const;
   QString _get_process_name() const;
   void _query_windbg_path();
+  void _enum_process_name();
   void _add_windbg_path(const map_qstring& paths);
+  void _add_proc_info(const ProcessHelper::process_map& process);
+
   QString _format_log_info(const QString& info, LOG_TYPE type);
   bool _get_cur_windbg_path(QString& path, QString& err_msg);
   QString _get_arch_str(const QString& windbg_path);
@@ -82,8 +90,11 @@ class WindbgIFEO : public QWidget {
 
  private:
   Ui::WindbgIFEOClass ui;
+  bool _stop_enum_process;
   map_qstring _map_windbg_path;
+  ProcessHelper::process_map _proces_info;
   std::unique_ptr<std::thread> _query_windbg_ptr;
+  std::unique_ptr<std::thread> _enum_process_ptr;
   RegEditorHelper _reg_editor_helper;
 
   const QString _ifeo_reg_path =
