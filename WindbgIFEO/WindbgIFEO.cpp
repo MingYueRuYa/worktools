@@ -299,9 +299,9 @@ void WindbgIFEO::on_english_stateChanged(int state) {
   }
 }
 
-void WindbgIFEO::on_chb_auto_start_stateChanged(int state) {
+void WindbgIFEO::on_auto_start_stateChanged(int state) {
   const QString reg_path =
-      R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+      R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
 
   QSettings setting(reg_path, QSettings::NativeFormat);
   QString name = ((Application*)qApp)->AppName();
@@ -309,7 +309,7 @@ void WindbgIFEO::on_chb_auto_start_stateChanged(int state) {
   this->_settings.set_auto_start(Qt::Checked == state);
   if (Qt::Checked == state) {
     QString cur_path = "\"" + qApp->applicationFilePath() + "\"";
-    setting.setValue(name, cur_path);
+    setting.setValue(name.replace(" ", ""), cur_path);
     this->log_info(
         QString(tr("set auto start successful, path:%1")).arg(cur_path),
         LOG_TYPE::INFO);
@@ -452,6 +452,7 @@ void WindbgIFEO::_init_ui() {
     this->ui.chb_english->setChecked(true);
     ((Application*)qApp)->switch_language(Application::Language::en_US);
   }
+  ui.chb_auto_start->setChecked(_settings.get_auto_start());
 
   std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
                                      ui.comboBox_attach_name};
@@ -475,14 +476,23 @@ void WindbgIFEO::_init_signal() {
           SLOT(on_english_stateChanged(int)));
   connect(ui.comboBox_attach_name, SIGNAL(currentTextChanged(QString)), this,
           SLOT(on_attach_name_changed(QString)));
+  connect(ui.chb_auto_start, SIGNAL(stateChanged(int)), this,
+          SLOT(on_auto_start_stateChanged(int)));
 }
 
 void WindbgIFEO::on_update_windbg_path() {
-  std::for_each(this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
-                [this](const std::pair<QString, QString>& value) {
-                  this->ui.comboBox_windbg_path->addItem(value.second);
-                  this->log_info(value.second);
-                });
+  std::for_each(
+      this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
+      [this](const std::pair<QString, QString>& value) {
+        QString windbg_path = value.second;
+        if (windbg_path.contains("arm")) {
+          this->log_info(QString(tr("filter arm version windbg path:%1"))
+                             .arg(windbg_path));
+        } else {
+          this->ui.comboBox_windbg_path->addItem(value.second);
+          this->log_info(value.second);
+        }
+      });
   connect(ui.comboBox_windbg_path, SIGNAL(currentTextChanged(QString)), this,
           SLOT(on_comboBoxChanged(QString)));
 }

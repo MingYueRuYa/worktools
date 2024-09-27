@@ -60,7 +60,7 @@ class WindbgIFEO : public QWidget {
   // settings
   void on_chinese_stateChanged(int state);
   void on_english_stateChanged(int state);
-  void on_chb_auto_start_stateChanged(int state);
+  void on_auto_start_stateChanged(int state);
 
   void on_update_windbg_path();
   void on_update_process_info();
