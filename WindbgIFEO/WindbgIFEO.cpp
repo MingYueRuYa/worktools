@@ -10,13 +10,14 @@
 #include <algorithm>
 #include <tuple>
 
+#include "NcFrameLessHelper.h"
 #include "application.h"
 #include "dolproductinfo.h"
 #include "everything/Everything.h"
 
-WindbgIFEO::WindbgIFEO(QWidget* parent) : QWidget(parent), _map_windbg_path() {
+WindbgIFEO::WindbgIFEO(QWidget* parent)
+    : QWidget(parent), _map_windbg_path(), _stop_enum_process(false) {
   ui.setupUi(this);
-  _stop_enum_process = false;
   this->_init_ui();
   this->_init_signal();
   this->_query_windbg_path();
@@ -444,6 +445,10 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
 }
 
 void WindbgIFEO::_init_ui() {
+  this->setWindowFlags(Qt::FramelessWindowHint |
+                       Qt::X11BypassWindowManagerHint);
+  _frame_less_helper = new NcFramelessHelper();
+  _frame_less_helper->activateOn(this);
   std::string lang = this->_settings.get_lang();
   if (lang == "zh_CN") {
     this->ui.chb_chinese->setChecked(true);

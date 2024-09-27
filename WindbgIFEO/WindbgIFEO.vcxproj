@@ -106,6 +106,7 @@
     <ClCompile Include="dolproductinfo.cpp" />
     <ClCompile Include="exec_helper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NcFrameLessHelper.cpp" />
     <ClCompile Include="process_helper.cpp" />
     <ClCompile Include="reg_editor_helper.cpp" />
     <ClCompile Include="settings.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
+    <ClInclude Include="NcFrameLessHelper.h" />
     <ClInclude Include="process_helper.h" />
     <ClInclude Include="reg_editor_helper.h" />
     <ClInclude Include="resource.h" />

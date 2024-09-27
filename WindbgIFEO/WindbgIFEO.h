@@ -14,6 +14,8 @@
 #include <QEvent>
 #include <QtWidgets/QWidget>
 
+class NcFramelessHelper;
+
 // windbg image file exection options
 class WindbgIFEO : public QWidget {
   Q_OBJECT
@@ -112,4 +114,5 @@ class WindbgIFEO : public QWidget {
       {ExecHelper::Architecture::ARCH_UNKNOWN, ""}};
 
   Settings _settings;
+  NcFramelessHelper* _frame_less_helper;
 };
