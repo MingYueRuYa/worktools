@@ -9,6 +9,7 @@
 #include <QtCore/QSettings>
 #include <algorithm>
 #include <tuple>
+#include <QGraphicsDropShadowEffect>
 
 #include "NcFrameLessHelper.h"
 #include "application.h"
@@ -445,6 +446,7 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
 }
 
 void WindbgIFEO::_init_ui() {
+  this->setAttribute(Qt::WA_TranslucentBackground, true);
   this->setWindowFlags(Qt::FramelessWindowHint |
                        Qt::X11BypassWindowManagerHint);
   _frame_less_helper = new NcFramelessHelper();
@@ -466,6 +468,12 @@ void WindbgIFEO::_init_ui() {
     com->setCaseSensitivity(Qt::CaseInsensitive);
     item->setCompleter(com);
   }
+
+  QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+  effect->setOffset(0, 0);
+  effect->setColor(Qt::lightGray);
+  effect->setBlurRadius(10);
+  this->setGraphicsEffect(effect);
 }
 
 void WindbgIFEO::_init_signal() {

@@ -118,9 +118,11 @@
     </QtTranslation>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="WindbgIFEO.rc" />
+    <Image Include="resource\images\app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resource\images\app.ico" />
+    <ResourceCompile Include="WindbgIFEO.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -3,5 +3,11 @@
         <file>language/en_US.qm</file>
         <file>language/zh_CN.qm</file>
         <file>images/icon.png</file>
+        <file>images/min.png</file>
+        <file>images/min_hover.png</file>
+        <file>images/min_pressed.png</file>
+        <file>images/close.png</file>
+        <file>images/close_hover.png</file>
+        <file>images/close_pressed.png</file>
     </qresource>
 </RCC>
