@@ -5,11 +5,13 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QFileInfo>
+#include <QGraphicsDropShadowEffect>
+#include <QMouseEvent>
+#include <QTimer>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <algorithm>
 #include <tuple>
-#include <QGraphicsDropShadowEffect>
 
 #include "NcFrameLessHelper.h"
 #include "application.h"
@@ -447,10 +449,9 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
 
 void WindbgIFEO::_init_ui() {
   this->setAttribute(Qt::WA_TranslucentBackground, true);
-  this->setWindowFlags(Qt::FramelessWindowHint |
-                       Qt::X11BypassWindowManagerHint);
-  _frame_less_helper = new NcFramelessHelper();
-  _frame_less_helper->activateOn(this);
+  this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+  //_frame_less_helper = new NcFramelessHelper();
+  //_frame_less_helper->activeOnWithChildWidget(this, ui.widget_title);
   std::string lang = this->_settings.get_lang();
   if (lang == "zh_CN") {
     this->ui.chb_chinese->setChecked(true);
@@ -539,6 +540,16 @@ void WindbgIFEO::on_comboBoxChanged(const QString& text) {
   this->log_info(tr("selecte current Windbg:") + "\n" + text, LOG_TYPE::INFO);
 }
 
+void WindbgIFEO::on_btn_close_clicked() {
+  this->close();
+}
+
+void WindbgIFEO::on_btn_mini_clicked() {
+  QPoint pos = QCursor::pos();
+  QCursor::setPos(pos + QPoint(0, 30));  // 设置鼠标位置
+  this->showMinimized();
+}
+
 void WindbgIFEO::changeEvent(QEvent* ev) {
   switch (ev->type()) {
     case QEvent::LanguageChange:
@@ -546,3 +557,30 @@ void WindbgIFEO::changeEvent(QEvent* ev) {
   }
   QWidget::changeEvent(ev);
 }
+
+// void WindbgIFEO::showEvent(QShowEvent* ev) {
+//  setAttribute(Qt::WA_Mapped);
+//  QWidget::showEvent(ev);
+//}
+
+// void WindbgIFEO::mousePressEvent(QMouseEvent* event) {
+//  if ((event->button() == Qt::LeftButton)) {
+//    mouse_press = true;
+//    mousePoint = event->globalPos() - this->pos();
+//    //        event->accept();
+//  } else if (event->button() == Qt::RightButton) {
+//    //如果是右键
+//    this->close();
+//  }
+//}
+// void WindbgIFEO::mouseMoveEvent(QMouseEvent* event) {
+//  //    if(event->buttons() == Qt::LeftButton){
+//  //    //如果这里写这行代码，拖动会有点问题
+//  if (mouse_press) {
+//    move(event->globalPos() - mousePoint);
+//    //        event->accept();
+//  }
+//}
+// void WindbgIFEO::mouseReleaseEvent(QMouseEvent* event) {
+//  mouse_press = false;
+//}

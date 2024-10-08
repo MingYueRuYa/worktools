@@ -70,8 +70,21 @@ class WindbgIFEO : public QWidget {
 
   void on_comboBoxChanged(const QString& text);
 
+  void on_btn_close_clicked();
+  void on_btn_mini_clicked();
+
  protected:
   virtual void changeEvent(QEvent* ev) override;
+  //virtual void showEvent(QShowEvent* ev) override;
+
+  // protected:
+  // void mouseMoveEvent(QMouseEvent* event);
+  // void mousePressEvent(QMouseEvent* event);
+  // void mouseReleaseEvent(QMouseEvent* event);
+
+  // private:
+  // QPoint mousePoint;
+  // bool mouse_press;
 
  private:
   void _init_ui();
