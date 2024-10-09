@@ -29,7 +29,6 @@ WindbgIFEO::WindbgIFEO(QWidget* parent)
 
 WindbgIFEO::~WindbgIFEO() {
   _stop_enum_process = true;
-
   std::vector<std::unique_ptr<std::thread>*> thr_ptr = {&_query_windbg_ptr,
                                                         &_enum_process_ptr};
   for (auto& item : thr_ptr) {
@@ -369,10 +368,11 @@ void WindbgIFEO::_query_windbg_path() {
 
 void WindbgIFEO::_enum_process_name() {
   auto func = [this]() {
-    while (!this->_stop_enum_process) {
+    // while (!this->_stop_enum_process) {
+    {
       ProcessHelper::process_map proc_map = ProcessHelper::EnumAllProcess();
       this->_add_proc_info(proc_map);
-      std::this_thread::sleep_for(std::chrono::seconds(1));
+      // std::this_thread::sleep_for(std::chrono::seconds(1));
     }
   };
   _enum_process_ptr = std::make_unique<std::thread>(func);
@@ -447,11 +447,19 @@ void WindbgIFEO::_location_reg_path(const QString& reg_path) {
   this->log_info(reg_path, LOG_TYPE::INFO);
 }
 
+void WindbgIFEO::_remove_combo_item(QComboBox* combo) {
+  int item_count = combo->count();
+  for (int i = 0; i < item_count; i++) {
+    combo->removeItem(i);
+  }
+}
+
 void WindbgIFEO::_init_ui() {
   this->setAttribute(Qt::WA_TranslucentBackground, true);
   this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
-  //_frame_less_helper = new NcFramelessHelper();
-  //_frame_less_helper->activeOnWithChildWidget(this, ui.widget_title);
+  _frame_less_helper = new NcFramelessHelper();
+  _frame_less_helper->activeOnWithChildWidget(this, ui.widget_title);
+  _frame_less_helper->setWidgetResizable(false);
   std::string lang = this->_settings.get_lang();
   if (lang == "zh_CN") {
     this->ui.chb_chinese->setChecked(true);
@@ -503,7 +511,12 @@ void WindbgIFEO::on_update_windbg_path() {
           this->log_info(QString(tr("filter arm version windbg path:%1"))
                              .arg(windbg_path));
         } else {
-          this->ui.comboBox_windbg_path->addItem(value.second);
+          QPixmap pixmap(1, 20);
+          pixmap.fill(Qt::transparent);
+          QIcon icon(pixmap);
+          this->ui.comboBox_windbg_path->setIconSize(QSize(1, 20));
+          this->ui.comboBox_windbg_path->addItem(icon, value.second);
+          // this->ui.comboBox_windbg_path->addItem(value.second);
           this->log_info(value.second);
         }
       });
@@ -525,7 +538,8 @@ void WindbgIFEO::on_update_process_info() {
   }
   for (auto& item : vec_com) {
     item->blockSignals(true);
-    item->clear();
+    // item->clear();
+    this->_remove_combo_item(item);
     item->addItems(process_list);
     item->blockSignals(false);
   }
@@ -547,7 +561,7 @@ void WindbgIFEO::on_btn_close_clicked() {
 void WindbgIFEO::on_btn_mini_clicked() {
   QPoint pos = QCursor::pos();
   QCursor::setPos(pos + QPoint(0, 30));  // 设置鼠标位置
-  this->showMinimized();
+  QTimer::singleShot(100, [this]() { this->showMinimized(); });
 }
 
 void WindbgIFEO::changeEvent(QEvent* ev) {
@@ -557,30 +571,3 @@ void WindbgIFEO::changeEvent(QEvent* ev) {
   }
   QWidget::changeEvent(ev);
 }
-
-// void WindbgIFEO::showEvent(QShowEvent* ev) {
-//  setAttribute(Qt::WA_Mapped);
-//  QWidget::showEvent(ev);
-//}
-
-// void WindbgIFEO::mousePressEvent(QMouseEvent* event) {
-//  if ((event->button() == Qt::LeftButton)) {
-//    mouse_press = true;
-//    mousePoint = event->globalPos() - this->pos();
-//    //        event->accept();
-//  } else if (event->button() == Qt::RightButton) {
-//    //如果是右键
-//    this->close();
-//  }
-//}
-// void WindbgIFEO::mouseMoveEvent(QMouseEvent* event) {
-//  //    if(event->buttons() == Qt::LeftButton){
-//  //    //如果这里写这行代码，拖动会有点问题
-//  if (mouse_press) {
-//    move(event->globalPos() - mousePoint);
-//    //        event->accept();
-//  }
-//}
-// void WindbgIFEO::mouseReleaseEvent(QMouseEvent* event) {
-//  mouse_press = false;
-//}

@@ -75,16 +75,6 @@ class WindbgIFEO : public QWidget {
 
  protected:
   virtual void changeEvent(QEvent* ev) override;
-  //virtual void showEvent(QShowEvent* ev) override;
-
-  // protected:
-  // void mouseMoveEvent(QMouseEvent* event);
-  // void mousePressEvent(QMouseEvent* event);
-  // void mouseReleaseEvent(QMouseEvent* event);
-
-  // private:
-  // QPoint mousePoint;
-  // bool mouse_press;
 
  private:
   void _init_ui();
@@ -102,6 +92,7 @@ class WindbgIFEO : public QWidget {
   QString _get_arch_reg(const QString& windbg_path);
   void _start_reg_edit_proc();
   void _location_reg_path(const QString& reg_path);
+  void _remove_combo_item(QComboBox* combo);
 
  private:
   Ui::WindbgIFEOClass ui;
