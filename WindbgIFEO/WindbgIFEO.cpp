@@ -478,6 +478,8 @@ void WindbgIFEO::_init_ui() {
     item->setCompleter(com);
   }
 
+  this->ui.comboBox_windbg_path->set_line_edit_enable(false);
+
   QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
   effect->setOffset(0, 0);
   effect->setColor(Qt::lightGray);

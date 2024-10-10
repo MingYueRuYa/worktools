@@ -3,6 +3,7 @@
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
+#include <QLineEdit>
 #include <QScrollBar>
 #include <QStyledItemDelegate>
 
@@ -19,6 +20,8 @@ class ComboBoxItemDelegate : public QStyledItemDelegate {
 };
 
 ComboBox::ComboBox(QWidget* parent) : QComboBox(parent) {
+  this->_init_ui();
+  this->_init_signal();
   qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
   this->setItemDelegate(new ComboBoxItemDelegate());
   this->update_theme();
@@ -154,3 +157,33 @@ margin:0;
   this->view()->parentWidget()->setStyleSheet(
       QString::fromStdString(parent_str));
 }
+
+bool ComboBox::set_line_edit_enable(bool enable) {
+  QLineEdit* line_edit = this->lineEdit();
+  if (nullptr == line_edit) {
+    return false;
+  }
+
+  line_edit->setFocusPolicy(enable ? Qt::FocusPolicy::ClickFocus
+                                   : Qt::FocusPolicy::NoFocus);
+  line_edit->setEnabled(enable);
+  return true;
+}
+
+void ComboBox::on_text_changed(const QString& text) {
+  QLineEdit* line_edit = this->lineEdit();
+  if (nullptr == line_edit) {
+    return;
+  }
+  QFontMetrics metrics(line_edit->font());
+  int width = line_edit->width() - 5;
+  QString elided_str = metrics.elidedText(text, Qt::ElideMiddle, width);
+  line_edit->setText(elided_str);
+}
+
+void ComboBox::_init_signal() {
+  connect(this, SIGNAL(currentTextChanged(QString)), this,
+          SLOT(on_text_changed(QString)));
+}
+
+void ComboBox::_init_ui() {}

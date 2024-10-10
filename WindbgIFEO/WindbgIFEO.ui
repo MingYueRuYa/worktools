@@ -284,7 +284,7 @@ QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/close_pressed.
                     </size>
                    </property>
                    <property name="editable">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                    <property name="iconSize">
                     <size>
