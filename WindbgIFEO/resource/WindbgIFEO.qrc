@@ -9,6 +9,7 @@
         <file>images/close.png</file>
         <file>images/close_hover.png</file>
         <file>images/close_pressed.png</file>
-		        <file>images/select.png</file>
+		<file>images/arrow_down.png</file>
+		<file>images/arrow_up.png</file>
     </qresource>
 </RCC>

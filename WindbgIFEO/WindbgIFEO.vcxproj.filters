@@ -58,12 +58,18 @@
     <ClCompile Include="NcFrameLessHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="combobox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="WindbgIFEO.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="application.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="combobox.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

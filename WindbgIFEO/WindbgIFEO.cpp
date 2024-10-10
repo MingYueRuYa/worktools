@@ -511,12 +511,7 @@ void WindbgIFEO::on_update_windbg_path() {
           this->log_info(QString(tr("filter arm version windbg path:%1"))
                              .arg(windbg_path));
         } else {
-          QPixmap pixmap(1, 20);
-          pixmap.fill(Qt::transparent);
-          QIcon icon(pixmap);
-          this->ui.comboBox_windbg_path->setIconSize(QSize(1, 20));
-          this->ui.comboBox_windbg_path->addItem(icon, value.second);
-          // this->ui.comboBox_windbg_path->addItem(value.second);
+          this->ui.comboBox_windbg_path->addItem(value.second);
           this->log_info(value.second);
         }
       });
