@@ -28,6 +28,7 @@
         <file>images/def_100_precent/tab_close.png</file>
         <file>images/def_100_precent/tab_close_hover.png</file>
         <file>images/def_100_precent/tab_close_pressed.png</file>
+		<file>images/def_100_precent/refresh.png</file>
         <file>images/def_200_precent/close.png</file>
         <file>images/def_200_precent/close_hover.png</file>
         <file>images/def_200_precent/close_pressed.png</file>
@@ -47,5 +48,6 @@
         <file>images/def_200_precent/tab_close.png</file>
         <file>images/def_200_precent/tab_close_hover.png</file>
         <file>images/def_200_precent/tab_close_pressed.png</file>
+		<file>images/def_200_precent/refresh.png</file>
     </qresource>
 </RCC>

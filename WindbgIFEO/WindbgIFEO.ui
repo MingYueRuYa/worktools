@@ -149,11 +149,12 @@ border-top-left-radius: 8px;
               </property>
               <property name="styleSheet">
                <string notr="true">QPushButton{
-border-image: url(&quot;:/WindbgConfig/images/min.png&quot;);
+border-image: url(&quot;:/WindbgConfig/images/def_100_precent/min.png&quot;);
 background-color: transparent;
 }
-QPushButton:hover{border-image: url(&quot;:/WindbgConfig/images/min_hover.png&quot;);background-color: transparent;}
-QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/min_pressed.png&quot;);background-color: transparent;}</string>
+QPushButton:hover{border-image: url(&quot;:/WindbgConfig/images/def_100_precent/min_hover.png&quot;);background-color: transparent;}
+QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/def_100_precent/min_pressed.png&quot;);background-color: transparent;}
+</string>
               </property>
               <property name="text">
                <string/>
@@ -447,8 +448,14 @@ background-color:#407ee1;
                </property>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_14">
+                 <property name="spacing">
+                  <number>12</number>
+                 </property>
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout">
+                   <property name="spacing">
+                    <number>2</number>
+                   </property>
                    <item>
                     <widget class="QLabel" name="label_2">
                      <property name="text">
@@ -466,8 +473,14 @@ background-color:#407ee1;
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>170</width>
                        <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>170</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="editable">
@@ -478,6 +491,47 @@ background-color:#407ee1;
                      </property>
                      <property name="frame">
                       <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="btn_refresh">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>25</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+border:None;
+background-color:#FFFFFF;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+border-radius:12px;
+} 
+
+QPushButton:hover {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d2d4d9;
+border-radius:12px;
+}
+
+QPushButton:pressed {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d8dbdf;
+border-radius:12px;
+}</string>
+                     </property>
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>
@@ -724,8 +778,14 @@ background-color:#407ee1;
                </property>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <property name="spacing">
+                  <number>12</number>
+                 </property>
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_8">
+                   <property name="spacing">
+                    <number>2</number>
+                   </property>
                    <item>
                     <widget class="QLabel" name="label_7">
                      <property name="text">
@@ -743,8 +803,14 @@ background-color:#407ee1;
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>170</width>
                        <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>170</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="editable">
@@ -755,6 +821,47 @@ background-color:#407ee1;
                      </property>
                      <property name="frame">
                       <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="btn_refresh_2">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>25</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+border:None;
+background-color:#FFFFFF;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+border-radius:12px;
+} 
+
+QPushButton:hover {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d2d4d9;
+border-radius:12px;
+}
+
+QPushButton:pressed {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d8dbdf;
+border-radius:12px;
+}</string>
+                     </property>
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>

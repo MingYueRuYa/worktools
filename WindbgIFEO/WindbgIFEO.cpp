@@ -286,22 +286,6 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
   std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
 }
 
-// void WindbgIFEO::on_chinese_stateChanged(int state) {
-//  if (state == Qt::Checked) {
-//    ((Application*)qApp)->switch_language(Application::Language::zh_CN);
-//    this->_settings.set_lang("zh_CN");
-//    this->log_info(tr("set language chinese successful"), LOG_TYPE::INFO);
-//  }
-//}
-//
-// void WindbgIFEO::on_english_stateChanged(int state) {
-//  if (state == Qt::Checked) {
-//    ((Application*)qApp)->switch_language(Application::Language::en_US);
-//    this->_settings.set_lang("en_US");
-//    this->log_info(tr("set language english successful"), LOG_TYPE::INFO);
-//  }
-//}
-
 void WindbgIFEO::on_auto_start_stateChanged(int state) {
   const QString reg_path =
       R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
