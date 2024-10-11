@@ -60,8 +60,8 @@ class WindbgIFEO : public QWidget {
   void on_pushButtonPostmortemQuery_clicked();
 
   // settings
-  void on_chinese_stateChanged(int state);
-  void on_english_stateChanged(int state);
+  // void on_chinese_stateChanged(int state);
+  // void on_english_stateChanged(int state);
   void on_auto_start_stateChanged(int state);
 
   void on_update_windbg_path();
@@ -69,6 +69,7 @@ class WindbgIFEO : public QWidget {
   void on_process_finished(int exitCode);
 
   void on_comboBoxChanged(const QString& text);
+  void on_comboBoxLanguage(const QString& text);
 
   void on_btn_close_clicked();
   void on_btn_mini_clicked();
@@ -78,6 +79,7 @@ class WindbgIFEO : public QWidget {
 
  private:
   void _init_ui();
+  void _init_comobo();
   void _init_signal();
   QString _get_reg_path() const;
   QString _get_process_name() const;

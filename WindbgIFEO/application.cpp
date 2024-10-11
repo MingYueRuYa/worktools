@@ -20,7 +20,7 @@ QString Application::AppName() const {
 
 bool Application::_install_lang(QTranslator& trans, Language lang) {
   std::map<Language, QString> _map = {
-      {Language::ch_ZN, ":/WindbgConfig/language/zh_CN.qm"},
+      {Language::zh_CN, ":/WindbgConfig/language/zh_CN.qm"},
       {Language::en_US, ":/WindbgConfig/language/en_US.qm"}};
 
   if (!trans.load(_map[lang])) {

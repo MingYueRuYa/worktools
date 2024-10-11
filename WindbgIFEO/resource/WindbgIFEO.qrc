@@ -9,7 +9,43 @@
         <file>images/close.png</file>
         <file>images/close_hover.png</file>
         <file>images/close_pressed.png</file>
-		<file>images/arrow_down.png</file>
-		<file>images/arrow_up.png</file>
+        <file>images/arrow_down.png</file>
+        <file>images/arrow_up.png</file>
+        <file>images/def_100_precent/close.png</file>
+        <file>images/def_100_precent/close_hover.png</file>
+        <file>images/def_100_precent/close_pressed.png</file>
+        <file>images/def_100_precent/max.png</file>
+        <file>images/def_100_precent/max_hover.png</file>
+        <file>images/def_100_precent/max_pressed.png</file>
+        <file>images/def_100_precent/min.png</file>
+        <file>images/def_100_precent/min_hover.png</file>
+        <file>images/def_100_precent/min_pressed.png</file>
+        <file>images/def_100_precent/restore.png</file>
+        <file>images/def_100_precent/restore_hover.png</file>
+        <file>images/def_100_precent/restore_pressed.png</file>
+        <file>images/def_100_precent/switch_off_middle.png</file>
+        <file>images/def_100_precent/switch_on_middle.png</file>
+        <file>images/def_100_precent/tab_close.png</file>
+        <file>images/def_100_precent/tab_close_hover.png</file>
+        <file>images/def_100_precent/tab_close_pressed.png</file>
+        <file>images/def_200_precent/close.png</file>
+        <file>images/def_200_precent/close_hover.png</file>
+        <file>images/def_200_precent/close_pressed.png</file>
+        <file>images/def_200_precent/max.png</file>
+        <file>images/def_200_precent/max_hover.png</file>
+        <file>images/def_200_precent/max_pressed.png</file>
+        <file>images/def_200_precent/min.png</file>
+        <file>images/def_200_precent/min_hover.png</file>
+        <file>images/def_200_precent/min_pressed.png</file>
+        <file>images/def_200_precent/restore.png</file>
+        <file>images/def_200_precent/restore_hover.png</file>
+        <file>images/def_200_precent/restore_pressed.png</file>
+        <file>images/def_200_precent/switch_off_big.png</file>
+        <file>images/def_200_precent/switch_off_middle.png</file>
+        <file>images/def_200_precent/switch_on_big.png</file>
+        <file>images/def_200_precent/switch_on_middle.png</file>
+        <file>images/def_200_precent/tab_close.png</file>
+        <file>images/def_200_precent/tab_close_hover.png</file>
+        <file>images/def_200_precent/tab_close_pressed.png</file>
     </qresource>
 </RCC>

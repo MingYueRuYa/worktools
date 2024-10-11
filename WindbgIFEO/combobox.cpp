@@ -29,9 +29,8 @@ ComboBox::ComboBox(QWidget* parent) : QComboBox(parent) {
 
 void ComboBox::update_theme() {
   std::string qss = R"(QComboBox{
-border:none;
-background:
-#EDEDED;
+          border:1px solid #CCCCCC;
+          background:#FFF;
 				  color:
 				  #4C4C4C;
 				  font-size:12px;
@@ -44,13 +43,20 @@ background:
 				  border: 1px solid rgba(255, 61, 61, 0.2);
 				  color: #FF3D3D;
 				  }
-				  QComboBox::hover,QComboBox::on{
-				  padding-left:7px;
-				  background:transparent;
-				  
+				  QComboBox::hover{
+				  /*padding-left:7px;*/
+				  background:#F2F2F2;
 				  border:
 				  1px solid #CCCCCC;
 				  }
+
+				  QComboBox::on{
+				  /*padding-left:7px;*/
+          background:#FFF;
+				  border:
+				  1px solid #0b57d0;
+				  }
+
 				  QComboBox::down-arrow{
 				  border:none;
 				  background:transparent;
@@ -67,7 +73,12 @@ background:
 				  }
 				  QComboBox:editable{
 				  background:
-				  #EDEDED;
+				  #FFF;
+				  }
+				  QComboBox:focus{
+				  background:
+				  #FFF;
+					border:1px solid #0b57d0;
 				  }
 				  QComboBox:disabled{
 				  padding-left:7px;
@@ -99,9 +110,9 @@ background:
 				   padding:0 0 0 0;
 				   border-radius:2px;
 				   background-color:
-				   #E0E0E0;
+				   #1967d2;
 				   color:
-				   #7e63f1;
+				   #FFFFFF;
 				   })";
 
   std::string scrollbar_str = R"(QScrollBar:vertical{

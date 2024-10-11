@@ -280,11 +280,11 @@ QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/close_pressed.
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
-                     <height>30</height>
+                     <height>25</height>
                     </size>
                    </property>
                    <property name="editable">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -457,12 +457,18 @@ background-color:#407ee1;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="comboBox_proc_name">
+                    <widget class="ComboBox" name="comboBox_proc_name">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>25</height>
+                      </size>
                      </property>
                      <property name="editable">
                       <bool>true</bool>
@@ -481,6 +487,17 @@ background-color:#407ee1;
                   <layout class="QHBoxLayout" name="horizontalLayout_13">
                    <item>
                     <widget class="QLabel" name="label_5">
+                     <property name="styleSheet">
+                      <string notr="true">QLineEdit{
+          border:1px solid #CCCCCC;
+          background:#eceff7;
+				  color:
+				  #5b5c60;
+				  font-size:12px;
+				  padding:0 0 0 8px;
+				  border-radius:12px;
+				  }</string>
+                     </property>
                      <property name="text">
                       <string>Parameters:</string>
                      </property>
@@ -488,6 +505,32 @@ background-color:#407ee1;
                    </item>
                    <item>
                     <widget class="QLineEdit" name="lineEdit_process_param">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QLineEdit{
+          border:1px solid #eceff7;
+          background:#eceff7;
+				  color:
+				  #5b5c60;
+				  font-size:12px;
+					padding-left:10px;
+				  border-radius:12px;
+				  }
+
+
+
+QLineEdit:focus{
+          border:1px solid #0b57d0;
+          background:#fff;
+
+
+				  }</string>
+                     </property>
                      <property name="placeholderText">
                       <string>example：-g</string>
                      </property>
@@ -691,12 +734,18 @@ background-color:#407ee1;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="comboBox_attach_name">
+                    <widget class="ComboBox" name="comboBox_attach_name">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>25</height>
+                      </size>
                      </property>
                      <property name="editable">
                       <bool>true</bool>
@@ -721,12 +770,18 @@ background-color:#407ee1;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="comboBox_attach_pid">
+                    <widget class="ComboBox" name="comboBox_attach_pid">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>25</height>
+                      </size>
                      </property>
                      <property name="editable">
                       <bool>false</bool>
@@ -1042,29 +1097,13 @@ background-color:#407ee1;
                    </widget>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="chb_english">
-                    <property name="styleSheet">
-                     <string notr="true">border:0px;</string>
+                   <widget class="ComboBox" name="comboBox_language">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>25</height>
+                     </size>
                     </property>
-                    <property name="text">
-                     <string>English</string>
-                    </property>
-                    <attribute name="buttonGroup">
-                     <string notr="true">buttonGroupChb</string>
-                    </attribute>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="chb_chinese">
-                    <property name="styleSheet">
-                     <string notr="true">border:0px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Chinese</string>
-                    </property>
-                    <attribute name="buttonGroup">
-                     <string notr="true">buttonGroupChb</string>
-                    </attribute>
                    </widget>
                   </item>
                   <item>
@@ -1091,10 +1130,21 @@ background-color:#407ee1;
                     <enum>Qt::RightToLeft</enum>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">border:0px;</string>
+                    <string notr="true">
+
+QCheckBox::indicator:unchecked {
+border:0px;
+ image: url(:/WindbgConfig/images/def_100_precent/switch_off_middle.png);
+}
+
+
+QCheckBox::indicator:checked {
+border:0px;
+ image: url(:/WindbgConfig/images/def_100_precent/switch_on_middle.png);
+}</string>
                    </property>
                    <property name="text">
-                    <string>Auto start</string>
+                    <string>Auto start:</string>
                    </property>
                   </widget>
                  </item>

@@ -6,7 +6,7 @@ class Application : public QApplication {
   Q_OBJECT
 
  public:
-  enum class Language { ch_ZN = 0, en_US = 1 };
+  enum class Language { zh_CN = 0, en_US = 1 };
 
  public:
   Application(int& argc, char** arg);

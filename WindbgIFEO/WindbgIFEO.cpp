@@ -286,21 +286,21 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
   std::for_each(this->_arch_map.begin(), this->_arch_map.end(), func);
 }
 
-void WindbgIFEO::on_chinese_stateChanged(int state) {
-  if (state == Qt::Checked) {
-    ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
-    this->_settings.set_lang("zh_CN");
-    this->log_info(tr("set language chinese successful"), LOG_TYPE::INFO);
-  }
-}
-
-void WindbgIFEO::on_english_stateChanged(int state) {
-  if (state == Qt::Checked) {
-    ((Application*)qApp)->switch_language(Application::Language::en_US);
-    this->_settings.set_lang("en_US");
-    this->log_info(tr("set language english successful"), LOG_TYPE::INFO);
-  }
-}
+// void WindbgIFEO::on_chinese_stateChanged(int state) {
+//  if (state == Qt::Checked) {
+//    ((Application*)qApp)->switch_language(Application::Language::zh_CN);
+//    this->_settings.set_lang("zh_CN");
+//    this->log_info(tr("set language chinese successful"), LOG_TYPE::INFO);
+//  }
+//}
+//
+// void WindbgIFEO::on_english_stateChanged(int state) {
+//  if (state == Qt::Checked) {
+//    ((Application*)qApp)->switch_language(Application::Language::en_US);
+//    this->_settings.set_lang("en_US");
+//    this->log_info(tr("set language english successful"), LOG_TYPE::INFO);
+//  }
+//}
 
 void WindbgIFEO::on_auto_start_stateChanged(int state) {
   const QString reg_path =
@@ -459,17 +459,18 @@ void WindbgIFEO::_init_ui() {
   this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
   _frame_less_helper = new NcFramelessHelper();
   _frame_less_helper->activeOnWithChildWidget(this, ui.widget_title);
-  _frame_less_helper->setWidgetResizable(false);
-  std::string lang = this->_settings.get_lang();
-  if (lang == "zh_CN") {
-    this->ui.chb_chinese->setChecked(true);
-    ((Application*)qApp)->switch_language(Application::Language::ch_ZN);
-  } else {
-    this->ui.chb_english->setChecked(true);
-    ((Application*)qApp)->switch_language(Application::Language::en_US);
-  }
   ui.chb_auto_start->setChecked(_settings.get_auto_start());
 
+  this->_init_comobo();
+
+  QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+  effect->setOffset(0, 0);
+  effect->setColor(Qt::lightGray);
+  effect->setBlurRadius(10);
+  this->setGraphicsEffect(effect);
+}
+
+void WindbgIFEO::_init_comobo() {
   std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
                                      ui.comboBox_attach_name};
   for (auto& item : vec_com) {
@@ -478,13 +479,21 @@ void WindbgIFEO::_init_ui() {
     item->setCompleter(com);
   }
 
-  this->ui.comboBox_windbg_path->set_line_edit_enable(false);
-
-  QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-  effect->setOffset(0, 0);
-  effect->setColor(Qt::lightGray);
-  effect->setBlurRadius(10);
-  this->setGraphicsEffect(effect);
+  using data_pair = std::pair<QString, Application::Language>;
+  for (auto& item :
+       {data_pair(tr("chinese"), Application::Language::zh_CN),
+        data_pair(tr("english(US)"), Application::Language::en_US)}) {
+    this->ui.comboBox_language->addItem(item.first, (int)item.second);
+  }
+  // this->ui.comboBox_language->addItems({tr("chinese"), tr("english(US)")});
+  std::string lang = this->_settings.get_lang();
+  if (lang == "zh_CN") {
+    this->ui.comboBox_language->setCurrentText("zh_CN");
+    ((Application*)qApp)->switch_language(Application::Language::zh_CN);
+  } else {
+    this->ui.comboBox_language->setCurrentText("en_US");
+    ((Application*)qApp)->switch_language(Application::Language::en_US);
+  }
 }
 
 void WindbgIFEO::_init_signal() {
@@ -494,14 +503,16 @@ void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_windbg_exes()), this,
           SLOT(on_update_windbg_path()), Qt::QueuedConnection);
 
-  connect(ui.chb_chinese, SIGNAL(stateChanged(int)), this,
-          SLOT(on_chinese_stateChanged(int)));
-  connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
-          SLOT(on_english_stateChanged(int)));
+  // connect(ui.chb_chinese, SIGNAL(stateChanged(int)), this,
+  //        SLOT(on_chinese_stateChanged(int)));
+  // connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
+  //        SLOT(on_english_stateChanged(int)));
   connect(ui.comboBox_attach_name, SIGNAL(currentTextChanged(QString)), this,
           SLOT(on_attach_name_changed(QString)));
   connect(ui.chb_auto_start, SIGNAL(stateChanged(int)), this,
           SLOT(on_auto_start_stateChanged(int)));
+  connect(ui.comboBox_language, SIGNAL(currentTextChanged(QString)), this,
+          SLOT(on_comboBoxLanguage(QString)));
 }
 
 void WindbgIFEO::on_update_windbg_path() {
@@ -549,6 +560,20 @@ void WindbgIFEO::on_process_finished(int exitCode) {
 
 void WindbgIFEO::on_comboBoxChanged(const QString& text) {
   this->log_info(tr("selecte current Windbg:") + "\n" + text, LOG_TYPE::INFO);
+}
+
+void WindbgIFEO::on_comboBoxLanguage(const QString& text) {
+  int data = this->ui.comboBox_language->currentData(Qt::UserRole).toInt();
+  bool is_zh_CN = (Application::Language)data == Application::Language::zh_CN;
+  ((Application*)qApp)
+      ->switch_language(is_zh_CN ? Application::Language::zh_CN
+                                 : Application::Language::en_US);
+  this->_settings.set_lang(is_zh_CN ? "zh_CN" : "en_US");
+  this->log_info(is_zh_CN ? tr("set language chinese successful")
+                          : tr("set language english successful"),
+                 LOG_TYPE::INFO);
+
+  this->update();
 }
 
 void WindbgIFEO::on_btn_close_clicked() {
