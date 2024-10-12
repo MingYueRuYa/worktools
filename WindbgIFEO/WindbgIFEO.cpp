@@ -19,8 +19,9 @@
 #include "everything/Everything.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent)
-    : QWidget(parent), _map_windbg_path(), _stop_enum_process(false) {
+  : QWidget(parent), _map_windbg_path(), _stop_enum_process(false) {
   ui.setupUi(this);
+  _workbranch_ptr = std::make_unique<wsp::workbranch>(2);
   this->_init_ui();
   this->_init_signal();
   this->_query_windbg_path();
@@ -29,14 +30,16 @@ WindbgIFEO::WindbgIFEO(QWidget* parent)
 
 WindbgIFEO::~WindbgIFEO() {
   _stop_enum_process = true;
-  std::vector<std::unique_ptr<std::thread>*> thr_ptr = {&_query_windbg_ptr,
-                                                        &_enum_process_ptr};
+  std::vector<std::unique_ptr<std::thread>*> thr_ptr = { &_query_windbg_ptr
+  };
   for (auto& item : thr_ptr) {
     if ((*item)->joinable()) {
       this->log_info(tr("wait thread exit..."));
       (*item)->join();
     }
   }
+
+  _workbranch_ptr->wait_tasks();
 }
 
 void WindbgIFEO::on_pushButtonStartDbg_clicked() {
@@ -54,7 +57,7 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
   result = QProcess::startDetached(cur_path, QStringList(), work_dir);
   const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
       {{true, {tr("Start WinDbg successful."), LOG_TYPE::INFO}},
-       {false, {tr("Start WinDbg error."), LOG_TYPE::ERR}}}};
+       {false, {tr("Start WinDbg error."), LOG_TYPE::ERR}}} };
   auto itr = map_result.find(result);
   this->log_info(itr->second.first, itr->second.second);
 }
@@ -68,28 +71,28 @@ void WindbgIFEO::on_pushButtonDbgDetails_clicked() {
   }
   dolProductInfo info(cur_path.toStdString(), true);
   QString file_details = QString(tr("File description:")) +
-                         QString::fromStdString(info.GetFileDescription()) +
-                         "\n";
+    QString::fromStdString(info.GetFileDescription()) +
+    "\n";
   file_details +=
-      QString(tr("Type:")) + QString::fromStdString(info.GetType()) + "\n";
+    QString(tr("Type:")) + QString::fromStdString(info.GetType()) + "\n";
   file_details += QString(tr("File version:")) +
-                  QString::fromStdString(info.GetFileVersion()) + "\n";
+    QString::fromStdString(info.GetFileVersion()) + "\n";
   file_details += QString(tr("Production name:")) +
-                  QString::fromStdString(info.GetProductName()) + "\n";
+    QString::fromStdString(info.GetProductName()) + "\n";
   file_details += QString(tr("Production version:")) +
-                  QString::fromStdString(info.GetProductVersion()) + "\n";
+    QString::fromStdString(info.GetProductVersion()) + "\n";
   file_details += QString(tr("Copyright:")) +
-                  QString::fromStdString(info.GetCopyRight()) + "\n";
+    QString::fromStdString(info.GetCopyRight()) + "\n";
   file_details +=
-      QString(tr("Size:")) + QString::fromStdString(info.GetSize()) + "\n";
+    QString(tr("Size:")) + QString::fromStdString(info.GetSize()) + "\n";
   file_details += QString(tr("Date modified:")) +
-                  QString::fromStdString(info.GetModifiedTime()) + "\n";
+    QString::fromStdString(info.GetModifiedTime()) + "\n";
   file_details += QString(tr("Language:")) +
-                  QString::fromStdString(info.GetLanguage()) + "\n";
+    QString::fromStdString(info.GetLanguage()) + "\n";
   file_details += QString(tr("Original filename:")) +
-                  QString::fromStdString(info.GetOriginName()) + "\n";
+    QString::fromStdString(info.GetOriginName()) + "\n";
   file_details += QString(tr("Digital Signatures:")) +
-                  QString::fromStdString(info.GetDigSignature()) + "\n";
+    QString::fromStdString(info.GetDigSignature()) + "\n";
 
   this->log_info(file_details, LOG_TYPE::INFO);
 }
@@ -121,11 +124,11 @@ void WindbgIFEO::on_pushButtonAdd_clicked() {
   }
 
   const QString value = "\"" + ui.comboBox_windbg_path->currentText() + "\"" +
-                        " " + ui.lineEdit_process_param->text();
+    " " + ui.lineEdit_process_param->text();
   QSettings settings(reg_path, QSettings::NativeFormat);
   settings.setValue(this->_bugger_value, value);
   this->log_info(QString(tr("set value successful, process name:%1"))
-                     .arg(this->_get_process_name()));
+    .arg(this->_get_process_name()));
 }
 
 void WindbgIFEO::on_pushButtonDel_clicked() {
@@ -138,7 +141,7 @@ void WindbgIFEO::on_pushButtonDel_clicked() {
   QSettings settings(this->_ifeo_reg_path, QSettings::NativeFormat);
   settings.remove(process_name);
   this->log_info(QString(tr("Remove value successful, process name:%1"))
-                     .arg(this->_get_process_name()));
+    .arg(this->_get_process_name()));
 }
 
 void WindbgIFEO::on_pushButtonIFEOOpenReg_clicked() {
@@ -160,7 +163,8 @@ void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
       }
       process_names.append(group);
     }
-  } else {
+  }
+  else {
     reg_path = this->_ifeo_reg_path + "\\" + sel_proc_name;
     process_names.append(sel_proc_name);
   }
@@ -170,10 +174,11 @@ void WindbgIFEO::on_pushButtonIFEOQuery_clicked() {
 
   if (process_names.isEmpty()) {
     this->log_info(tr("Not find any value."));
-  } else {
+  }
+  else {
     for (const QString& name : process_names) {
       QSettings settings(this->_ifeo_reg_path + "\\" + name,
-                         QSettings::NativeFormat);
+        QSettings::NativeFormat);
       QString value = settings.value(this->_bugger_value).toString();
       if (value.isEmpty()) {
         value = tr("Not find value.");
@@ -191,7 +196,7 @@ void WindbgIFEO::on_btn_attach_clicked() {
   QString error_msg = "";
   bool result = this->_get_cur_windbg_path(windbg_path, error_msg);
   QString pid = this->ui.comboBox_attach_pid->currentText();
-  QStringList params = {"-p", pid};
+  QStringList params = { "-p", pid };
   QFileInfo file_info(windbg_path);
   const QString work_dir = file_info.absoluteDir().absolutePath();
   QProcess::startDetached(windbg_path, params, work_dir);
@@ -231,7 +236,7 @@ void WindbgIFEO::on_pushButtonPostmortem_clicked() {
   bug_settings.setValue(this->_bugger_value, windbg_path);
   bug_settings.setValue("Auto", 1);
   this->log_info(
-      QString(tr("Register %1 postmortem successful")).arg(str_arch));
+    QString(tr("Register %1 postmortem successful")).arg(str_arch));
 }
 
 void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {
@@ -250,7 +255,7 @@ void WindbgIFEO::on_pushButtonCancelPostmortem_clicked() {
   bug_settings.setValue(this->_bugger_value, "");
   bug_settings.setValue("Auto", 1);
   QString log_info =
-      QString(tr("Unregister %1 postmortem successful")).arg(str_arch);
+    QString(tr("Unregister %1 postmortem successful")).arg(str_arch);
   this->log_info(log_info);
 }
 
@@ -274,7 +279,8 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
     QVariant var = bug_settings.value(this->_bugger_value, "");
     if (item.first == ExecHelper::Architecture::ARCH_X64) {
       this->log_info(tr("x64 config:"));
-    } else if (item.first == ExecHelper::Architecture::ARCH_X86) {
+    }
+    else if (item.first == ExecHelper::Architecture::ARCH_X86) {
       this->log_info(tr("x86 config:"));
     }
     QString value = var.toString();
@@ -288,7 +294,7 @@ void WindbgIFEO::on_pushButtonPostmortemQuery_clicked() {
 
 void WindbgIFEO::on_auto_start_stateChanged(int state) {
   const QString reg_path =
-      R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+    R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
 
   QSettings setting(reg_path, QSettings::NativeFormat);
   QString name = ((Application*)qApp)->AppName();
@@ -298,9 +304,10 @@ void WindbgIFEO::on_auto_start_stateChanged(int state) {
     QString cur_path = "\"" + qApp->applicationFilePath() + "\"";
     setting.setValue(name.replace(" ", ""), cur_path);
     this->log_info(
-        QString(tr("set auto start successful, path:%1")).arg(cur_path),
-        LOG_TYPE::INFO);
-  } else {
+      QString(tr("set auto start successful, path:%1")).arg(cur_path),
+      LOG_TYPE::INFO);
+  }
+  else {
     setting.remove(name);
     this->log_info(tr("unset auto start successful"), LOG_TYPE::INFO);
   }
@@ -310,7 +317,8 @@ QString WindbgIFEO::_get_reg_path() const {
   QString process_name = this->_get_process_name();
   if (process_name.isEmpty()) {
     return QString("");
-  } else {
+  }
+  else {
     return this->_ifeo_reg_path + QString("\\") + process_name;
   }
 }
@@ -339,8 +347,8 @@ void WindbgIFEO::_query_windbg_path() {
     DWORD i;
     for (i = 0; i < Everything_GetNumResults(); i++) {
       path = QString::fromStdWString(Everything_GetResultPath(i)) +
-             QString("\\") +
-             QString::fromStdWString(Everything_GetResultFileName(i));
+        QString("\\") +
+        QString::fromStdWString(Everything_GetResultFileName(i));
       map_path[path] = path;
       qDebug() << path;
     }
@@ -351,15 +359,14 @@ void WindbgIFEO::_query_windbg_path() {
 }
 
 void WindbgIFEO::_enum_process_name() {
+  this->log_info(tr("Start refresh process info."));
   auto func = [this]() {
-    // while (!this->_stop_enum_process) {
     {
       ProcessHelper::process_map proc_map = ProcessHelper::EnumAllProcess();
       this->_add_proc_info(proc_map);
-      // std::this_thread::sleep_for(std::chrono::seconds(1));
     }
   };
-  _enum_process_ptr = std::make_unique<std::thread>(func);
+  _workbranch_ptr->submit(func);
 }
 
 void WindbgIFEO::_add_proc_info(const ProcessHelper::process_map& process) {
@@ -378,7 +385,7 @@ QString WindbgIFEO::_format_log_info(const QString& info, LOG_TYPE type) {
       {LOG_TYPE::DEBUG, "[DEBUG]:"},
       {LOG_TYPE::INFO, "[INFO]:"},
       {LOG_TYPE::WARNING, "[WARNING]:"},
-      {LOG_TYPE::ERR, "[ERR]:"}};
+      {LOG_TYPE::ERR, "[ERR]:"} };
 
   auto itr = map_log.find(type);
   return itr->second + info;
@@ -411,7 +418,8 @@ QString WindbgIFEO::_get_arch_reg(const QString& windbg_path) {
   auto find_itr = this->_arch_map.find(arch);
   if (find_itr == this->_arch_map.end()) {
     return "";
-  } else {
+  }
+  else {
     return find_itr->second;
   }
 }
@@ -426,7 +434,7 @@ void WindbgIFEO::_start_reg_edit_proc() {
 void WindbgIFEO::_location_reg_path(const QString& reg_path) {
   bool result = this->_reg_editor_helper.send_value(reg_path.toStdWString());
   QString msg = result ? tr("Open registry editor successful")
-                       : tr("Open registry editor failed");
+    : tr("Open registry editor failed");
   this->log_info(msg, LOG_TYPE::INFO);
   this->log_info(reg_path, LOG_TYPE::INFO);
 }
@@ -455,8 +463,8 @@ void WindbgIFEO::_init_ui() {
 }
 
 void WindbgIFEO::_init_comobo() {
-  std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
-                                     ui.comboBox_attach_name};
+  std::vector<QComboBox*> vec_com = { ui.comboBox_proc_name,
+                                     ui.comboBox_attach_name };
   for (auto& item : vec_com) {
     QCompleter* com = new QCompleter(item->model(), this);
     com->setCaseSensitivity(Qt::CaseInsensitive);
@@ -464,17 +472,16 @@ void WindbgIFEO::_init_comobo() {
   }
 
   using data_pair = std::pair<QString, Application::Language>;
-  for (auto& item :
-       {data_pair(tr("chinese"), Application::Language::zh_CN),
-        data_pair(tr("english(US)"), Application::Language::en_US)}) {
+  for (auto& item : { data_pair(tr("Chinese"), Application::Language::zh_CN),
+                     data_pair(tr("English"), Application::Language::en_US) }) {
     this->ui.comboBox_language->addItem(item.first, (int)item.second);
   }
-  // this->ui.comboBox_language->addItems({tr("chinese"), tr("english(US)")});
   std::string lang = this->_settings.get_lang();
   if (lang == "zh_CN") {
     this->ui.comboBox_language->setCurrentText("zh_CN");
     ((Application*)qApp)->switch_language(Application::Language::zh_CN);
-  } else {
+  }
+  else {
     this->ui.comboBox_language->setCurrentText("en_US");
     ((Application*)qApp)->switch_language(Application::Language::en_US);
   }
@@ -482,43 +489,45 @@ void WindbgIFEO::_init_comobo() {
 
 void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_process_info()), this,
-          SLOT(on_update_process_info()), Qt::QueuedConnection);
+    SLOT(on_update_process_info()), Qt::QueuedConnection);
 
   connect(this, SIGNAL(finished_windbg_exes()), this,
-          SLOT(on_update_windbg_path()), Qt::QueuedConnection);
+    SLOT(on_update_windbg_path()), Qt::QueuedConnection);
 
   // connect(ui.chb_chinese, SIGNAL(stateChanged(int)), this,
   //        SLOT(on_chinese_stateChanged(int)));
   // connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
   //        SLOT(on_english_stateChanged(int)));
   connect(ui.comboBox_attach_name, SIGNAL(currentTextChanged(QString)), this,
-          SLOT(on_attach_name_changed(QString)));
+    SLOT(on_attach_name_changed(QString)));
   connect(ui.chb_auto_start, SIGNAL(stateChanged(int)), this,
-          SLOT(on_auto_start_stateChanged(int)));
+    SLOT(on_auto_start_stateChanged(int)));
   connect(ui.comboBox_language, SIGNAL(currentTextChanged(QString)), this,
-          SLOT(on_comboBoxLanguage(QString)));
+    SLOT(on_comboBoxLanguage(QString)));
 }
 
 void WindbgIFEO::on_update_windbg_path() {
   std::for_each(
-      this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
-      [this](const std::pair<QString, QString>& value) {
-        QString windbg_path = value.second;
-        if (windbg_path.contains("arm")) {
-          this->log_info(QString(tr("filter arm version windbg path:%1"))
-                             .arg(windbg_path));
-        } else {
-          this->ui.comboBox_windbg_path->addItem(value.second);
-          this->log_info(value.second);
-        }
-      });
+    this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
+    [this](const std::pair<QString, QString>& value) {
+      QString windbg_path = value.second;
+      if (windbg_path.contains("arm")) {
+        this->log_info(QString(tr("filter arm version windbg path:%1"))
+          .arg(windbg_path));
+      }
+      else {
+        this->ui.comboBox_windbg_path->addItem(value.second);
+        this->log_info(value.second);
+      }
+    });
   connect(ui.comboBox_windbg_path, SIGNAL(currentTextChanged(QString)), this,
-          SLOT(on_comboBoxChanged(QString)));
+    SLOT(on_comboBoxChanged(QString)));
 }
 
 void WindbgIFEO::on_update_process_info() {
-  std::vector<QComboBox*> vec_com = {ui.comboBox_proc_name,
-                                     ui.comboBox_attach_name};
+  this->log_info(tr("Process refresh successful."));
+  std::vector<QComboBox*> vec_com = { ui.comboBox_proc_name,
+                                     ui.comboBox_attach_name };
 
   QStringList process_list = {};
   for (auto& info : this->_proces_info) {
@@ -550,14 +559,24 @@ void WindbgIFEO::on_comboBoxLanguage(const QString& text) {
   int data = this->ui.comboBox_language->currentData(Qt::UserRole).toInt();
   bool is_zh_CN = (Application::Language)data == Application::Language::zh_CN;
   ((Application*)qApp)
-      ->switch_language(is_zh_CN ? Application::Language::zh_CN
-                                 : Application::Language::en_US);
+    ->switch_language(is_zh_CN ? Application::Language::zh_CN
+      : Application::Language::en_US);
   this->_settings.set_lang(is_zh_CN ? "zh_CN" : "en_US");
   this->log_info(is_zh_CN ? tr("set language chinese successful")
-                          : tr("set language english successful"),
-                 LOG_TYPE::INFO);
+    : tr("set language english successful"),
+    LOG_TYPE::INFO);
 
   this->update();
+}
+
+void WindbgIFEO::on_btn_refresh_clicked()
+{
+  this->_enum_process_name();
+}
+
+void WindbgIFEO::on_btn_refresh_2_clicked()
+{
+  this->_enum_process_name();
 }
 
 void WindbgIFEO::on_btn_close_clicked() {
@@ -572,8 +591,8 @@ void WindbgIFEO::on_btn_mini_clicked() {
 
 void WindbgIFEO::changeEvent(QEvent* ev) {
   switch (ev->type()) {
-    case QEvent::LanguageChange:
-      ui.retranslateUi(this);
+  case QEvent::LanguageChange:
+    ui.retranslateUi(this);
   }
   QWidget::changeEvent(ev);
 }

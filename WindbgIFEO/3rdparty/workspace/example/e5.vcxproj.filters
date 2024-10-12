@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\my_document\worktools\WindbgIFEO\3rdparty\workspace\example\e5.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\my_document\worktools\WindbgIFEO\3rdparty\workspace\example\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4805BD14-80A7-3596-AEB7-F0DD16C8DB40}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -6,6 +6,7 @@
 #include "ui_WindbgIFEO.h"
 
 #include "process_helper.h"
+#include "workspace/workspace.hpp"
 
 #include <map>
 #include <string>
@@ -20,23 +21,23 @@ class NcFramelessHelper;
 class WindbgIFEO : public QWidget {
   Q_OBJECT
 
-  using map_qstring = std::map<QString, QString>;
+    using map_qstring = std::map<QString, QString>;
 
- public:
+public:
   enum class LOG_TYPE { VERBORSE, DEBUG, INFO, WARNING, ERR };
 
- public:
+public:
   WindbgIFEO(QWidget* parent = Q_NULLPTR);
   ~WindbgIFEO();
   WindbgIFEO(const WindbgIFEO&) = delete;
 
   void log_info(const QString& info, LOG_TYPE type = LOG_TYPE::INFO);
 
- signals:
+signals:
   void finished_windbg_exes();
   void finished_process_info();
 
- protected slots:
+protected slots:
   // windbg msic
   void on_pushButtonStartDbg_clicked();
   void on_pushButtonDbgDetails_clicked();
@@ -71,13 +72,16 @@ class WindbgIFEO : public QWidget {
   void on_comboBoxChanged(const QString& text);
   void on_comboBoxLanguage(const QString& text);
 
+  void on_btn_refresh_clicked();
+  void on_btn_refresh_2_clicked();
+
   void on_btn_close_clicked();
   void on_btn_mini_clicked();
 
- protected:
+protected:
   virtual void changeEvent(QEvent* ev) override;
 
- private:
+private:
   void _init_ui();
   void _init_comobo();
   void _init_signal();
@@ -96,7 +100,7 @@ class WindbgIFEO : public QWidget {
   void _location_reg_path(const QString& reg_path);
   void _remove_combo_item(QComboBox* combo);
 
- private:
+private:
   Ui::WindbgIFEOClass ui;
   bool _stop_enum_process;
   map_qstring _map_windbg_path;
@@ -106,19 +110,20 @@ class WindbgIFEO : public QWidget {
   RegEditorHelper _reg_editor_helper;
 
   const QString _ifeo_reg_path =
-      R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options)";
+    R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options)";
   const QString _x86_postmortem_reg_path =
-      R"(HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug)";
+    R"(HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug)";
   const QString _x64_postmortem_reg_path =
-      R"(HKLM\Software\Microsoft\Windows NT\CurrentVersion\AeDebug)";
+    R"(HKLM\Software\Microsoft\Windows NT\CurrentVersion\AeDebug)";
   const QString _bugger_value = "Debugger";
   // const QString _windbg_name = "WinDbg.exe";
 
   const std::map<ExecHelper::Architecture, QString> _arch_map = {
       {ExecHelper::Architecture::ARCH_X86, this->_x86_postmortem_reg_path},
       {ExecHelper::Architecture::ARCH_X64, this->_x64_postmortem_reg_path},
-      {ExecHelper::Architecture::ARCH_UNKNOWN, ""}};
+      {ExecHelper::Architecture::ARCH_UNKNOWN, ""} };
 
   Settings _settings;
   NcFramelessHelper* _frame_less_helper;
+  std::unique_ptr<wsp::workbranch> _workbranch_ptr;
 };
