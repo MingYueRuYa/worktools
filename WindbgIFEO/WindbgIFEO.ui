@@ -244,6 +244,19 @@ QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/close_pressed.
              <number>0</number>
             </property>
             <item>
+             <widget class="QWidget" name="widget_2" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="groupBoxWinDbgAbout">
               <property name="minimumSize">
                <size>

@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 #include <thread>
+#include <QProcess>
 
 #include <QEvent>
 #include <QtWidgets/QWidget>
@@ -68,6 +69,7 @@ protected slots:
   void on_update_windbg_path();
   void on_update_process_info();
   void on_process_finished(int exitCode);
+  void on_process_error(QProcess::ProcessError);
 
   void on_comboBoxChanged(const QString& text);
   void on_comboBoxLanguage(const QString& text);

@@ -44,7 +44,14 @@ void WindbgIFEO::on_pushButtonStartDbg_clicked() {
   QFileInfo file_info(cur_path);
   const QString work_dir = file_info.absoluteDir().absolutePath();
   // TODO: start failed reason
-  result = QProcess::startDetached(cur_path, QStringList(), work_dir);
+
+  QProcess* process = new QProcess();
+  result = process->startDetached(cur_path, QStringList(), work_dir);
+  connect(process, SIGNAL(finished(int)), this, SLOT(on_process_finished(int)));
+  connect(process, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(on_process_error(QProcess::ProcessError)));
+  QProcess::ProcessError err = process->error();
+
+  // result = QProcess::startDetached(cur_path, QStringList(), work_dir);
   const std::map<bool, std::pair<QString, LOG_TYPE>> map_result = {
       {{true, {tr("Start WinDbg successful."), LOG_TYPE::INFO}},
        {false, {tr("Start WinDbg error."), LOG_TYPE::ERR}}} };
@@ -189,7 +196,7 @@ void WindbgIFEO::on_btn_attach_clicked() {
   QStringList params = { "-p", pid };
   QFileInfo file_info(windbg_path);
   const QString work_dir = file_info.absoluteDir().absolutePath();
-  QProcess::startDetached(windbg_path, params, work_dir);
+  result = QProcess::startDetached(windbg_path, params, work_dir);
 }
 
 void WindbgIFEO::on_attach_name_changed(const QString& name) {
@@ -494,10 +501,10 @@ void WindbgIFEO::_init_signal() {
 void WindbgIFEO::on_update_windbg_path() {
   this->log_info(tr("finished search windbg path"));
   disconnect(this, SLOT(on_comboBoxChanged(QString)));
+  this->ui.comboBox_windbg_path->clear();
   std::for_each(
     this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
     [this](const std::pair<QString, QString>& value) {
-      this->ui.comboBox_windbg_path->clear();
       QString windbg_path = value.second;
       if (windbg_path.contains("arm")) {
         this->log_info(QString(tr("filter arm version windbg path:%1"))
@@ -534,6 +541,12 @@ void WindbgIFEO::on_update_process_info() {
 }
 
 void WindbgIFEO::on_process_finished(int exitCode) {
+  QProcess* process = (QProcess*)sender();
+  process->deleteLater();
+}
+
+void WindbgIFEO::on_process_error(QProcess::ProcessError error)
+{
   QProcess* process = (QProcess*)sender();
   process->deleteLater();
 }
