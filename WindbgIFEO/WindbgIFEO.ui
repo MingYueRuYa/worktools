@@ -12,8 +12,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>40</height>
+    <width>1167</width>
+    <height>644</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1167</width>
+    <height>644</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -298,6 +304,47 @@ QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/close_pressed.
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_refresh_path">
+                   <property name="minimumSize">
+                    <size>
+                     <width>25</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>25</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+border:None;
+background-color:#FFFFFF;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+border-radius:12px;
+} 
+
+QPushButton:hover {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d2d4d9;
+border-radius:12px;
+}
+
+QPushButton:pressed {
+border:None;
+qproperty-icon: url(:/WindbgConfig/images/def_100_precent/refresh.png) center;
+background-color:#d8dbdf;
+border-radius:12px;
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item>
@@ -473,7 +520,7 @@ background-color:#407ee1;
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>170</width>
+                       <width>210</width>
                        <height>25</height>
                       </size>
                      </property>
@@ -495,7 +542,7 @@ background-color:#407ee1;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="btn_refresh">
+                    <widget class="QPushButton" name="btn_refresh_precoess">
                      <property name="minimumSize">
                       <size>
                        <width>25</width>
@@ -816,7 +863,7 @@ background-color:#407ee1;
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>170</width>
+                       <width>210</width>
                        <height>25</height>
                       </size>
                      </property>
@@ -838,7 +885,7 @@ background-color:#407ee1;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="btn_refresh_2">
+                    <widget class="QPushButton" name="btn_refresh_precoess_2">
                      <property name="minimumSize">
                       <size>
                        <width>25</width>

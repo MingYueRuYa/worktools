@@ -72,8 +72,9 @@ protected slots:
   void on_comboBoxChanged(const QString& text);
   void on_comboBoxLanguage(const QString& text);
 
-  void on_btn_refresh_clicked();
-  void on_btn_refresh_2_clicked();
+  void on_btn_refresh_process_clicked();
+  void on_btn_refresh_process_2_clicked();
+  void on_btn_refresh_path_clicked();
 
   void on_btn_close_clicked();
   void on_btn_mini_clicked();
@@ -102,11 +103,8 @@ private:
 
 private:
   Ui::WindbgIFEOClass ui;
-  bool _stop_enum_process;
   map_qstring _map_windbg_path;
   ProcessHelper::process_map _proces_info;
-  std::unique_ptr<std::thread> _query_windbg_ptr;
-  std::unique_ptr<std::thread> _enum_process_ptr;
   RegEditorHelper _reg_editor_helper;
 
   const QString _ifeo_reg_path =

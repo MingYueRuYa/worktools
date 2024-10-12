@@ -19,7 +19,7 @@
 #include "everything/Everything.h"
 
 WindbgIFEO::WindbgIFEO(QWidget* parent)
-  : QWidget(parent), _map_windbg_path(), _stop_enum_process(false) {
+  : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
   _workbranch_ptr = std::make_unique<wsp::workbranch>(2);
   this->_init_ui();
@@ -29,16 +29,6 @@ WindbgIFEO::WindbgIFEO(QWidget* parent)
 }
 
 WindbgIFEO::~WindbgIFEO() {
-  _stop_enum_process = true;
-  std::vector<std::unique_ptr<std::thread>*> thr_ptr = { &_query_windbg_ptr
-  };
-  for (auto& item : thr_ptr) {
-    if ((*item)->joinable()) {
-      this->log_info(tr("wait thread exit..."));
-      (*item)->join();
-    }
-  }
-
   _workbranch_ptr->wait_tasks();
 }
 
@@ -332,7 +322,7 @@ void WindbgIFEO::log_info(const QString& info, LOG_TYPE type) {
 }
 
 void WindbgIFEO::_query_windbg_path() {
-  // std::thread thr();
+  this->log_info(tr("Start serach windbg path"));
   auto func = [this]() {
     Everything_SetMatchCase(true);
     Everything_SetMatchWholeWord(true);
@@ -350,12 +340,11 @@ void WindbgIFEO::_query_windbg_path() {
         QString("\\") +
         QString::fromStdWString(Everything_GetResultFileName(i));
       map_path[path] = path;
-      qDebug() << path;
     }
     this->_add_windbg_path(map_path);
   };
 
-  _query_windbg_ptr = std::make_unique<std::thread>(func);
+  _workbranch_ptr->submit(func);
 }
 
 void WindbgIFEO::_enum_process_name() {
@@ -494,10 +483,6 @@ void WindbgIFEO::_init_signal() {
   connect(this, SIGNAL(finished_windbg_exes()), this,
     SLOT(on_update_windbg_path()), Qt::QueuedConnection);
 
-  // connect(ui.chb_chinese, SIGNAL(stateChanged(int)), this,
-  //        SLOT(on_chinese_stateChanged(int)));
-  // connect(ui.chb_english, SIGNAL(stateChanged(int)), this,
-  //        SLOT(on_english_stateChanged(int)));
   connect(ui.comboBox_attach_name, SIGNAL(currentTextChanged(QString)), this,
     SLOT(on_attach_name_changed(QString)));
   connect(ui.chb_auto_start, SIGNAL(stateChanged(int)), this,
@@ -507,9 +492,12 @@ void WindbgIFEO::_init_signal() {
 }
 
 void WindbgIFEO::on_update_windbg_path() {
+  this->log_info(tr("finished search windbg path"));
+  disconnect(this, SLOT(on_comboBoxChanged(QString)));
   std::for_each(
     this->_map_windbg_path.begin(), this->_map_windbg_path.end(),
     [this](const std::pair<QString, QString>& value) {
+      this->ui.comboBox_windbg_path->clear();
       QString windbg_path = value.second;
       if (windbg_path.contains("arm")) {
         this->log_info(QString(tr("filter arm version windbg path:%1"))
@@ -539,7 +527,6 @@ void WindbgIFEO::on_update_process_info() {
   }
   for (auto& item : vec_com) {
     item->blockSignals(true);
-    // item->clear();
     this->_remove_combo_item(item);
     item->addItems(process_list);
     item->blockSignals(false);
@@ -569,14 +556,19 @@ void WindbgIFEO::on_comboBoxLanguage(const QString& text) {
   this->update();
 }
 
-void WindbgIFEO::on_btn_refresh_clicked()
+void WindbgIFEO::on_btn_refresh_process_clicked()
 {
   this->_enum_process_name();
 }
 
-void WindbgIFEO::on_btn_refresh_2_clicked()
+void WindbgIFEO::on_btn_refresh_process_2_clicked()
 {
   this->_enum_process_name();
+}
+
+void WindbgIFEO::on_btn_refresh_path_clicked()
+{
+  this->_query_windbg_path();
 }
 
 void WindbgIFEO::on_btn_close_clicked() {
