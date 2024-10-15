@@ -36,7 +36,7 @@ void ComboBox::update_theme() {
 				  font-size:12px;
 				  padding:0 0 0 8px;
 				  border-radius:2px;
-				  margin:0 6px;
+				  margin:0 3px;
 				  text-align: Middle;
 				  }
 				  QComboBox[error=true]{

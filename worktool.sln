@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dolphin", "dolphin\dolphin.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "monkey", "monkey\monkey.vcxproj", "{F85DC719-1249-4347-96FA-D40560B6045C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoundImage", "RoundImage\RoundImage\RoundImage.vcxproj", "{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -69,12 +71,28 @@ Global
 		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|x64.Build.0 = Release|x64
 		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|x86.ActiveCfg = Release|Win32
 		{F85DC719-1249-4347-96FA-D40560B6045C}.Release|x86.Build.0 = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|Win32.Build.0 = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|x64.ActiveCfg = Debug|x64
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|x64.Build.0 = Debug|x64
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|x86.ActiveCfg = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Debug|x86.Build.0 = Debug|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|Win32.ActiveCfg = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|Win32.Build.0 = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|x64.ActiveCfg = Release|x64
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|x64.Build.0 = Release|x64
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|x86.ActiveCfg = Release|Win32
+		{A59BD98C-CF5C-4383-8B65-197EED9A7F3C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = Qt5.6.3
 		SolutionGuid = {27243E68-A755-43AF-8542-334CF3206EC7}
+		Qt5Version = qt5.12.5
 	EndGlobalSection
 EndGlobal

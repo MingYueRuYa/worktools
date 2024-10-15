@@ -347,6 +347,7 @@ void WindbgIFEO::_query_windbg_path() {
         QString("\\") +
         QString::fromStdWString(Everything_GetResultFileName(i));
       map_path[path] = path;
+      qDebug() << path;
     }
     this->_add_windbg_path(map_path);
   };

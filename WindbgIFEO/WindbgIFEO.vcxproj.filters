@@ -61,6 +61,15 @@
     <ClCompile Include="combobox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="move_widget_helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="round_shadow_helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="round_shadow_widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="WindbgIFEO.h">
@@ -71,6 +80,9 @@
     </QtMoc>
     <QtMoc Include="combobox.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="round_shadow_widget.h">
+      <Filter>Source Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +120,12 @@
     </ClInclude>
     <ClInclude Include="NcFrameLessHelper.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="move_widget_helper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="round_shadow_helper.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

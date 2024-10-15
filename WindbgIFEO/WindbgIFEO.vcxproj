@@ -52,11 +52,11 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>5.15.11_x64_static</QtInstall>
+    <QtInstall>5.15.11.mt_static</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>5.15.11_x64_static</QtInstall>
+    <QtInstall>5.15.11.mt_static</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -107,9 +107,12 @@
     <ClCompile Include="dolproductinfo.cpp" />
     <ClCompile Include="exec_helper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="move_widget_helper.cpp" />
     <ClCompile Include="NcFrameLessHelper.cpp" />
     <ClCompile Include="process_helper.cpp" />
     <ClCompile Include="reg_editor_helper.cpp" />
+    <ClCompile Include="round_shadow_helper.cpp" />
+    <ClCompile Include="round_shadow_widget.cpp" />
     <ClCompile Include="settings.cpp" />
     <ClCompile Include="WindbgIFEO.cpp" />
     <ClCompile Include="windbg_info_mgr.cpp" />
@@ -127,10 +130,13 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="dolproductinfo.h" />
     <ClInclude Include="exec_helper.h" />
+    <ClInclude Include="move_widget_helper.h" />
     <ClInclude Include="NcFrameLessHelper.h" />
     <ClInclude Include="process_helper.h" />
     <ClInclude Include="reg_editor_helper.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="round_shadow_helper.h" />
+    <QtMoc Include="round_shadow_widget.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="windbg_info_mgr.h" />
   </ItemGroup>
