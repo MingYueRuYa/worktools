@@ -17,9 +17,9 @@ RoundShadowWidget::RoundShadowWidget(QWidget* parent) : QWidget(parent) {
 }
 
 RoundShadowWidget::RoundShadowWidget(const int shadow_width,
-                                     const int radius,
-                                     QWidget* parent)
-    : RoundShadowHelper(shadow_width, radius), QWidget(parent) {}
+  const int radius,
+  QWidget* parent)
+  : RoundShadowHelper(shadow_width, radius), QWidget(parent) {}
 
 void RoundShadowWidget::paintEvent(QPaintEvent* ev) {
   const int kBORDER_DISTANCE = shadow_width_ / 2;
@@ -35,22 +35,22 @@ void RoundShadowWidget::paintEvent(QPaintEvent* ev) {
 
   RoundShadow(&painter, QRect(0, 0, this->width(), this->height()));
   QRect rect(kBORDER_DISTANCE, kBORDER_DISTANCE,
-             this->width() - kBORDER_DISTANCE * 2,
-             this->height() - kBORDER_DISTANCE * 2);
+    this->width() - kBORDER_DISTANCE * 2,
+    this->height() - kBORDER_DISTANCE * 2);
   FillRoundShadow(&painter, rect, Qt::white, radius_);
 }
 
-void RoundShadowWidget::mousePressEvent(QMouseEvent* event) {
-  this->raise();
-  move_widget_helper_.mousePressEvent(event, pos());
-}
-
-void RoundShadowWidget::mouseReleaseEvent(QMouseEvent* event) {
-  move_widget_helper_.mouseReleaseEvent(event);
-}
-
-void RoundShadowWidget::mouseMoveEvent(QMouseEvent* event) {
-  if (move_widget_helper_.CanMove()) {
-    move(move_widget_helper_.mouseMoveEvent(event));
-  }
-}
+//void RoundShadowWidget::mousePressEvent(QMouseEvent* event) {
+//  this->raise();
+//  move_widget_helper_.mousePressEvent(event, pos());
+//}
+//
+//void RoundShadowWidget::mouseReleaseEvent(QMouseEvent* event) {
+//  move_widget_helper_.mouseReleaseEvent(event);
+//}
+//
+//void RoundShadowWidget::mouseMoveEvent(QMouseEvent* event) {
+//  if (move_widget_helper_.CanMove()) {
+//    move(move_widget_helper_.mouseMoveEvent(event));
+//  }
+//}

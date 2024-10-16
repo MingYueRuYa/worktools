@@ -7,19 +7,25 @@
     <x>0</x>
     <y>0</y>
     <width>1167</width>
-    <height>721</height>
+    <height>740</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
     <width>1167</width>
-    <height>600</height>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1167</width>
-    <height>771</height>
+    <height>740</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -605,7 +611,7 @@ font-size: 12px;</string>
                         </property>
                         <property name="minimumSize">
                          <size>
-                          <width>210</width>
+                          <width>150</width>
                           <height>25</height>
                          </size>
                         </property>
@@ -688,7 +694,7 @@ font-size: 13px;</string>
                        <widget class="QLineEdit" name="lineEdit_process_param">
                         <property name="minimumSize">
                          <size>
-                          <width>0</width>
+                          <width>170</width>
                           <height>25</height>
                          </size>
                         </property>
@@ -980,7 +986,7 @@ font-size: 13px;</string>
                         </property>
                         <property name="minimumSize">
                          <size>
-                          <width>210</width>
+                          <width>150</width>
                           <height>25</height>
                          </size>
                         </property>
@@ -1041,19 +1047,6 @@ border-radius:12px;
                          <string/>
                         </property>
                        </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_8">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
                       </item>
                      </layout>
                     </item>
@@ -1582,17 +1575,6 @@ border:0px;
               <property name="bottomMargin">
                <number>10</number>
               </property>
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="styleSheet">
-                 <string notr="true">font-family: &quot;Microsoft YaHei&quot;;
-font-size: 12px;</string>
-                </property>
-                <property name="text">
-                 <string>Operation log:</string>
-                </property>
-               </widget>
-              </item>
               <item>
                <widget class="QTextBrowser" name="textBrowserLog">
                 <property name="styleSheet">
