@@ -6,7 +6,8 @@
 #include "ui_WindbgIFEO.h"
 
 #include "process_helper.h"
-#include "workspace/workspace.hpp"
+//#include "workspace/workspace.hpp"
+#include "ThreadPool/thread_pool.hpp"
 
 #include <map>
 #include <string>
@@ -125,5 +126,6 @@ private:
 
   Settings _settings;
   NcFramelessHelper* _frame_less_helper;
-  std::unique_ptr<wsp::workbranch> _workbranch_ptr;
+  //std::unique_ptr<wsp::workbranch> _workbranch_ptr;
+  std::unique_ptr<std::threadpool> _workbranch_ptr;
 };

@@ -21,7 +21,7 @@
 WindbgIFEO::WindbgIFEO(QWidget* parent)
   : QWidget(parent), _map_windbg_path() {
   ui.setupUi(this);
-  _workbranch_ptr = std::make_unique<wsp::workbranch>(2);
+  _workbranch_ptr = std::make_unique<std::threadpool>();
   this->_init_ui();
   this->_init_signal();
   this->_query_windbg_path();
@@ -29,7 +29,7 @@ WindbgIFEO::WindbgIFEO(QWidget* parent)
 }
 
 WindbgIFEO::~WindbgIFEO() {
-  _workbranch_ptr->wait_tasks();
+  //_workbranch_ptr->wait_tasks();
 }
 
 void WindbgIFEO::on_pushButtonStartDbg_clicked() {
@@ -352,7 +352,7 @@ void WindbgIFEO::_query_windbg_path() {
     this->_add_windbg_path(map_path);
   };
 
-  _workbranch_ptr->submit(func);
+  _workbranch_ptr->commit(func);
 }
 
 void WindbgIFEO::_enum_process_name() {
@@ -363,7 +363,7 @@ void WindbgIFEO::_enum_process_name() {
       this->_add_proc_info(proc_map);
     }
   };
-  _workbranch_ptr->submit(func);
+  _workbranch_ptr->commit(func);
 }
 
 void WindbgIFEO::_add_proc_info(const ProcessHelper::process_map& process) {
