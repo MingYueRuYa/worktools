@@ -207,7 +207,11 @@ QPushButton:pressed{border-image: url(&quot;:/WindbgConfig/images/close_pressed.
          <item>
           <widget class="QScrollArea" name="scrollArea">
            <property name="styleSheet">
-            <string notr="true">
+            <string notr="true">QScrollArea{
+background:
+#FFFFFF;
+border:none;
+}
 /*以下是滑块设置*/
 
 QScrollBar:vertical{
@@ -243,11 +247,7 @@ QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal{height:0px;width
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background:none;}
 
 
-QScrollArea{
-background:
-#FFFFFF;
-border:none;
-}
+
 </string>
            </property>
            <property name="widgetResizable">
@@ -750,16 +750,15 @@ border-radius:12px;
                               </property>
                               <property name="styleSheet">
                                <string notr="true">QLineEdit{
-          border:1px solid #eceff7;
-          background:#eceff7;
-				  color:
-				  #5b5c60;
-				  font-size:12px;
-					padding-left:10px;
-				  border-radius:12px;
+border:1px solid #eceff7;
+background:#eceff7;
+color:
+#5b5c60;
+font-size:12px;
+padding-left:10px;
+border-radius:12px;
+font-family: &quot;Microsoft YaHei&quot;;
 				  }
-
-
 
 QLineEdit:focus{
           border:1px solid #0b57d0;
@@ -1067,7 +1066,7 @@ font-size: 12px;</string>
                                </size>
                               </property>
                               <property name="editable">
-                               <bool>true</bool>
+                               <bool>false</bool>
                               </property>
                               <property name="placeholderText">
                                <string>example: git.ext</string>

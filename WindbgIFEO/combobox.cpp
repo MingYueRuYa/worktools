@@ -38,6 +38,7 @@ void ComboBox::update_theme() {
 				  border-radius:2px;
 				  margin:0 3px;
 				  text-align: Middle;
+					font-family: "Microsoft YaHei";
 				  }
 				  QComboBox[error=true]{
 				  border: 1px solid rgba(255, 61, 61, 0.2);

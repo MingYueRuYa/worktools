@@ -539,6 +539,14 @@ void WindbgIFEO::on_update_process_info() {
     item->addItems(process_list);
     item->blockSignals(false);
   }
+
+  for (auto& item : vec_com) {
+    if (item->count() <= 0) {
+      continue;
+    }
+    item->setCurrentIndex(0);
+  }
+  
 }
 
 void WindbgIFEO::on_process_finished(int exitCode) {
