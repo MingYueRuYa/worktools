@@ -135,7 +135,11 @@
            </layout>
           </item>
           <item>
-           <widget class="QListWidget" name="listWidget"/>
+           <widget class="ListWidget" name="listWidget">
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+           </widget>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -216,6 +220,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ListWidget</class>
+   <extends>QListWidget</extends>
+   <header>ListWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="EnvTools.qrc"/>
  </resources>

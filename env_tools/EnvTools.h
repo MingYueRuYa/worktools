@@ -73,6 +73,9 @@ struct std::equal_to<CachedData*> {
   }
 };
 
+using Key = std::wstring;
+using Value = CachedData*;
+
 class EnvTools : public QWidget
 {
   Q_OBJECT
@@ -83,6 +86,7 @@ public:
 private:
   void _init_ui();
   void _init_signal();
+  void _connect_sig(bool is_con);
   void _update_cached(EditType type,
     const QString& old_key,
     const QString& new_key,
@@ -95,19 +99,33 @@ private:
     const QString& new_value);
   void _clear_cached();
   void test_data();
+  QString _find_table_value(const QString& key);
+  QString _list_get_value();
+  void _kill_explorer();
+  void _start_explorer();
+  QString _get_table_item_data(int row, int column);
+  QString _get_table_item_data(QTableWidgetItem* item);
+  QString _get_table_item_text(int row, int column);
+  QString _get_table_item_text(QTableWidgetItem* item);
+  void _reset_data();
+  void _clear_table_item();
 
 protected slots:
   void DoCellClicked(int row, int column);
-  void OnItemChanged(QTableWidgetItem*);
+  void OnTableItemChanged(QTableWidgetItem*);
+  void OnListItemChanged(QListWidgetItem*);
+  void OnListItemMoved(/*const QModelIndexList&*/);
   void on_btn_add_all_clicked();
   void on_btn_delete_all_clicked();
   void on_btn_add_sub_clicked();
   void on_btn_del_sub_clicked();
   void on_btn_save_clicked();
+  void on_btn_restart_explorer_clicked();
 
 private:
   Ui::EnvToolsClass ui;
   EnvHelper _env_helper;
   //std::hash<CachedData*> _cached_data;
-  std::unordered_set<CachedData*> _cached_data;
+  //std::unordered_set<CachedData*> _cached_data;
+  std::map<Key, Value> _cached_data;
 };

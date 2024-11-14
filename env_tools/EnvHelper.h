@@ -23,10 +23,14 @@ public:
   std::pair<wstring, wstring> find(const wstring& name) const;
   bool set_key(LPCWSTR varName, LPCWSTR varValue);
   bool del_key(const std::wstring& valueName);
+  void reset();
 
 private:
   bool _init_env();
   void _convert_2_map();
+  void _query_values();
+  void _enum_keys(HKEY hKey);
+
 
 private:
   vector<wstring> _vec_env;

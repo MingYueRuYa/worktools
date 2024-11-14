@@ -66,6 +66,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -102,10 +103,12 @@
     <QtMoc Include="EnvTools.h" />
     <ClCompile Include="EnvHelper.cpp" />
     <ClCompile Include="EnvTools.cpp" />
+    <ClCompile Include="ListWidget.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnvHelper.h" />
+    <QtMoc Include="ListWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
