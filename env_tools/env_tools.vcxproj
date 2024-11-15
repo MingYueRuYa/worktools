@@ -98,7 +98,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="EnvTools.qrc" />
     <QtUic Include="EnvTools.ui" />
     <QtMoc Include="EnvTools.h" />
     <ClCompile Include="EnvHelper.cpp" />
@@ -109,6 +108,9 @@
   <ItemGroup>
     <ClInclude Include="EnvHelper.h" />
     <QtMoc Include="ListWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="res\EnvTools.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

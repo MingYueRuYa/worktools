@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/EnvTools">
+        <file>icon.png</file>
+    </qresource>
+</RCC>
