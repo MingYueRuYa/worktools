@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/EnvTools">
         <file>icon.png</file>
+        <file>translator/env_tools_zh.qm</file>
     </qresource>
 </RCC>

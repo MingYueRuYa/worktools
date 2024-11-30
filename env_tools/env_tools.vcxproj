@@ -36,12 +36,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.11_x64_static</QtInstall>
+    <QtInstall>5.15.11.mt_static</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.11_x64_static</QtInstall>
+    <QtInstall>5.15.11.mt_static</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
@@ -68,11 +68,17 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -105,12 +111,14 @@
   <ItemGroup>
     <QtUic Include="EnvTools.ui" />
     <QtMoc Include="EnvTools.h" />
+    <ClCompile Include="application.cpp" />
     <ClCompile Include="EnvHelper.cpp" />
     <ClCompile Include="EnvTools.cpp" />
     <ClCompile Include="ListWidget.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="application.h" />
     <ClInclude Include="EnvHelper.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="ListWidget.h" />
@@ -119,11 +127,14 @@
     <QtRcc Include="res\EnvTools.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\app.ico" />
+    <Image Include="res\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="env_tools.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\app.ico" />
-    <Image Include="res\icon.png" />
+    <None Include="env_tools_zh.ts" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
