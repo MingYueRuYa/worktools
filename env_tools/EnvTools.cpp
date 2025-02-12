@@ -355,6 +355,7 @@ void EnvTools::on_btn_add_sub_clicked()
   QListWidgetItem* item = new QListWidgetItem();
   item->setFlags(item->flags() | Qt::ItemIsEditable);
   ui.listWidget->addItem(item);
+  ui.listWidget->setCurrentItem(item);
 }
 
 void EnvTools::on_btn_del_sub_clicked()
