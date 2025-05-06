@@ -10,12 +10,15 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
+    shadowwidget.cpp \
     widget.cpp
 
 HEADERS += \
+    shadowwidget.h \
     widget.h
 
 FORMS += \
+    shadow.ui \
     sheet_style_demo.ui
 
 # Default rules for deployment.

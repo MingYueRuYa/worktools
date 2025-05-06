@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-namespace Ui { class Form; }
+namespace Ui { class DemoWnd; }
 
 class Widget : public QWidget
 {
@@ -17,6 +17,6 @@ private slots:
     void on_pushButtonShadow_clicked();
 
 private:
-    Ui::Form *ui;
+    Ui::DemoWnd *ui;
 };
 #endif // WIDGET_H

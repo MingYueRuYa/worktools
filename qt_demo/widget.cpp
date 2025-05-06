@@ -1,11 +1,12 @@
 #include "widget.h"
 #include "ui_sheet_style_demo.h"
+#include "shadowwidget.h"
 
 #include <QWidget>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::Form)
+    , ui(new Ui::DemoWnd)
 {
     ui->setupUi(this);
 
@@ -24,13 +25,16 @@ Widget::~Widget()
 
 void Widget::on_pushButtonShadow_clicked()
 {
-    QWidget *widget = new QWidget();
-    QString strQss = QString("QWidget{border-width: 24px; border-image: url(\":resource/shadow.png\") 24 24 24 24 stretch stretch;}");
-    if (strQss != widget->styleSheet())
-    {
-        widget->setStyleSheet(strQss);
-    }
-    widget->setWindowFlags(widget->windowFlags()|Qt::FramelessWindowHint);
+    // QWidget *widget = new QWidget();
+    // QString strQss = QString("QWidget{border-width: 24px; border-image: url(\":resource/shadow.png\") 24 24 24 24 stretch stretch;}");
+    // if (strQss != widget->styleSheet())
+    // {
+    //     widget->setStyleSheet(strQss);
+    // }
+    // widget->setWindowFlags(widget->windowFlags()|Qt::FramelessWindowHint);
+    // widget->show();
+
+    ShadowWidget *widget = new ShadowWidget();
     widget->show();
 }
 
