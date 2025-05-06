@@ -343,7 +343,7 @@ color:
     </property>
    </item>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="pushButtonShadow">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -363,7 +363,7 @@ border-left-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rg
 border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(0, 0, 0, 255));</string>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>阴影窗口</string>
    </property>
   </widget>
   <widget class="QTabWidget" name="tabWidget">

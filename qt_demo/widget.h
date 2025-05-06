@@ -13,6 +13,9 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+private slots:
+    void on_pushButtonShadow_clicked();
+
 private:
     Ui::Form *ui;
 };

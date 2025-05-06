@@ -127,6 +127,8 @@ void monMainWindow::ReadRCFile()
         if (! file.open(QIODevice::ReadOnly)) {
             continue;
         }
+        RCFileStatus rcStatus;
+        rcStatus.path = mFilePathList[i];
 
         QTextStream textstream(&file);
         textstream.setCodec("UTF-8");
@@ -139,15 +141,18 @@ void monMainWindow::ReadRCFile()
             if (linestr.contains(FILEVERSION)) {
                 tableWidget->setItem(i, 1, 
                         new QTableWidgetItem(linestrlist[1].replace("\"", "")));
+                rcStatus.file_version = linestrlist[1].replace("\"", "");
             } else if (linestr.contains(PRODUCTVERSION)) {
                 tableWidget->setItem(i, 2, 
                         new QTableWidgetItem(linestrlist[1].replace("\"", "")));
+                rcStatus.product_version = linestrlist[1].replace("\"", "");
             }
         }
         tableWidget->setItem(i, 3, 
                         new QTableWidgetItem());
 
         file.close();
+        mVecRCStatus.push_back(rcStatus);
     }
 }
 

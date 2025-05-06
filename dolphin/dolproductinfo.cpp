@@ -365,8 +365,8 @@ LPSTR dolProductInfo::FormatDWord(DWORD dwValue, LPSTR lpszValue, LPSTR lpszMore
 	nf.NumDigits	= 0;
 	nf.LeadingZero	= 0;
 	nf.Grouping		= 3;
-	nf.lpDecimalSep = ".";
-	nf.lpThousandSep = ",";
+	nf.lpDecimalSep = (char *)".";
+	nf.lpThousandSep = (char *)",";
 	nf.NegativeOrder = 0;
 
 	_ultoa(dwValue, szTemp, 10);

@@ -4,6 +4,13 @@
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QDir>
 
+struct RCFileStatus
+{
+    QString file_version;
+    QString product_version;
+    QString path;
+};
+
 class monMainWindow : public QMainWindow, public Ui::monMainWindowClass
 {
     Q_OBJECT
@@ -33,4 +40,5 @@ private:
 private:
     QDir mSelectDir;
     QList<QString> mFilePathList;
+    QList<RCFileStatus> mVecRCStatus;
 };

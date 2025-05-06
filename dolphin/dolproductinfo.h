@@ -76,7 +76,7 @@ public:
 private:
 	struct KEY_VALUE {
 		DWORD mKey;
-		char *mValue;
+		const char *mValue;
 	};
 
     typedef struct {
