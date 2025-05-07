@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     shadowwidget.cpp \
-    widget.cpp
+    widget.cpp\
+    NcFrameLessHelper.cpp
 
 HEADERS += \
     shadowwidget.h \
-    widget.h
+    widget.h \
+    NcFrameLessHelper.h
 
 FORMS += \
     shadow.ui \
@@ -28,3 +30,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
+
+LIBS += -luser32

@@ -1,6 +1,8 @@
 #ifndef SHADOWWIDGET_H
 #define SHADOWWIDGET_H
 
+#include "NcFrameLessHelper.h"
+
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +25,7 @@ signals:
 
 private:
     Ui::Form *ui;
+    NcFramelessHelper m_frameless;
 };
 
 #endif // SHADOWWIDGET_H

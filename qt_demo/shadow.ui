@@ -36,10 +36,10 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QWidget" name="widgetTitle" native="true">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>890</width>
           <height>50</height>
          </size>
         </property>
