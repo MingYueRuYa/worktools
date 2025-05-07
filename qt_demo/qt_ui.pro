@@ -12,12 +12,14 @@ SOURCES += \
     main.cpp \
     shadowwidget.cpp \
     widget.cpp\
-    NcFrameLessHelper.cpp
+    NcFrameLessHelper.cpp \
+    blur_widget.cpp
 
 HEADERS += \
     shadowwidget.h \
     widget.h \
-    NcFrameLessHelper.h
+    NcFrameLessHelper.h \
+    blur_widget.h
 
 FORMS += \
     shadow.ui \
