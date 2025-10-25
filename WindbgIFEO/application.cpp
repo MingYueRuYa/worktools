@@ -56,20 +56,22 @@ void Application::_init() {
   QLoggingCategory::defaultCategory()->setEnabled(QtCriticalMsg, false);
 #endif
   QWebEngineSettings* webSetting = QWebEngineSettings::globalSettings();
-  webSetting->setAttribute(QWebEngineSettings::AutoLoadImages, true);
-  webSetting->setAttribute(QWebEngineSettings::PluginsEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
-  webSetting->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, true);
-  webSetting->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
-  webSetting->setAttribute(QWebEngineSettings::DnsPrefetchEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-  webSetting->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, true);
-  webSetting->setAttribute(QWebEngineSettings::WebGLEnabled, true);
-  webSetting->setAttribute(QWebEngineSettings::AutoLoadIconsForPage, false);
-  webSetting->setAttribute(QWebEngineSettings::XSSAuditingEnabled, false);
-  webSetting->setAttribute(QWebEngineSettings::ErrorPageEnabled, false);
-  webSetting->setDefaultTextEncoding("UTF-8");
+  if (webSetting != nullptr) {
+      webSetting->setAttribute(QWebEngineSettings::AutoLoadImages, true);
+      webSetting->setAttribute(QWebEngineSettings::PluginsEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+      webSetting->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, true);
+      webSetting->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
+      webSetting->setAttribute(QWebEngineSettings::DnsPrefetchEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
+      webSetting->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, true);
+      webSetting->setAttribute(QWebEngineSettings::WebGLEnabled, true);
+      webSetting->setAttribute(QWebEngineSettings::AutoLoadIconsForPage, false);
+      webSetting->setAttribute(QWebEngineSettings::XSSAuditingEnabled, false);
+      webSetting->setAttribute(QWebEngineSettings::ErrorPageEnabled, false);
+      webSetting->setDefaultTextEncoding("UTF-8");
+  }
 }

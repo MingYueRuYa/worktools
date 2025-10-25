@@ -84,6 +84,7 @@ protected slots:
 
 protected:
   virtual void changeEvent(QEvent* ev) override;
+  virtual bool nativeEvent(const QByteArray& eventType, void* message, long* result);
 
 private:
   void _init_ui();
@@ -103,7 +104,7 @@ private:
   void _start_reg_edit_proc();
   void _location_reg_path(const QString& reg_path);
   void _remove_combo_item(QComboBox* combo);
-
+    void _updateWindowGeometry();
 private:
   Ui::WindbgIFEOClass ui;
   map_qstring _map_windbg_path;
@@ -128,4 +129,5 @@ private:
   NcFramelessHelper* _frame_less_helper;
   //std::unique_ptr<wsp::workbranch> _workbranch_ptr;
   std::unique_ptr<std::threadpool> _workbranch_ptr;
+  int _origin_width = 0;
 };

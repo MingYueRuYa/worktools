@@ -12,6 +12,8 @@
 #include <QtCore/QSettings>
 #include <algorithm>
 #include <tuple>
+#include <QScreen>
+#include <QWindow>
 
 #include "NcFrameLessHelper.h"
 #include "application.h"
@@ -451,6 +453,7 @@ void WindbgIFEO::_init_ui() {
   ui.chb_auto_start->setChecked(_settings.get_auto_start());
 
   this->_init_comobo();
+  _origin_width = this->width();
 
   QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
   effect->setOffset(0, 0);
@@ -609,4 +612,43 @@ void WindbgIFEO::changeEvent(QEvent* ev) {
     ui.retranslateUi(this);
   }
   QWidget::changeEvent(ev);
+}
+
+bool WindbgIFEO::nativeEvent(const QByteArray& eventType, void* message, long* result)
+{
+    MSG* pMsg = (MSG*)message;
+    do
+    {
+        switch (pMsg->message)
+        {
+        case WM_DISPLAYCHANGE:
+            //case WM_DPICHANGED:
+        case WM_DEVICECHANGE:
+            QTimer::singleShot(1000, this, [this]() {_updateWindowGeometry(); });
+            break;
+        default:
+            break;
+        }
+    } while (false);
+
+    return __super::nativeEvent(eventType, message, result);
+}
+
+void WindbgIFEO::_updateWindowGeometry()
+{
+    QRect screenRect = QApplication::primaryScreen()->geometry();
+    QRect wndRect = geometry();
+
+    if (!screenRect.contains(wndRect.center()))
+    {
+        move(screenRect.center() - QPoint(width() / 2, height() / 2));
+    }
+
+    this->setFixedWidth(_origin_width + 1);
+    this->setFixedWidth(_origin_width);
+    QWindow* win = windowHandle();
+    if (win)
+    {
+        win->setScreen(QApplication::screenAt(pos()));
+    }
 }
