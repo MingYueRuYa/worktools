@@ -52,12 +52,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>5.15.11.mt_static</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>Qt_Qt-5.15.8</QtInstall>
+    <QtModules>core;network;gui;widgets;webchannel;webengine;webenginewidgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>5.15.11.mt_static</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>Qt_Qt-5.15.8</QtInstall>
+    <QtModules>core;network;gui;widgets;webchannel;webengine;webenginewidgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />

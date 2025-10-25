@@ -15,6 +15,9 @@ class Application : public QApplication {
   bool switch_language(Language lang);
   QString AppName() const;
 
+
+
  private:
+  void _init();
   bool _install_lang(QTranslator& trans, Language lang);
 };
