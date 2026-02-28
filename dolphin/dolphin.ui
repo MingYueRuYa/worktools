@@ -31,6 +31,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btn_selectdir">
+        <property name="text">
+         <string>选择目录</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btn_ok">
         <property name="text">
          <string>确定</string>
@@ -47,6 +54,11 @@
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>false</bool>
       </attribute>
+      <column>
+       <property name="text">
+        <string>文件名</string>
+       </property>
+      </column>
       <column>
        <property name="text">
         <string>原始文件名</string>

@@ -31,6 +31,7 @@ protected:
 protected slots:
     void DoAbout();
 	void DoOpenFileDialog();
+	void DoOpenDirDialog();
 	void DoOk();
 	void DoClear(bool checked);
 
@@ -40,6 +41,7 @@ private:
     void ShowInfo();
 	void InitMenu();
 	void ClearTable();
+	QStringList CollectExeDllFromDir(const QString &dirPath);
 
 private:
 	QMenu *mMenu;

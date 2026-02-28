@@ -16,6 +16,10 @@
 
 #define ENCODING (X509_ASN_ENCODING | PKCS_7_ASN_ENCODING)
 
+#ifndef CERT_FIND_ISSUER_AND_SERIAL_NUMBER
+#define CERT_FIND_ISSUER_AND_SERIAL_NUMBER 3
+#endif
+
 const int LINE_BUFFER_SIZE = 2048;
 
 dolProductInfo::dolProductInfo(const string &pFilePath, bool pIsInit)
@@ -64,6 +68,10 @@ bool dolProductInfo::Init()
 
 	CloseHandle(hFile);
 
+	// Query digital signature early: do not depend on version info.
+	// Some signed PE files have no version resource; query signature regardless.
+	QueryDigSignature();
+
 	if ((size = GetFileVersionInfoSizeA(mFilePath.c_str(), &temp)) < 0) {
 		return false;
 	}
@@ -99,28 +107,31 @@ bool dolProductInfo::Init()
 		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
 	}
 
-	if (! VerQueryValueA((LPCVOID)buf, 
+	// Language/codepage from Translation; 040904E4 = en-US, used to build version info path
+	bool translationOk = VerQueryValueA((LPCVOID)buf, 
 						("\\VarFileInfo\\Translation"), 
-						(LPVOID *)&str, &size)) {
-		// return false;
-	}
-	
-	sprintf_s(szLang1, sizeof(szLang1)/sizeof(char), 
-				"%4.4X%4.4X", 
-				*(unsigned short *)str, 
-				*(unsigned short *)(str+2));
-
-
-	// 如果采用unicode读取失败，就在用mult char在读取一次
-	result = GetInfoStr(buf, szLang1, "ProductName", tempbuf);
-	if (! result) {
-		ZeroMemory(szLang1, 20);	
+						(LPVOID *)&str, &size) && str != NULL && size >= 4;
+	if (! translationOk) {
+		strcpy_s(szLang1, "040904E4");
+	} else {
 		sprintf_s(szLang1, sizeof(szLang1)/sizeof(char), 
 					"%4.4X%4.4X", 
 					*(unsigned short *)str, 
-					0x4E4);
+					*(unsigned short *)(str+2));
+	}
 
-		if (GetInfoStr(buf, szLang1, "ProductName", tempbuf)) {
+	char szLangAlt[20];
+	if (translationOk) {
+		sprintf_s(szLangAlt, sizeof(szLangAlt)/sizeof(char), 
+					"%4.4X%4.4X", *(unsigned short *)str, (unsigned short)0x04E4);
+	} else {
+		strcpy_s(szLangAlt, "040904E4");
+	}
+
+	// ProductName: try current lang then fallback (e.g. Chinese)
+	result = GetInfoStr(buf, szLang1, "ProductName", tempbuf);
+	if (! result) {
+		if (GetInfoStr(buf, szLangAlt, "ProductName", tempbuf)) {
 			mProductName = tempbuf;
 			ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
 		}
@@ -129,8 +140,17 @@ bool dolProductInfo::Init()
 		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
 	}
 
-
+	// FileDescription: multi-lang fallback (current / alt / 040904E4 / 080404B0)
 	if (GetInfoStr(buf, szLang1, "FileDescription", tempbuf)) {
+		mFileDescription = tempbuf;
+		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
+	} else if (GetInfoStr(buf, szLangAlt, "FileDescription", tempbuf)) {
+		mFileDescription = tempbuf;
+		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
+	} else if (GetInfoStr(buf, "040904E4", "FileDescription", tempbuf)) {
+		mFileDescription = tempbuf;
+		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
+	} else if (GetInfoStr(buf, "080404B0", "FileDescription", tempbuf)) {
 		mFileDescription = tempbuf;
 		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
 	}
@@ -149,8 +169,6 @@ bool dolProductInfo::Init()
 		mOriginName = tempbuf;
 		ZeroMemory(tempbuf, LINE_BUFFER_SIZE);
 	}
-
-    string signstr = QueryDigSignature(); 
 
 	delete[] buf;
 	return true;
@@ -395,6 +413,8 @@ string dolProductInfo::QueryDigSignature()
 {
     HCERTSTORE hStore   = NULL;
     HCRYPTMSG  hMsg     = NULL;
+    PCMSG_SIGNER_INFO pSignerInfo = NULL;
+    PCCERT_CONTEXT pCertContext = NULL;
     DWORD dwEncoding, dwContentType, dwFormatType;
     SPROG_PUBLISHERINFO ProgPubInfo;
     ZeroMemory(&ProgPubInfo, sizeof(ProgPubInfo));
@@ -403,7 +423,7 @@ string dolProductInfo::QueryDigSignature()
     wstring filepath = StringtoWString(mFilePath);
     lstrcpynW(szFileName, filepath.c_str(), MAX_PATH);
 #else
-    if (mbstowcs(szFileName, mFilePath.c_str(), MAX_PATH) == -1)
+    if (mbstowcs(szFileName, mFilePath.c_str(), MAX_PATH) == (size_t)-1)
     {
         return "";
     }
@@ -424,19 +444,23 @@ string dolProductInfo::QueryDigSignature()
 
     if (! fResult) { return ""; }
 
-    DWORD dwSignerInfo;
+    DWORD dwSignerInfo = 0;
     if ( ! CryptMsgGetParam(hMsg, 
                           CMSG_SIGNER_INFO_PARAM,
                           0,
                           NULL,
                           &dwSignerInfo)) {
+        CertCloseStore(hStore, 0);
+        CryptMsgClose(hMsg);
         return "";
     }
 
-
-    PCMSG_SIGNER_INFO pSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, 
-                                                                dwSignerInfo);
-    if (NULL == pSignerInfo) { return ""; }
+    pSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dwSignerInfo);
+    if (NULL == pSignerInfo) {
+        CertCloseStore(hStore, 0);
+        CryptMsgClose(hMsg);
+        return "";
+    }
 
     fResult = CryptMsgGetParam(hMsg, 
                                CMSG_SIGNER_INFO_PARAM,
@@ -444,24 +468,38 @@ string dolProductInfo::QueryDigSignature()
                                (PVOID)pSignerInfo,
                                &dwSignerInfo);
 
-    if (! fResult) { return ""; }
-
-    if (GetProgAndPublisherInfo(pSignerInfo, &ProgPubInfo)) {
-        // TODO 
+    if (! fResult) {
+        LocalFree(pSignerInfo);
+        CertCloseStore(hStore, 0);
+        CryptMsgClose(hMsg);
+        return "";
     }
 
+    if (GetProgAndPublisherInfo(pSignerInfo, &ProgPubInfo)) {
+        // TODO
+    }
 
     CERT_INFO CertInfo;
+    ZeroMemory(&CertInfo, sizeof(CertInfo));
     CertInfo.Issuer         = pSignerInfo->Issuer;
     CertInfo.SerialNumber   = pSignerInfo->SerialNumber;
 
-    PCCERT_CONTEXT pCertContext = CertFindCertificateInStore(hStore,
+    // Find cert by Issuer+SerialNumber (CERT_FIND_ISSUER_AND_SERIAL_NUMBER), not by Subject
+    pCertContext = CertFindCertificateInStore(hStore,
                                             ENCODING,
                                             0,
-                                            CERT_FIND_SUBJECT_CERT,
+                                            CERT_FIND_ISSUER_AND_SERIAL_NUMBER,
                                             (PVOID)&CertInfo,
                                             NULL);
-    if (NULL == pCertContext) { return ""; }
+    if (NULL == pCertContext) {
+        if (ProgPubInfo.lpszProgramName != NULL) LocalFree(ProgPubInfo.lpszProgramName);
+        if (ProgPubInfo.lpszPublisherLink != NULL) LocalFree(ProgPubInfo.lpszPublisherLink);
+        if (ProgPubInfo.lpszMoreInfoLink != NULL) LocalFree(ProgPubInfo.lpszMoreInfoLink);
+        LocalFree(pSignerInfo);
+        CertCloseStore(hStore, 0);
+        CryptMsgClose(hMsg);
+        return "";
+    }
 
     PrintCertificateInfo(pCertContext, mDigSignature);
 
@@ -473,12 +511,12 @@ string dolProductInfo::QueryDigSignature()
     if (ProgPubInfo.lpszMoreInfoLink != NULL)
         LocalFree(ProgPubInfo.lpszMoreInfoLink);
 
-    if (pSignerInfo != NULL) LocalFree(pSignerInfo);
-    if (pCertContext != NULL) CertFreeCertificateContext(pCertContext);
-    if (hStore != NULL) CertCloseStore(hStore, 0);
-    if (hMsg != NULL) CryptMsgClose(hMsg);
+    LocalFree(pSignerInfo);
+    CertFreeCertificateContext(pCertContext);
+    CertCloseStore(hStore, 0);
+    CryptMsgClose(hMsg);
 
-    return "";
+    return mDigSignature;
 }
 
 LPWSTR dolProductInfo::AllocateAndCopyWideString(LPCWSTR inputString)

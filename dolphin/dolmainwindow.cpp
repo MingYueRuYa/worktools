@@ -8,6 +8,7 @@
 #include "dolmainwindow.h"
 #include <windows.h>
 #include <QtCore\QDebug>
+#include <QtCore\QDir>
 #include <QtWidgets\QFileDialog>
 #include <QtWidgets\QMessagebox>
 
@@ -33,14 +34,15 @@ dolMainWindow::dolMainWindow(QWidget *parent)
 	InitMenu();
 
 	connect(btn_serachpath, SIGNAL(clicked()), this, SLOT(DoOpenFileDialog()));
+	connect(btn_selectdir, SIGNAL(clicked()), this, SLOT(DoOpenDirDialog()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(DoOk()));
 
-	// 设置table row等宽
+	// Set table header to stretch mode (columns auto-resize)
 	productInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     setAcceptDrops(true);
 
-	// 解决win7 拖拽问题
+	// Win7+: allow drag-drop and WM_COPYDATA messages
 	if (pChangeWindowMessageFilterEx) {
 	// Call the safer ChangeWindowMessageFilterEx API if available (Windows 7 onwards)
 		pChangeWindowMessageFilterEx((HWND)winId(), 
@@ -72,20 +74,19 @@ dolMainWindow::~dolMainWindow()
 	ClearProductInfo();
 }
 
-//当用户拖动文件到窗口部件上时候，就会触发dragEnterEvent事件
+// Override dragEnterEvent for drag-and-drop support
 void dolMainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-    //如果为文件，则支持拖放
+    // Accept if drag contains text/uri-list
     if (event->mimeData()->hasFormat("text/uri-list")) {
         event->acceptProposedAction();
     }
 }
 
-//当用户放下这个文件后，就会触发dropEvent事件
+// Override dropEvent to handle dropped files
 void dolMainWindow::dropEvent(QDropEvent *event)
 {
-    //注意：这里如果有多文件存在，意思是用户一下子拖动了多个文件，而不是拖动一个目录
-    //如果想读取整个目录，则在不同的操作平台下，自己编写函数实现读取整个目录文件名
+    // Get dropped url list; return if empty
     QList<QUrl> urls = event->mimeData()->urls();
     if (urls.isEmpty()) {
         return;
@@ -100,8 +101,10 @@ void dolMainWindow::dropEvent(QDropEvent *event)
     for (int i = 0; i<urls.size(); ++i) {
         QString filename = urls[i].toLocalFile();
         QFileInfo fileinfo(filename);
-        if (fileinfo.suffix() == suffixarray[0] ||
-            fileinfo.suffix() == suffixarray[1] ) {
+        if (fileinfo.isDir()) {
+            mSearchPathList.append(CollectExeDllFromDir(filename));
+        } else if (fileinfo.suffix().toLower() == suffixarray[0] ||
+            fileinfo.suffix().toLower() == suffixarray[1]) {
             mSearchPathList.append(filename);
         }
     }
@@ -131,19 +134,18 @@ void dolMainWindow::DoAbout()
 
 void dolMainWindow::DoOpenFileDialog()
 {
-	//定义文件对话框类  
+	// Create file dialog
 	QFileDialog filedialog(this);
-	//定义文件对话框标题  
+	// Set window title
 	filedialog.setWindowTitle(tr("Open Files"));
-	//设置默认文件路径  
+	// Set current directory
 	filedialog.setDirectory(".");
-	//设置文件过滤器  
+	// Set name filter for dll/exe
 	filedialog.setNameFilter(tr("Files(*.dll *.exe)"));
-	//设置可以选择多个文件,默认为只能选择一个文件QFileDialog::ExistingFiles  
+	// Allow multiple selection (ExistingFiles)
 	filedialog.setFileMode(QFileDialog::ExistingFiles);
-	//设置视图模式  
+	// Detail view
 	filedialog.setViewMode(QFileDialog::Detail);
-	//打印所有选择的文件的路径  
 	// QStringList filenames;
 	if (filedialog.exec()) {
 		// filenames = filedialog.selectedFiles();
@@ -156,6 +158,39 @@ void dolMainWindow::DoOpenFileDialog()
 
 	QFileInfo fileinfo(mSearchPathList[0]);
 	lineedit_path->setText(fileinfo.absolutePath());
+}
+
+void dolMainWindow::DoOpenDirDialog()
+{
+	QFileDialog filedialog(this);
+	filedialog.setWindowTitle(tr("Select Directory"));
+	filedialog.setDirectory(".");
+	filedialog.setFileMode(QFileDialog::Directory);
+	filedialog.setOption(QFileDialog::ShowDirsOnly, true);
+	filedialog.setViewMode(QFileDialog::Detail);
+
+	QStringList dirs;
+	if (filedialog.exec()) {
+		dirs = filedialog.selectedFiles();
+	}
+
+	if (dirs.isEmpty()) {
+		return;
+	}
+
+	mSearchPathList.clear();
+	for (const QString &dirPath : dirs) {
+		mSearchPathList.append(CollectExeDllFromDir(dirPath));
+	}
+
+	if (mSearchPathList.empty()) {
+		return;
+	}
+
+	QFileInfo fileinfo(mSearchPathList[0]);
+	lineedit_path->setText(fileinfo.absolutePath());
+
+	ShowInfo();
 }
 
 void dolMainWindow::DoOk()
@@ -181,41 +216,46 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 {
 	productInfoTable->insertRow(productInfoTable->rowCount());
 
-    QString convertstr = QString::fromLocal8Bit(pInfo->GetOriginName().c_str());
-	QTableWidgetItem *item = new QTableWidgetItem(convertstr);
+	int row = productInfoTable->rowCount() - 1;
+	QString filePath = QString::fromStdString(pInfo->GetFilePath());
+	QString fileName = QFileInfo(filePath).fileName();
+	QTableWidgetItem *item = new QTableWidgetItem(fileName);
+	productInfoTable->setItem(row, 0, item);
+
+	QString convertstr = QString::fromLocal8Bit(pInfo->GetOriginName().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 0, item);
+	productInfoTable->setItem(row, 1, item);
 
 	convertstr = QString::fromLocal8Bit(pInfo->GetFileDescription().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 1, item);
+	productInfoTable->setItem(row, 2, item);
 
-    convertstr = QString::fromLocal8Bit(pInfo->GetDigSignature().c_str());
+	convertstr = QString::fromLocal8Bit(pInfo->GetDigSignature().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 2, item);
+	productInfoTable->setItem(row, 3, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetType().c_str()));
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 3, item);
+	productInfoTable->setItem(row, 4, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetFileVersion().c_str()));
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 4, item);
+	productInfoTable->setItem(row, 5, item);
 
-    convertstr = QString::fromLocal8Bit(pInfo->GetProductName().c_str());
+	convertstr = QString::fromLocal8Bit(pInfo->GetProductName().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 5, item);
+	productInfoTable->setItem(row, 6, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetProductVersion().c_str()));
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 6, item);
+	productInfoTable->setItem(row, 7, item);
 
-    convertstr = QString::fromLocal8Bit(pInfo->GetCopyRight().c_str());
+	convertstr = QString::fromLocal8Bit(pInfo->GetCopyRight().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 7, item);
+	productInfoTable->setItem(row, 8, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetSize().c_str()));
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 8, item);
+	productInfoTable->setItem(row, 9, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetModifiedTime().c_str()));
-	productInfoTable->setItem(productInfoTable->rowCount()-1, 9, item);
+	productInfoTable->setItem(row, 10, item);
 }
 
 void dolMainWindow::ShowInfo()
@@ -247,6 +287,23 @@ void dolMainWindow::ClearTable()
 	while (productInfoTable->rowCount() > 0) {
 		productInfoTable->removeRow(0);
 	}	
+}
+
+QStringList dolMainWindow::CollectExeDllFromDir(const QString &dirPath)
+{
+	QStringList result;
+	QDir dir(dirPath);
+	if (!dir.exists()) {
+		return result;
+	}
+	QFileInfoList entries = dir.entryInfoList(QDir::Files);
+	for (const QFileInfo &fi : entries) {
+		QString suffix = fi.suffix().toLower();
+		if (suffix == QLatin1String("exe") || suffix == QLatin1String("dll")) {
+			result.append(fi.absoluteFilePath());
+		}
+	}
+	return result;
 }
 
 #include "moc_dolmainwindow.cpp"
