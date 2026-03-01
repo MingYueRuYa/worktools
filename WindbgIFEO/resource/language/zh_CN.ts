@@ -5,7 +5,7 @@
     <name>WindbgIFEO</name>
     <message>
         <source>wait thread exit...</source>
-        <translation>等待线程推出...</translation>
+        <translation type="vanished">等待线程推出...</translation>
     </message>
     <message>
         <source>Start windbg successful.</source>
@@ -73,7 +73,7 @@
     </message>
     <message>
         <source>Remove value successful</source>
-        <translation>删除值成功</translation>
+        <translation type="vanished">删除值成功</translation>
     </message>
     <message>
         <source>Start query image file exection options:</source>
@@ -157,6 +157,58 @@
         <source>selecte current Windbg:</source>
         <translation>当前选中的WinDbg:</translation>
     </message>
+    <message>
+        <source>set value successful, process name:%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove value successful, process name:%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>set auto start successful, path:%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>unset auto start successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start serach windbg path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start refresh process info.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chinese</source>
+        <translation type="unfinished">中文</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation type="unfinished">English</translation>
+    </message>
+    <message>
+        <source>finished search windbg path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>filter arm version windbg path:%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process refresh successful.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>set language chinese successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>set language english successful</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindbgIFEOClass</name>
@@ -166,7 +218,7 @@
     </message>
     <message>
         <source>WinDbg about</source>
-        <translation>WinDbg 事项</translation>
+        <translation type="vanished">WinDbg 事项</translation>
     </message>
     <message>
         <source>WinDbg path：</source>
@@ -186,7 +238,7 @@
     </message>
     <message>
         <source>Image File Exection Options</source>
-        <translation>镜像映射</translation>
+        <translation type="vanished">镜像映射</translation>
     </message>
     <message>
         <source>Process name:</source>
@@ -198,7 +250,7 @@
     </message>
     <message>
         <source>example：git.exe</source>
-        <translation>例如：git.exe</translation>
+        <translation type="vanished">例如：git.exe</translation>
     </message>
     <message>
         <source>example：-g</source>
@@ -218,11 +270,11 @@
     </message>
     <message>
         <source>Open regedit</source>
-        <translation>打开注册表</translation>
+        <translation type="vanished">打开注册表</translation>
     </message>
     <message>
         <source>Postmortem</source>
-        <translation>事后调试</translation>
+        <translation type="vanished">事后调试</translation>
     </message>
     <message>
         <source>Register</source>
@@ -234,11 +286,11 @@
     </message>
     <message>
         <source>Open x64 regedit</source>
-        <translation>打开x64注册表</translation>
+        <translation type="vanished">打开x64注册表</translation>
     </message>
     <message>
         <source>Open x86 regedit</source>
-        <translation>打开x86注册表</translation>
+        <translation type="vanished">打开x86注册表</translation>
     </message>
     <message>
         <source>WinDbg Config Assistant</source>
@@ -246,11 +298,11 @@
     </message>
     <message>
         <source>Operation log:</source>
-        <translation>操作日志：</translation>
+        <translation type="vanished">操作日志：</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation type="vanished">设置</translation>
     </message>
     <message>
         <source>Language:</source>
@@ -258,15 +310,59 @@
     </message>
     <message>
         <source>English</source>
-        <translation>English</translation>
+        <translation type="vanished">English</translation>
     </message>
     <message>
         <source>Chinese</source>
-        <translation>中文</translation>
+        <translation type="vanished">中文</translation>
     </message>
     <message>
         <source>Auto start</source>
-        <translation>开机启动</translation>
+        <translation type="vanished">开机启动</translation>
+    </message>
+    <message>
+        <source>WinDbg about:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image File Exection Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>example: git.ext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open reg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attach Process:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process ID:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postmortem:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open x64 reg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open x86 reg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto start:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -37,8 +37,8 @@ dolMainWindow::dolMainWindow(QWidget *parent)
 	connect(btn_selectdir, SIGNAL(clicked()), this, SLOT(DoOpenDirDialog()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(DoOk()));
 
-	// Set table header to stretch mode (columns auto-resize)
-	productInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	// Allow user to resize columns by dragging header
+	productInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 
     setAcceptDrops(true);
 
@@ -237,25 +237,22 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 	item = new QTableWidgetItem(QString(pInfo->GetType().c_str()));
 	productInfoTable->setItem(row, 4, item);
 
-	item = new QTableWidgetItem(QString(pInfo->GetFileVersion().c_str()));
-	productInfoTable->setItem(row, 5, item);
-
 	convertstr = QString::fromLocal8Bit(pInfo->GetProductName().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(row, 6, item);
+	productInfoTable->setItem(row, 5, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetProductVersion().c_str()));
-	productInfoTable->setItem(row, 7, item);
+	productInfoTable->setItem(row, 6, item);
 
 	convertstr = QString::fromLocal8Bit(pInfo->GetCopyRight().c_str());
 	item = new QTableWidgetItem(convertstr);
-	productInfoTable->setItem(row, 8, item);
+	productInfoTable->setItem(row, 7, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetSize().c_str()));
-	productInfoTable->setItem(row, 9, item);
+	productInfoTable->setItem(row, 8, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetModifiedTime().c_str()));
-	productInfoTable->setItem(row, 10, item);
+	productInfoTable->setItem(row, 9, item);
 }
 
 void dolMainWindow::ShowInfo()

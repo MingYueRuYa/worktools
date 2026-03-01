@@ -81,11 +81,6 @@
       </column>
       <column>
        <property name="text">
-        <string>文件版本</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
         <string>产品名称</string>
        </property>
       </column>
