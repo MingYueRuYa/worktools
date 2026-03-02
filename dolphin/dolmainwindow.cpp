@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <QtCore\QDebug>
 #include <QtCore\QDir>
+#include <QtCore\QDirIterator>
 #include <QtWidgets\QFileDialog>
 #include <QtWidgets\QMessagebox>
 
@@ -231,6 +232,7 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 	productInfoTable->setItem(row, 2, item);
 
 	convertstr = QString::fromLocal8Bit(pInfo->GetDigSignature().c_str());
+	bool signatureEmpty = convertstr.trimmed().isEmpty();
 	item = new QTableWidgetItem(convertstr);
 	productInfoTable->setItem(row, 3, item);
 
@@ -253,6 +255,15 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 
 	item = new QTableWidgetItem(QString(pInfo->GetModifiedTime().c_str()));
 	productInfoTable->setItem(row, 9, item);
+
+	if (signatureEmpty) {
+		for (int col = 0; col < productInfoTable->columnCount(); ++col) {
+			QTableWidgetItem *cell = productInfoTable->item(row, col);
+			if (cell) {
+				cell->setBackground(QBrush(Qt::red));
+			}
+		}
+	}
 }
 
 void dolMainWindow::ShowInfo()
@@ -293,8 +304,11 @@ QStringList dolMainWindow::CollectExeDllFromDir(const QString &dirPath)
 	if (!dir.exists()) {
 		return result;
 	}
-	QFileInfoList entries = dir.entryInfoList(QDir::Files);
-	for (const QFileInfo &fi : entries) {
+	// 递归遍历目录及所有子目录
+	QDirIterator it(dirPath, QDir::Files, QDirIterator::Subdirectories);
+	while (it.hasNext()) {
+		QString path = it.next();
+		QFileInfo fi(path);
 		QString suffix = fi.suffix().toLower();
 		if (suffix == QLatin1String("exe") || suffix == QLatin1String("dll")) {
 			result.append(fi.absoluteFilePath());
