@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2018 liushixiong (liushixiongcpp@163.com)
 ** All rights reserved.
@@ -10,6 +10,7 @@
 #include <QtCore\QDebug>
 #include <QtCore\QDir>
 #include <QtCore\QDirIterator>
+#include <QtWidgets\QAbstractItemView>
 #include <QtWidgets\QFileDialog>
 #include <QtWidgets\QMessagebox>
 
@@ -40,6 +41,8 @@ dolMainWindow::dolMainWindow(QWidget *parent)
 
 	// Allow user to resize columns by dragging header
 	productInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+	// 单元格只读，不可编辑
+	productInfoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     setAcceptDrops(true);
 
@@ -159,6 +162,9 @@ void dolMainWindow::DoOpenFileDialog()
 
 	QFileInfo fileinfo(mSearchPathList[0]);
 	lineedit_path->setText(fileinfo.absolutePath());
+
+	// 选中文件后自动查询并显示信息
+	ShowInfo();
 }
 
 void dolMainWindow::DoOpenDirDialog()
@@ -219,8 +225,7 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 
 	int row = productInfoTable->rowCount() - 1;
 	QString filePath = QString::fromStdString(pInfo->GetFilePath());
-	QString fileName = QFileInfo(filePath).fileName();
-	QTableWidgetItem *item = new QTableWidgetItem(fileName);
+	QTableWidgetItem *item = new QTableWidgetItem(filePath);
 	productInfoTable->setItem(row, 0, item);
 
 	QString convertstr = QString::fromLocal8Bit(pInfo->GetOriginName().c_str());
@@ -255,6 +260,14 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 
 	item = new QTableWidgetItem(QString(pInfo->GetModifiedTime().c_str()));
 	productInfoTable->setItem(row, 9, item);
+
+	// 设置该行所有单元格为不可编辑
+	for (int col = 0; col < productInfoTable->columnCount(); ++col) {
+		QTableWidgetItem *cell = productInfoTable->item(row, col);
+		if (cell) {
+			cell->setFlags(cell->flags() & ~Qt::ItemIsEditable);
+		}
+	}
 
 	if (signatureEmpty) {
 		for (int col = 0; col < productInfoTable->columnCount(); ++col) {
