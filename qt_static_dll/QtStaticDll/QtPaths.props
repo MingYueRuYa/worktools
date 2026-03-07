@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 请将 QtDir 改为您本机 Qt 静态编译的安装目录，例如：C:\Qt\5.15.2\msvc2019_64_static -->
+  <PropertyGroup>
+    <QtDir Condition="'$(QtDir)' == ''">C:\Qt\5.15.2\msvc2019_64_static</QtDir>
+  </PropertyGroup>
+</Project>
