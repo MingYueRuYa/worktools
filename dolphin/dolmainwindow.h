@@ -9,6 +9,8 @@
 ****************************************************************************/
 
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtGui/QDragEnterEvent>
 #include <QtCore/QMimeData>
 
@@ -34,6 +36,7 @@ protected slots:
 	void DoOpenDirDialog();
 	void DoOk();
 	void DoClear(bool checked);
+	void OnHeaderSectionClicked(int logicalIndex);
 
 private:
 	void ClearProductInfo();
@@ -42,9 +45,17 @@ private:
 	void InitMenu();
 	void ClearTable();
 	QStringList CollectExeDllFromDir(const QString &dirPath);
+	/** 根据当前 mProductInfoList 更新状态栏统计信息 */
+	void UpdateStatusBarStats();
+
+	/** 将字节数转换为 B / K / M / G 的可读字符串（按 1024 进位） */
+	static QString formatByteSize(qint64 bytes);
 
 private:
 	QMenu *mMenu;
+	QLabel *m_statusStatsLabel;
+	int m_sortColumn;
+	Qt::SortOrder m_sortOrder;
 
 private:
 	QStringList mSearchPathList;

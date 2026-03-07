@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) 2018 liushixiong (liushixiongcpp@163.com)
 ** All rights reserved.
@@ -7,11 +7,15 @@
 
 #include "dolmainwindow.h"
 #include <windows.h>
+#include <algorithm>
 #include <QtCore\QDebug>
 #include <QtCore\QDir>
+#include <QtCore\QMap>
 #include <QtCore\QDirIterator>
+#include <QtCore\QFileInfo>
 #include <QtWidgets\QAbstractItemView>
 #include <QtWidgets\QFileDialog>
+#include <QtWidgets\QHeaderView>
 #include <QtWidgets\QMessagebox>
 
 #include "dolabout.h"
@@ -43,6 +47,17 @@ dolMainWindow::dolMainWindow(QWidget *parent)
 	productInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 	// 单元格只读，不可编辑
 	productInfoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	// 表头点击排序（大小列按实际字节数排序）
+	m_sortColumn = -1;
+	m_sortOrder = Qt::AscendingOrder;
+	productInfoTable->setSortingEnabled(false);
+	productInfoTable->horizontalHeader()->setSectionsClickable(true);
+	connect(productInfoTable->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(OnHeaderSectionClicked(int)));
+
+	m_statusStatsLabel = new QLabel(this);
+	m_statusStatsLabel->setTextFormat(Qt::RichText);
+	dolphinClass::statusBar->addWidget(m_statusStatsLabel, 1);
 
     setAcceptDrops(true);
 
@@ -76,6 +91,21 @@ dolMainWindow::dolMainWindow(QWidget *parent)
 dolMainWindow::~dolMainWindow()
 {
 	ClearProductInfo();
+}
+
+QString dolMainWindow::formatByteSize(qint64 bytes)
+{
+	const qint64 K = 1024;
+	const qint64 M = K * 1024;
+	const qint64 G = M * 1024;
+	qint64 n = (bytes < 0) ? 0 : bytes;
+	if (n < K)
+		return QString::number(n) + " B";
+	if (n < M)
+		return QString::number(n / (double)K, 'f', 2) + " K";
+	if (n < G)
+		return QString::number(n / (double)M, 'f', 2) + " M";
+	return QString::number(n / (double)G, 'f', 2) + " G";
 }
 
 // Override dragEnterEvent for drag-and-drop support
@@ -255,7 +285,7 @@ void dolMainWindow::InsertRow(dolProductInfo *pInfo)
 	item = new QTableWidgetItem(convertstr);
 	productInfoTable->setItem(row, 7, item);
 
-	item = new QTableWidgetItem(QString(pInfo->GetSize().c_str()));
+	item = new QTableWidgetItem(formatByteSize(QFileInfo(QString::fromLocal8Bit(pInfo->GetFilePath().c_str())).size()));
 	productInfoTable->setItem(row, 8, item);
 
 	item = new QTableWidgetItem(QString(pInfo->GetModifiedTime().c_str()));
@@ -293,6 +323,21 @@ void dolMainWindow::ShowInfo()
 
 		InsertRow(info);
 	}
+
+	QString html;
+	for (dolProductInfo *info : mProductInfoList) {
+		QString sig = QString::fromLocal8Bit(info->GetDigSignature().c_str()).trimmed();
+		if (!sig.isEmpty())
+			continue;
+		QString filePath = QString::fromStdString(info->GetFilePath());
+		QString escaped = filePath.toHtmlEscaped();
+		html += QStringLiteral("<span style='color:red'>%1</span>").arg(escaped);
+		html += QLatin1String("<br/>");
+	}
+	QString body = html.isEmpty() ? QString() : QStringLiteral("<div style='font-size:20px'>%1</div>").arg(html);
+	textBrowser->setHtml(body);
+
+	UpdateStatusBarStats();
 }
 
 void dolMainWindow::InitMenu()
@@ -307,7 +352,76 @@ void dolMainWindow::ClearTable()
 {
 	while (productInfoTable->rowCount() > 0) {
 		productInfoTable->removeRow(0);
-	}	
+	}
+	ClearProductInfo();
+	textBrowser->clear();
+	UpdateStatusBarStats();  // 清空后显示 0 个文件
+}
+
+void dolMainWindow::OnHeaderSectionClicked(int logicalIndex)
+{
+	// 同一列再次点击则切换升序/降序
+	if (logicalIndex == m_sortColumn) {
+		m_sortOrder = (m_sortOrder == Qt::AscendingOrder) ? Qt::DescendingOrder : Qt::AscendingOrder;
+	} else {
+		m_sortColumn = logicalIndex;
+		m_sortOrder = Qt::AscendingOrder;
+	}
+
+	// 大小列（第 9 列，索引 8）按实际字节数排序
+	if (logicalIndex == 8) {
+		std::sort(mProductInfoList.begin(), mProductInfoList.end(),
+			[this](dolProductInfo *a, dolProductInfo *b) {
+				qint64 sa = QFileInfo(QString::fromStdString(a->GetFilePath())).size();
+				qint64 sb = QFileInfo(QString::fromStdString(b->GetFilePath())).size();
+				if (m_sortOrder == Qt::AscendingOrder)
+					return sa < sb;
+				return sa > sb;
+			});
+		ClearTable();
+		for (int i = 0; i < mProductInfoList.size(); ++i) {
+			InsertRow(mProductInfoList[i]);
+		}
+	} else {
+		productInfoTable->sortItems(logicalIndex, m_sortOrder);
+	}
+
+	productInfoTable->horizontalHeader()->setSortIndicator(m_sortColumn, m_sortOrder);
+}
+
+void dolMainWindow::UpdateStatusBarStats()
+{
+	const int total = mProductInfoList.size();
+	if (total == 0) {
+		m_statusStatsLabel->setText(tr("0 files"));
+		return;
+	}
+
+	int unsignedCount = 0;
+	QMap<QString, int> signatureCount;
+	for (dolProductInfo *info : mProductInfoList) {
+		QString sig = QString::fromLocal8Bit(info->GetDigSignature().c_str()).trimmed();
+		if (sig.isEmpty()) {
+			++unsignedCount;
+		} else {
+			signatureCount[sig] += 1;
+		}
+	}
+
+	QString unsignedPart = tr("%1 unsigned").arg(unsignedCount);
+	if (unsignedCount > 0) {
+		unsignedPart = QStringLiteral("<span style='color:red'>%1</span>").arg(unsignedPart);
+	}
+	QString msg = tr("%1 files, %2").arg(total).arg(unsignedPart);
+	if (!signatureCount.isEmpty()) {
+		msg += tr("; Signed: ");
+		QStringList parts;
+		for (auto it = signatureCount.constBegin(); it != signatureCount.constEnd(); ++it) {
+			parts.append(QStringLiteral("%1(%2)").arg(it.key().toHtmlEscaped()).arg(it.value()));
+		}
+		msg += parts.join(QStringLiteral(", "));
+	}
+	m_statusStatsLabel->setText(msg);
 }
 
 QStringList dolMainWindow::CollectExeDllFromDir(const QString &dirPath)
