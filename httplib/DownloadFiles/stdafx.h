@@ -1,0 +1,9 @@
+#pragma once
+#include "targetver.h"
+#define WIN32_LEAN_AND_MEAN
+#define _AFXDLL
+#include <afxwin.h>
+#include <afxdialogex.h>
+#include <afxcmn.h>
+#include <afxdlgs.h>
+#include <string>

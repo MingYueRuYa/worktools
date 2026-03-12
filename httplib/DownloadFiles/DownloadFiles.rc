@@ -1,0 +1,84 @@
+// Microsoft Visual C++ generated resource script.
+#include "Resource.h"
+#define APSTUDIO_READONLY_SYMBOLS
+#include "winres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(65001)
+#endif
+
+#ifdef APSTUDIO_INVOKED
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "winres.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#endif
+
+// Optional: add DownloadFiles.ico in res folder and uncomment the next line for IDR_MAINFRAME
+// IDR_MAINFRAME           ICON                    "res\\DownloadFiles.ico"
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#endif
+
+IDD_DOWNLOADFILES_DIALOG DIALOGEX 0, 0, 320, 200
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "File Download"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Download URL:",IDC_STATIC,12,15,40,8
+    EDITTEXT        IDC_EDIT_URL,55,12,250,14,ES_AUTOHSCROLL
+    LTEXT           "Save path:",IDC_STATIC,12,38,40,8
+    EDITTEXT        IDC_EDIT_SAVE_PATH,55,35,200,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse...",IDC_BTN_BROWSE,260,34,50,14
+    LTEXT           "Method:",IDC_STATIC,12,58,28,8
+    CONTROL         "GET",IDC_RADIO_GET,"Button",BS_AUTORADIOBUTTON | WS_GROUP,45,56,36,12
+    CONTROL         "POST",IDC_RADIO_POST,"Button",BS_AUTORADIOBUTTON,85,56,40,12
+    LTEXT           "HTTP headers (one per line, format: Name: Value):",IDC_STATIC,12,78,180,8
+    EDITTEXT        IDC_EDIT_HTTP_PARAMS,12,88,296,50,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    PUSHBUTTON      "Download",IDC_BTN_DOWNLOAD,120,148,80,22
+    LTEXT           "Status:",IDC_STATIC,12,178,24,8
+    LTEXT           "",IDC_STATIC_STATUS,40,178,268,12
+END
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DOWNLOADFILES_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+END
+#endif
+
+#ifndef APSTUDIO_INVOKED
+#include "winver.h"
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "File Download"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "ProductName", "DownloadFiles"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+#endif
